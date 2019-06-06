@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sparrow.demo.mapper.SpaDocumentMapper">
+
+    <insert id="docAdd" parameterType="java.util.Map">
+        INSERT INTO spa_document
+        <set>
+            uuid = #{uuid},
+            owner_uuid = #{ownerUuid}
+        </set>
+    </insert>
+
+    <update id="updateDocMeta" parameterType="java.util.Map">
+        UPDATE spa_document
+        SET doc_name = #{docName}
+        WHERE uuid = #{uuid}
+    </update>
+
+
+</mapper>
