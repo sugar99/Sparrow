@@ -2,6 +2,8 @@
 
 <b style="color:red">完整的搜索功能放在一个单独页面中</b>，**其它页面仅提供一个搜索框作为入口跳转到搜索页面。**
 
+> 搜索demo的前端代码请放在 `/search-demo/frontend` 目录下，便于统一管理。
+
 ## 1.搜索建议
 
 <img src="../assets/search-type.png">
