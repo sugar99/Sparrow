@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "55026adb-a245-4367-b3bd-74ef78fef22b",
+		"name": "sparrow search api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "backend",
+			"item": [
+				{
+					"name": "search suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend-url}}/search/suggestions?keyword=算法&size=10",
+							"host": [
+								"{{backend-url}}"
+							],
+							"path": [
+								"search",
+								"suggestions"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "算法"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "top associations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend-url}}/search/top-associations?keyword=算法&tag_count=5&category_count=5",
+							"host": [
+								"{{backend-url}}"
+							],
+							"path": [
+								"search",
+								"top-associations"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "算法"
+								},
+								{
+									"key": "tag_count",
+									"value": "5"
+								},
+								{
+									"key": "category_count",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search results",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"all\",\n    \"keyword\": \"算法\",\n    \"tags\": [\n        1,\n        3\n    ],\n    \"categories\": [\n        1,\n        2\n    ],\n    \"exts\": [\n        \"jpg\",\n        \"all\",\n        \"jpg\",\n        \"gif\",\n        \"doc\",\n        \"pdf\"\n    ],\n    \"time_zone\": \"+8\",\n    \"page\": 2,\n    \"per_page\": 40\n}"
+						},
+						"url": {
+							"raw": "{{backend-url}}/search/results",
+							"host": [
+								"{{backend-url}}"
+							],
+							"path": [
+								"search",
+								"results"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

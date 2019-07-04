@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Sparrow Search</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism-okaidia.min.css" />
+    <style>
+      blockquote {
+        border-left: solid 4px #eee;
+        padding-left: 8px;
+        font-style: italic;
+        margin-left: 0;
+        padding: 8px;
+      }
+
+      .ui.micro.label {
+        font-size: .25rem;
+      }
+
+      .ui.transaction.accordion .title {
+        text-align: center;
+      }
+
+      .ui.transaction.accordion .content {
+        border-top: solid 1px #ddd !important;
+        border-bottom: solid 1px #ddd !important;
+        background-color: rgba(0,0,0,.03);
+        padding: 0.5em 1em !important;
+      }
+
+      .ui.transaction.accordion .content.active {
+        margin-top: 0.5em;
+      }
+
+      .ui.basic.label {
+        text-align: left;
+        overflow: auto;
+      }
+
+      .ui.basic.label.request-url {
+        user-select: text;
+      }
+
+      .resource .ui.sub.header {
+        text-transform: none;
+      }
+
+      @media only screen and (min-width: 768px) {
+        .sidewrap {
+          margin-right: 2rem;
+        }
+
+        .sidenav {
+          left: 0;
+          top: 0;
+          width: inherit;
+          position: fixed !important;
+          height: 100% !important;
+          overflow-y: auto !important;
+          padding-left: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui padded grid">
+      <div class="sidewrap four wide computer five wide tablet sixteen wide mobile column">
+        <div class="sidenav">
+          <div class="ui horizontal divider">
+  <a href="#introduction">Introduction</a>
+</div>
+<div class="ui fluid secondary vertical menu">
+  <a class="item" href="#introduction">Sparrow Search</a>
+</div>
+<div class="ui horizontal divider">
+  <a href="#search">Search</a>
+</div>
+<div class="ui accordion fluid">
+      <div class="title active">
+        <i class="dropdown icon"></i>
+        <strong>S1.Search Suggestions</strong>
+      </div>
+    <div class="content active">
+      <div class="ui fluid secondary vertical menu">
+        <a class="item green" href="#search-s1.search-suggestions-s1.search-suggestions">
+          <i class="ui green empty circular label"></i>
+            <span>S1.Search Suggestions</span>
+        </a>
+      </div>
+    </div>
+      <div class="title ">
+        <i class="dropdown icon"></i>
+        <strong>S2.Top Associations</strong>
+      </div>
+    <div class="content ">
+      <div class="ui fluid secondary vertical menu">
+        <a class="item green" href="#search-s2.top-associations-s2.top-associations">
+          <i class="ui green empty circular label"></i>
+            <span>S2.Top Associations</span>
+        </a>
+      </div>
+    </div>
+      <div class="title ">
+        <i class="dropdown icon"></i>
+        <strong>S3.Search Results</strong>
+      </div>
+    <div class="content ">
+      <div class="ui fluid secondary vertical menu">
+        <a class="item blue" href="#search-s3.search-results-s3.search-results">
+          <i class="ui blue empty circular label"></i>
+            <span>S3.Search Results</span>
+        </a>
+      </div>
+    </div>
+</div>
+        </div>
+      </div>
+      <div class="eleven wide computer ten wide tablet sixteen wide mobile column">
+        <div class="ui hidden divider header"></div>
+<h1 class="ui huge header" id="introduction">Sparrow Search</h1>
+<hr class="ui divider">
+<div class="description"><p>APIs for Sparrow File Searching</p>
+<h1><code>Data Structure</code></h1>
+<blockquote>
+<p>MSON(Markdown Syntax for Object Notation)是blueprint api使用的对象描述语言，用于抽象地描述JSON, XML, YAML等数据传输格式。</p>
+</blockquote>
+<p>用<a href="https://github.com/apiaryio/mson/blob/master/MSON%20Specification.md">MSON格式</a>定义API的数据结构，用于：</p>
+<ul>
+<li>
+<p>Request Parameters</p>
+</li>
+<li>
+<p>Request Body</p>
+</li>
+<li>
+<p>Response Body</p>
+</li>
+</ul>
+<h2><code>result</code> - API返回数据格式（Response Body）</h2>
+<ul>
+<li>
+<p><code>status</code>: <code>200</code> (number) - 状态码</p>
+</li>
+<li>
+<p><code>msg</code>: <code>OK</code> (string) - 消息</p>
+</li>
+<li>
+<p><code>data</code> (enum, optional, nullable) - 返回数据</p>
+<ul>
+<li>(object)</li>
+<li>(array)</li>
+</ul>
+</li>
+</ul>
+<h2><a id="search_type" href="#search_type"> <code>search_type</code>(enum[string]) - 文件类型 </a></h2>
+<ul>
+<li>
+<p><code>all</code> - 全部</p>
+</li>
+<li>
+<p>image - 图片</p>
+</li>
+<li>
+<p>doc - 文档</p>
+</li>
+<li>
+<p>video - 视频</p>
+</li>
+<li>
+<p>audio - 音频</p>
+</li>
+<li>
+<p>other - 其它文件</p>
+</li>
+</ul>
+<h2><code>spa_file</code></h2>
+<ul>
+<li>
+<p><code>id</code>: <code>image_10432347</code> (string)</p>
+</li>
+<li>
+<p><code>title</code>: <code>算法</code> (string) - 文件标题</p>
+</li>
+<li>
+<p><code>desc</code>: <code>《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。</code> (string)</p>
+</li>
+<li>
+<p><code>type</code>: <code>image</code> (search_type)</p>
+</li>
+<li>
+<p><code>ext</code>: <code>jpg</code> (string) - 文件拓展名</p>
+</li>
+<li>
+<p><code>categories</code>: 0, 1, 6 (array[number], optional) - 类目id数组</p>
+</li>
+<li>
+<p><code>tags</code>: 6, 133, 137, 2552, 2697, 2998, 22409, 24310 (array[number], optional) - 标签id数组</p>
+</li>
+<li>
+<p><code>creator</code>: <code>green</code> (string) - 创建者id</p>
+</li>
+<li>
+<p><code>store_key</code>: <code>http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg</code> (string) - oss存储url</p>
+</li>
+<li>
+<p><code>thumbnail</code>: <code>http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg</code> (string) - 缩略图url</p>
+</li>
+<li>
+<p><code>derived_files</code> (array[string], optional, nullable) - 衍生文件</p>
+</li>
+<li>
+<p><code>created_time</code>: <code>2017-07-01 21:34:16</code> (string) - 创建时间</p>
+</li>
+<li>
+<p><code>modified_time</code>: <code>2017-07-06 21:34:16</code> (string) - 最后修改时间</p>
+</li>
+<li>
+<p><code>version</code>: <code>0</code> (number) - 版本号</p>
+</li>
+<li>
+<p><code>original_id</code>: <code>10432347</code> (string) - 原始文件id</p>
+</li>
+<li>
+<p><code>parent_id</code> (string, nullable) - 父版本文件id</p>
+</li>
+</ul>
+<pre><code class="language-json">{
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"image_10432347"</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"算法"</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。"</span>,
+    <span class="hljs-attr">"type"</span>: <span class="hljs-string">"image"</span>,
+    <span class="hljs-attr">"ext"</span>: <span class="hljs-string">"jpg"</span>,
+    <span class="hljs-attr">"categories"</span>: [
+        <span class="hljs-number">0</span>,
+        <span class="hljs-number">1</span>,
+        <span class="hljs-number">6</span>
+    ],
+    <span class="hljs-attr">"tags"</span>: [
+        <span class="hljs-number">6</span>,
+        <span class="hljs-number">133</span>,
+        <span class="hljs-number">137</span>,
+        <span class="hljs-number">2552</span>,
+        <span class="hljs-number">2697</span>,
+        <span class="hljs-number">2998</span>,
+        <span class="hljs-number">22409</span>,
+        <span class="hljs-number">24310</span>
+    ],
+    <span class="hljs-attr">"creator"</span>: <span class="hljs-string">"green"</span>,
+    <span class="hljs-attr">"store_key"</span>: <span class="hljs-string">"http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"</span>,
+    <span class="hljs-attr">"thumbnail"</span>: <span class="hljs-string">"http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"</span>,
+    <span class="hljs-attr">"derived_files"</span>: [],
+    <span class="hljs-attr">"created_time"</span>: <span class="hljs-string">"2017-07-01 21:34:16"</span>,
+    <span class="hljs-attr">"modified_time"</span>: <span class="hljs-string">"2017-07-06 21:34:16"</span>,
+    <span class="hljs-attr">"version"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"original_id"</span>: <span class="hljs-string">"10432347"</span>,
+    <span class="hljs-attr">"parent_id"</span>: <span class="hljs-literal">null</span>
+}
+</code></pre>
+<h2><code>spa_category</code></h2>
+<ul>
+<li>
+<p><code>id</code>: 6 (number)</p>
+</li>
+<li>
+<p><code>title</code>: 科技 (string) - 类目名</p>
+</li>
+</ul>
+<h2><code>spa_tag</code></h2>
+<ul>
+<li>
+<p><code>id</code>: 137 (number)</p>
+</li>
+<li>
+<p><code>title</code>: 算法 (string) - 标签名</p>
+</li>
+</ul>
+<h2><code>search_suggestion</code></h2>
+<ul>
+<li><code>keyword</code>: 算法 (string) - 搜索建议词</li>
+</ul>
+<h2><code>top_associations</code></h2>
+<ul>
+<li>
+<p><code>tags</code> (array[spa_tag])</p>
+<ul>
+<li>(spa_tag)
+<ul>
+<li>id: 2998 (number)</li>
+<li>title: 计算机</li>
+</ul>
+</li>
+<li>(spa_tag)
+<ul>
+<li>id: 2697 (number)</li>
+<li>title: 计算机科学</li>
+</ul>
+</li>
+<li>(spa_tag)
+<ul>
+<li>id: 66 (number)</li>
+<li>title: 哲学</li>
+</ul>
+</li>
+<li>(spa_tag)
+<ul>
+<li>id: 133 (number)</li>
+<li>title: 编程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>categories</code> (array[spa_category])</p>
+<ul>
+<li>(spa_category)
+<ul>
+<li><code>id</code>: 1 (number)</li>
+<li><code>title</code>: 文学</li>
+</ul>
+</li>
+<li>(spa_category)
+<ul>
+<li><code>id</code>: 2 (number)</li>
+<li><code>title</code>: 流行</li>
+</ul>
+</li>
+<li>(spa_category)
+<ul>
+<li><code>id</code>: 3 (number)</li>
+<li><code>title</code>: 文化</li>
+</ul>
+</li>
+<li>(spa_category)
+<ul>
+<li><code>id</code>: 4 (number)</li>
+<li><code>title</code>: 生活</li>
+</ul>
+</li>
+<li>(spa_category)
+<ul>
+<li><code>id</code>: 5 (number)</li>
+<li><code>title</code>: 经管</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><code>key_count</code></h2>
+<ul>
+<li>
+<p><code>key</code>: all (string)</p>
+</li>
+<li>
+<p><code>count</code>: 100 (number)</p>
+</li>
+</ul>
+<h2><code>time_distr</code> (array[key_count]) - 时间分布</h2>
+<ul>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>全部</code> (string)</li>
+<li><code>doc_count</code>: <code>33</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>三天内</code> (string)</li>
+<li><code>doc_count</code>: <code>6</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>一周内</code> (string)</li>
+<li><code>doc_count</code>: <code>15</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>一个月内</code> (string)</li>
+<li><code>doc_count</code>: <code>23</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>三个月内</code> (string)</li>
+<li><code>doc_count</code>: <code>25</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>半年内</code> (string)</li>
+<li><code>doc_count</code>: <code>27</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>一年内</code> (string)</li>
+<li><code>doc_count</code>: <code>27</code> (number)</li>
+</ul>
+</li>
+<li>
+<p>(key_count)</p>
+<ul>
+<li><code>key</code>: <code>一年前</code> (string)</li>
+<li><code>doc_count</code>: <code>0</code> (number)</li>
+</ul>
+</li>
+</ul>
+</div>
+        <div class="ui hidden divider"></div>
+          <div class="ui horizontal divider" id="search">
+    Search
+  </div>
+  <div class="ui header center aligned">
+    <div class="ui header">
+      <div class="sub header">
+        
+      </div>
+    </div>
+  </div>
+    <div class="ui stacked segments">
+      <div class="ui basic segment resource">
+        <div class="ui purple huge ribbon label">
+          S1.Search Suggestions
+        </div>
+        <div class="ui header">
+          <div class="ui sub header">
+            
+          </div>
+        </div>
+      </div>
+
+        <div class="ui grey horizontal small divider header">
+  <i class="ui grey micro circular label"></i>
+  <i class="ui pink micro circular label"></i>
+  <i class="ui grey micro circular label"></i>
+</div>
+        <div class="ui basic segment">
+          <h3 class="ui block center aligned header" id="search-s1.search-suggestions-s1.search-suggestions">
+            S1.Search Suggestions
+          </h3>
+          <div class="description"><p>搜索建议</p>
+</div>
+
+            <h4 class="ui horizontal divider">
+              REQUEST
+            </h4>
+            <div class="description"></div>
+            <div class="fluid ui large labeled button">
+              <div class="ui green large button">
+                <h3>GET</h3>
+              </div>
+              <a class="ui basic fluid request-url green label">
+                <code>http://localhost:8080/search/suggestions</code>
+              </a>
+            </div>
+
+              <table class="ui celled definition table">
+                <thead>
+                  <tr>
+                    <th colspan="4">Parameters</th>
+                  </tr>
+                <thead>
+                <tbody>
+                        <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>type</code></td>
+      <td class="center aligned">
+        <code>type</code>
+        <code class="ui label">all</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p><a href="#search_type">搜索类型</a></p>
+
+      </td>
+    </tr>
+    <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>keyword</code></td>
+      <td class="center aligned">
+        <code>keyword</code>
+        <code class="ui label">算法</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p>搜索关键词</p>
+<p>默认为空，返回默认搜索建议</p>
+
+      </td>
+    </tr>
+    <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>size</code></td>
+      <td class="center aligned">
+        <code>size</code>
+        <code class="ui label">10</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p>搜索建议条数</p>
+
+      </td>
+    </tr>
+
+                </tbody>
+              </table>
+
+            
+
+
+            <h4 class="ui horizontal divider">RESPONSE</h4>
+            <div class="description"></div>
+            <table class="ui celled definition table">
+  <thead>
+    <tr>
+      <th colspan="2">Headers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="four wide">Content-Type</td>
+      <td><code>application/json</code></td>
+    </tr>
+  </tbody>
+</table>
+
+            <div class="ui stacked blue segment">
+              <div class="ui fluid transaction accordion">
+                <div class="title center aligned">
+                  <a class="ui blue circular label">
+                    200
+                  </a>
+                  <code>application/json</code>
+                </div>
+                <div class="content tabbed">
+                  <div class="ui top attached tabular menu">
+                    <a data-tab="body" class="active item">BODY</a>
+                    <a data-tab="schema" class="item">SCHEMA</a>
+                  </div>
+                  <div class="ui bottom attached active tab segment" data-tab="body">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;status&quot;: 200,
+  &quot;msg&quot;: &quot;OK&quot;,
+  &quot;data&quot;: [
+    &quot;算法&quot;,
+    &quot;优化算法&quot;,
+    &quot;算法&amp;数学&quot;,
+    &quot;算法分析&quot;,
+    &quot;算法导论&quot;,
+    &quot;算法设计&quot;,
+    &quot;算法初级&quot;,
+    &quot;随机算法&quot;,
+    &quot;算法&amp;数据结构&quot;,
+    &quot;算法/数据结构&quot;
+  ]
+}</code>
+                    </pre>
+                  </div>
+                  <div class="ui bottom attached tab segment" data-tab="schema">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;status&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;msg&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;data&quot;: {
+      &quot;type&quot;: &quot;array&quot;
+    }
+  }
+}</code>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui stacked segments">
+      <div class="ui basic segment resource">
+        <div class="ui purple huge ribbon label">
+          S2.Top Associations
+        </div>
+        <div class="ui header">
+          <div class="ui sub header">
+            
+          </div>
+        </div>
+      </div>
+
+        <div class="ui grey horizontal small divider header">
+  <i class="ui grey micro circular label"></i>
+  <i class="ui pink micro circular label"></i>
+  <i class="ui grey micro circular label"></i>
+</div>
+        <div class="ui basic segment">
+          <h3 class="ui block center aligned header" id="search-s2.top-associations-s2.top-associations">
+            S2.Top Associations
+          </h3>
+          <div class="description"><p>获取与关键词高度相关的类目标签</p>
+</div>
+
+            <h4 class="ui horizontal divider">
+              REQUEST
+            </h4>
+            <div class="description"></div>
+            <div class="fluid ui large labeled button">
+              <div class="ui green large button">
+                <h3>GET</h3>
+              </div>
+              <a class="ui basic fluid request-url green label">
+                <code>http://localhost:8080/search/top-associations</code>
+              </a>
+            </div>
+
+              <table class="ui celled definition table">
+                <thead>
+                  <tr>
+                    <th colspan="4">Parameters</th>
+                  </tr>
+                <thead>
+                <tbody>
+                        <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>keyword</code></td>
+      <td class="center aligned">
+        <code>keyword</code>
+        <code class="ui label">算法</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p>搜索关键词</p>
+
+      </td>
+    </tr>
+    <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>category_count</code></td>
+      <td class="center aligned">
+        <code>category_count</code>
+        <code class="ui label">5</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p>类目数量</p>
+
+      </td>
+    </tr>
+    <tr>
+      <td class="center aligned one wide">
+        <i class="ui empty circular label grey" data-content="optional" data-position="top center"></i>
+      </td>
+      <td><code>tag_count</code></td>
+      <td class="center aligned">
+        <code>tag_count</code>
+        <code class="ui label">5</code>
+        
+        
+      </td>
+      <td class="eight wide">
+        <p>标签数量</p>
+
+      </td>
+    </tr>
+
+                </tbody>
+              </table>
+
+            
+
+
+            <h4 class="ui horizontal divider">RESPONSE</h4>
+            <div class="description"></div>
+            <table class="ui celled definition table">
+  <thead>
+    <tr>
+      <th colspan="2">Headers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="four wide">Content-Type</td>
+      <td><code>application/json</code></td>
+    </tr>
+  </tbody>
+</table>
+
+            <div class="ui stacked blue segment">
+              <div class="ui fluid transaction accordion">
+                <div class="title center aligned">
+                  <a class="ui blue circular label">
+                    200
+                  </a>
+                  <code>application/json</code>
+                </div>
+                <div class="content tabbed">
+                  <div class="ui top attached tabular menu">
+                    <a data-tab="body" class="active item">BODY</a>
+                    <a data-tab="schema" class="item">SCHEMA</a>
+                  </div>
+                  <div class="ui bottom attached active tab segment" data-tab="body">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;status&quot;: 200,
+  &quot;msg&quot;: &quot;OK&quot;,
+  &quot;data&quot;: {
+    &quot;tags&quot;: [
+      {
+        &quot;id&quot;: 137,
+        &quot;title&quot;: &quot;算法&quot;
+      },
+      {
+        &quot;id&quot;: 2998,
+        &quot;title&quot;: &quot;计算机&quot;
+      },
+      {
+        &quot;id&quot;: 2697,
+        &quot;title&quot;: &quot;计算机科学&quot;
+      },
+      {
+        &quot;id&quot;: 66,
+        &quot;title&quot;: &quot;哲学&quot;
+      },
+      {
+        &quot;id&quot;: 133,
+        &quot;title&quot;: &quot;编程&quot;
+      }
+    ],
+    &quot;categories&quot;: [
+      {
+        &quot;id&quot;: 6,
+        &quot;title&quot;: &quot;科技&quot;
+      },
+      {
+        &quot;id&quot;: 1,
+        &quot;title&quot;: &quot;文学&quot;
+      },
+      {
+        &quot;id&quot;: 2,
+        &quot;title&quot;: &quot;流行&quot;
+      },
+      {
+        &quot;id&quot;: 3,
+        &quot;title&quot;: &quot;文化&quot;
+      },
+      {
+        &quot;id&quot;: 4,
+        &quot;title&quot;: &quot;生活&quot;
+      },
+      {
+        &quot;id&quot;: 5,
+        &quot;title&quot;: &quot;经管&quot;
+      }
+    ]
+  }
+}</code>
+                    </pre>
+                  </div>
+                  <div class="ui bottom attached tab segment" data-tab="schema">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;status&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;msg&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;data&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;tags&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;categories&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        }
+      }
+    }
+  }
+}</code>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui stacked segments">
+      <div class="ui basic segment resource">
+        <div class="ui purple huge ribbon label">
+          S3.Search Results
+        </div>
+        <div class="ui header">
+          <div class="ui sub header">
+            
+          </div>
+        </div>
+      </div>
+
+        <div class="ui grey horizontal small divider header">
+  <i class="ui grey micro circular label"></i>
+  <i class="ui pink micro circular label"></i>
+  <i class="ui grey micro circular label"></i>
+</div>
+        <div class="ui basic segment">
+          <h3 class="ui block center aligned header" id="search-s3.search-results-s3.search-results">
+            S3.Search Results
+          </h3>
+          <div class="description"><p>搜索结果</p>
+</div>
+
+            <h4 class="ui horizontal divider">
+              REQUEST
+            </h4>
+            <div class="description"></div>
+            <div class="fluid ui large labeled button">
+              <div class="ui blue large button">
+                <h3>POST</h3>
+              </div>
+              <a class="ui basic fluid request-url blue label">
+                <code>http://localhost:8080/search/results</code>
+              </a>
+            </div>
+
+
+            <table class="ui celled definition table">
+  <thead>
+    <tr>
+      <th colspan="2">Headers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="four wide">Content-Type</td>
+      <td><code>application/json</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+              <div class="ui stacked segment">
+                <div class="ui fluid transaction accordion">
+                  <div class="title">
+                    <code>application/json</code>
+                  </div>
+                  <div class="content tabbed">
+                    <div class="ui top attached tabular menu">
+                      <a data-tab="body" class="active item">BODY</a>
+                      <a data-tab="schema" class="item">SCHEMA</a>
+                    </div>
+                    <div class="ui bottom attached active tab segment" data-tab="body">
+                      <pre style="white-space: inherit">
+                        <code class="language-json">{
+  &quot;type&quot;: &quot;all&quot;,
+  &quot;keyword&quot;: &quot;算法&quot;,
+  &quot;tags&quot;: [
+    1,
+    3
+  ],
+  &quot;categories&quot;: [
+    1,
+    2
+  ],
+  &quot;exts&quot;: [
+    &quot;jpg&quot;,
+    &quot;all&quot;,
+    &quot;jpg&quot;,
+    &quot;gif&quot;,
+    &quot;doc&quot;,
+    &quot;pdf&quot;
+  ],
+  &quot;time_zone&quot;: &quot;+8&quot;,
+  &quot;page&quot;: 2,
+  &quot;per_page&quot;: 40
+}</code>
+                      </pre>
+                    </div>
+                    <div class="ui bottom attached tab segment" data-tab="schema">
+                      <pre style="white-space: inherit">
+                        <code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;type&quot;: {
+      &quot;anyOf&quot;: [
+        {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        {
+          &quot;enum&quot;: [
+            &quot;all&quot;,
+            &quot;image&quot;,
+            &quot;doc&quot;,
+            &quot;video&quot;,
+            &quot;audio&quot;,
+            &quot;other&quot;
+          ]
+        }
+      ]
+    },
+    &quot;keyword&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;tags&quot;: {
+      &quot;anyOf&quot;: [
+        {
+          &quot;type&quot;: &quot;null&quot;
+        },
+        {
+          &quot;type&quot;: &quot;array&quot;
+        }
+      ]
+    },
+    &quot;categories&quot;: {
+      &quot;anyOf&quot;: [
+        {
+          &quot;type&quot;: &quot;null&quot;
+        },
+        {
+          &quot;type&quot;: &quot;array&quot;
+        }
+      ]
+    },
+    &quot;exts&quot;: {
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;time_zone&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;page&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;per_page&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    }
+  }
+}</code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <h4 class="ui horizontal divider">RESPONSE</h4>
+            <div class="description"></div>
+            <table class="ui celled definition table">
+  <thead>
+    <tr>
+      <th colspan="2">Headers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="four wide">Content-Type</td>
+      <td><code>application/json</code></td>
+    </tr>
+  </tbody>
+</table>
+
+            <div class="ui stacked blue segment">
+              <div class="ui fluid transaction accordion">
+                <div class="title center aligned">
+                  <a class="ui blue circular label">
+                    200
+                  </a>
+                  <code>application/json</code>
+                </div>
+                <div class="content tabbed">
+                  <div class="ui top attached tabular menu">
+                    <a data-tab="body" class="active item">BODY</a>
+                    <a data-tab="schema" class="item">SCHEMA</a>
+                  </div>
+                  <div class="ui bottom attached active tab segment" data-tab="body">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;status&quot;: 200,
+  &quot;msg&quot;: &quot;OK&quot;,
+  &quot;data&quot;: {
+    &quot;group_by_created_time&quot;: [
+      {
+        &quot;key&quot;: &quot;all&quot;,
+        &quot;count&quot;: 100
+      },
+      {
+        &quot;key&quot;: &quot;全部&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 33
+      },
+      {
+        &quot;key&quot;: &quot;三天内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 6
+      },
+      {
+        &quot;key&quot;: &quot;一周内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 15
+      },
+      {
+        &quot;key&quot;: &quot;一个月内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 23
+      },
+      {
+        &quot;key&quot;: &quot;三个月内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 25
+      },
+      {
+        &quot;key&quot;: &quot;半年内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 27
+      },
+      {
+        &quot;key&quot;: &quot;一年内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 27
+      },
+      {
+        &quot;key&quot;: &quot;一年前&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 0
+      }
+    ],
+    &quot;group_by_modified_time&quot;: [
+      {
+        &quot;key&quot;: &quot;all&quot;,
+        &quot;count&quot;: 100
+      },
+      {
+        &quot;key&quot;: &quot;全部&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 33
+      },
+      {
+        &quot;key&quot;: &quot;三天内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 6
+      },
+      {
+        &quot;key&quot;: &quot;一周内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 15
+      },
+      {
+        &quot;key&quot;: &quot;一个月内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 23
+      },
+      {
+        &quot;key&quot;: &quot;三个月内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 25
+      },
+      {
+        &quot;key&quot;: &quot;半年内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 27
+      },
+      {
+        &quot;key&quot;: &quot;一年内&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 27
+      },
+      {
+        &quot;key&quot;: &quot;一年前&quot;,
+        &quot;count&quot;: 100,
+        &quot;doc_count&quot;: 0
+      }
+    ],
+    &quot;result&quot;: [
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      },
+      {
+        &quot;id&quot;: &quot;image_10432347&quot;,
+        &quot;title&quot;: &quot;算法&quot;,
+        &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;type&quot;: &quot;image&quot;,
+        &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;categories&quot;: [
+          0,
+          1,
+          6
+        ],
+        &quot;tags&quot;: [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
+        &quot;derived_files&quot;: [],
+        &quot;created_time&quot;: &quot;2017-07-01 21:34:16&quot;,
+        &quot;modified_time&quot;: &quot;2017-07-06 21:34:16&quot;,
+        &quot;version&quot;: 0,
+        &quot;original_id&quot;: &quot;10432347&quot;,
+        &quot;parent_id&quot;: null
+      }
+    ]
+  }
+}</code>
+                    </pre>
+                  </div>
+                  <div class="ui bottom attached tab segment" data-tab="schema">
+                    <pre style="white-space: inherit">
+                      <code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;status&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;msg&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;data&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;group_by_created_time&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;group_by_modified_time&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;result&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        }
+      }
+    }
+  }
+}</code>
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/components/accordion.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/components/tab.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/components/transition.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/components/popup.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/prism.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-json.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $('table').addClass('ui table');
+        $('.ui.accordion').accordion({ animateChildren: false, duration: 0 });
+        $('.content.tabbed').each(function(index) {
+          $('.ui.tabular .item', $(this)).tab({ context: $(this) });
+        });
+        $('.ui.vertical.menu').on('click', '.item', function() {
+          $('.ui.vertical.menu .item').removeClass('active');
+          $(this).addClass('active');
+        });
+        $('.ui.empty.circular.label').popup();
+      });
+    </script>
+  </body>
+</html>
+
+
+
+
+
+

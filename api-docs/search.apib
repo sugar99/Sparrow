@@ -1,10 +1,170 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org
+HOST: http://localhost:8080
 
 # Sparrow Search
 
 APIs for Sparrow File Searching
 
+# `Data Structure`
+
+> MSON(Markdown Syntax for Object Notation)是blueprint api使用的对象描述语言，用于抽象地描述JSON, XML, YAML等数据传输格式。
+
+用[MSON格式](https://github.com/apiaryio/mson/blob/master/MSON%20Specification.md)定义API的数据结构，用于：
+* Request Parameters
+* Request Body
+* Response Body 
+
+## `result` - API返回数据格式（Response Body）
+    
+- `status`: `200` (number) - 状态码
+- `msg`: `OK` (string) - 消息
+- `data` (enum, optional, nullable) - 返回数据
+    - (object)
+    - (array)
+
+## <a id="search_type" href="#search_type"> `search_type`(enum[string]) - 文件类型 </a>
++ `all` - 全部
++ image - 图片
++ doc - 文档
++ video - 视频
++ audio - 音频
++ other - 其它文件
+
+
+## `spa_file`
+
+- `id`: `image_10432347` (string)
+- `title`: `算法` (string) - 文件标题
+- `desc`: `《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。` (string)
+- `type`: `image` (search_type)
+- `ext`: `jpg` (string) - 文件拓展名
+- `categories`: 0, 1, 6 (array[number], optional) - 类目id数组
+- `tags`: 6, 133, 137, 2552, 2697, 2998, 22409, 24310 (array[number], optional) - 标签id数组
+- `creator`: `green` (string) - 创建者id
+- `store_key`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - oss存储url
+- `thumbnail`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - 缩略图url
+- `derived_files` (array[string], optional, nullable) - 衍生文件
+- `created_time`: `2017-07-01 21:34:16` (string) - 创建时间
+- `modified_time`: `2017-07-06 21:34:16` (string) - 最后修改时间
+- `version`: `0` (number) - 版本号
+- `original_id`: `10432347` (string) - 原始文件id
+- `parent_id` (string, nullable) - 父版本文件id
+
+```json
+{
+    "id": "image_10432347",
+    "title": "算法",
+    "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
+    "type": "image",
+    "ext": "jpg",
+    "categories": [
+        0,
+        1,
+        6
+    ],
+    "tags": [
+        6,
+        133,
+        137,
+        2552,
+        2697,
+        2998,
+        22409,
+        24310
+    ],
+    "creator": "green",
+    "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+    "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+    "derived_files": [],
+    "created_time": "2017-07-01 21:34:16",
+    "modified_time": "2017-07-06 21:34:16",
+    "version": 0,
+    "original_id": "10432347",
+    "parent_id": null
+}
+```
+
+## `spa_category`
+
+- `id`: 6 (number)
+- `title`: 科技 (string) - 类目名
+
+## `spa_tag`
+
+- `id`: 137 (number)
+- `title`: 算法 (string) - 标签名
+
+## `search_suggestion`
+
+- `keyword`: 算法 (string) - 搜索建议词
+
+## `top_associations`
+
+- `tags` (array[spa_tag])
+    - (spa_tag)
+        - id: 2998 (number)
+        - title: 计算机
+    - (spa_tag)
+        - id: 2697 (number)
+        - title: 计算机科学
+    - (spa_tag)
+        - id: 66 (number)
+        - title: 哲学
+    - (spa_tag)
+        - id: 133 (number)
+        - title: 编程
+        
+    
+- `categories` (array[spa_category])
+    - (spa_category)
+        - `id`: 1 (number)
+        - `title`: 文学
+    - (spa_category)
+        - `id`: 2 (number)
+        - `title`: 流行
+    - (spa_category)
+        - `id`: 3 (number)
+        - `title`: 文化
+    - (spa_category)
+        - `id`: 4 (number)
+        - `title`: 生活
+    - (spa_category)
+        - `id`: 5 (number)
+        - `title`: 经管
+        
+
+## `key_count`
+
+- `key`: all (string)
+- `count`: 100 (number)
+
+## `time_distr` (array[key_count]) - 时间分布
+
+- (key_count)
+    - `key`: `全部` (string)
+    - `doc_count`: `33` (number)
+- (key_count)
+    - `key`: `三天内` (string)
+    - `doc_count`: `6` (number)
+- (key_count)
+    - `key`: `一周内` (string)
+    - `doc_count`: `15` (number)
+- (key_count)
+    - `key`: `一个月内` (string)
+    - `doc_count`: `23` (number)
+- (key_count)
+    - `key`: `三个月内` (string)
+    - `doc_count`: `25` (number)
+- (key_count)
+    - `key`: `半年内` (string)
+    - `doc_count`: `27` (number)
+- (key_count)
+    - `key`: `一年内` (string)
+    - `doc_count`: `27` (number)
+- (key_count)
+    - `key`: `一年前` (string)
+    - `doc_count`: `0` (number)
+    
 
 # Data Structure
 
@@ -133,8 +293,10 @@ APIs for Sparrow File Searching
 
 + Parameters
 
-    + type: all (search_type, optional) - 搜索类型
+    + type: all (search_type, optional)
     
+        <a href="#search_type">搜索类型（click here）</a>
+
     + keyword: `算法` (string, optional) - 搜索关键词
     
         默认为空，返回默认搜索建议
