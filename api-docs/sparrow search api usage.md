@@ -29,12 +29,12 @@ snowboard mock search.apib -b localhost:8080
 
 > 如果导入出错，请升级postman版本
 
-![1562252530470](D:\MyData\Code\Gitlab\sparrow\api-docs\assets\1562252530470.png)
+![1562252530470](./assets/1562252530470.png)
 
 2. 创建测试环境 `elasticsearch` （命名随意），添加环境变量 `backend-url`
 
-![1562252651608](D:\MyData\Code\Gitlab\sparrow\api-docs\assets\1562252651608.png)
+![1562252651608](./assets/1562252651608.png)
 
 3. 使用脚本测试
 
-![1562252802803](D:\MyData\Code\Gitlab\sparrow\api-docs\assets\1562252802803.png)
+![1562252802803](./assets/1562252802803.png)
