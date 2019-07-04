@@ -10,6 +10,10 @@
 
 ### 2.1.启动Mock服务
 
+使用[snowboard](https://github.com/bukalapak/snowboard)Mock数据。
+
+> 好像我用[drakov](https://github.com/Aconex/drakov)会导致出错，而snowboard则没问题。
+
 1. 使用npm安装snowboard
 
 ```bash
