@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ public class SearchController
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "10") int size)
     {
+        SearchType.validateSearchType(type);
         return searchService.getSearchSuggestions(type,keyword,size);
     }
     

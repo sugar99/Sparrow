@@ -10,10 +10,9 @@ public enum ErrorCode
 {
     // 400 BadRequest 参数错误等
     BAD_REQUEST_COMMON(400_000, "Bad Request"),
+    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ {all, image, doc, video, audio, other}"),
     PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),
     PARAM_ERR_REQUEST_DATA_REQUIRED_FIELD_IS_NULL(400_002, "请求数据必须字段不可为空"),
-    PARAM_ERR_USERNAME_REGISTERED_EXISTS(400_003, "注册用户名已存在"),
-    PARAM_ERR_FAVORITE_TYPE(400_004, "favorite_type ∈ {author, book}"),
     
     
     // 403 Forbidden 权限：未授权 / 非法访问

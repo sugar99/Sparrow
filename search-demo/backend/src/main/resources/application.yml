@@ -1,10 +1,5 @@
 
-spring:
-  elasticsearch:
-    rest:
-      uris: localhost:9200
-  data:
-    elasticsearch:
-      cluster-nodes: loacalhost:9200
-
+elasticsearch-config:
+  host: localhost
+  port: 9200
 

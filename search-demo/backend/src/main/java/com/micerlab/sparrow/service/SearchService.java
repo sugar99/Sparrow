@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SearchService
 {
@@ -20,7 +22,8 @@ public class SearchService
     
     public Result getSearchSuggestions(String type, String keyword, int size)
     {
-        return null;
+        List<String> suggestions =  searchDao.suggestions(type, keyword, size);
+        return Result.OK().data(suggestions).build();
     }
     
     public Result getTopAssociations(String keyword, int catgory_count, int tag_count)
