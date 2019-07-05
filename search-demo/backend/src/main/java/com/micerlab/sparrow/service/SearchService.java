@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SearchService
@@ -28,7 +29,8 @@ public class SearchService
     
     public Result getTopAssociations(String keyword, int catgory_count, int tag_count)
     {
-        return null;
+        Map<String, Object> topAssociations = searchDao.topAssociations(keyword, catgory_count, tag_count);
+        return Result.OK().data(topAssociations).build();
     }
     
     public Result getSearchResults()
