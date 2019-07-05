@@ -1,0 +1,10 @@
+
+spring:
+  elasticsearch:
+    rest:
+      uris: localhost:9200
+  data:
+    elasticsearch:
+      cluster-nodes: loacalhost:9200
+
+
