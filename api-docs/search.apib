@@ -28,7 +28,7 @@ APIs for Sparrow File Searching
 + doc - 文档
 + video - 视频
 + audio - 音频
-+ other - 其它文件
++ others - 其它文件
 
 
 ## <a id="spa_file" href="#spa_file"> `spa_file` </a>
@@ -273,7 +273,7 @@ APIs for Sparrow File Searching
 + doc - 文档
 + video - 视频
 + audio - 音频
-+ other - 其它文件
++ others - 其它文件
 
 
 ## `spa_file`
@@ -343,6 +343,24 @@ APIs for Sparrow File Searching
         - `id`: 5 (number)
         - `title`: 经管
 
+## `time_range_filter` (object) - 时间过滤器
+
++ from: `2010-01-01 00:00:00` (string, optional) - 起始时间
+
+    默认为`null`，不限制起始时间
+    * now
+    * yyyy-MM-dd
+    * yyyy-MM-dd HH:mm:ss 
+
++ to: `2019-07-06` (string, optional) - 截至时间
+
+    默认为`null`或now，不限制截至时间
+    * now
+    * yyyy-MM-dd
+    * yyyy-MM-dd HH:mm:ss 
+
+    + Default: now
+
 ## `search_result_params` (object) - 搜索结果参数
 
 + type: all (search_type, optional) - 搜索类型
@@ -387,6 +405,10 @@ APIs for Sparrow File Searching
         + doc
         + pdf
 
++ `created_time`: (time_range_filter) - 创建时间
+
++ `modified_time`: (time_range_filter, optional) - 最后修改时间
+
 + time_zone: +8 (string, optional) - UTC时区
     + Default: +8
 
@@ -398,14 +420,11 @@ APIs for Sparrow File Searching
 
 ## `key_count`
 
-- `key`: all (string)
-- `count`: 100 (number)
+- `key`: `全部` (string)
+- `doc_count`: 100 (number)
 
 ## `time_distr` (array[key_count]) - 时间分布
 
-- (key_count)
-    - `key`: `全部` (string)
-    - `doc_count`: `33` (number)
 - (key_count)
     - `key`: `三天内` (string)
     - `doc_count`: `6` (number)
@@ -431,6 +450,20 @@ APIs for Sparrow File Searching
 ## `search_result_data` (object) - 搜索结果
 
 ### Properties
+
++ `group_by_ext` (array[key_count])
+
+    + Members
+        + (key_count)
+            + `key`: `jpg`
+            + `doc_count`: `50` (number)
+        + (key_count)
+            + `key`: `png`
+            + `doc_count`: `30` (number)
+        + (key_count)
+            + `key`: `gif`
+            + `doc_count`: `20` (number)
+
 
 + `group_by_created_time` (array)
 
