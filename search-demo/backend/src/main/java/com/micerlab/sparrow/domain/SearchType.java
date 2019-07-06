@@ -9,7 +9,7 @@ public enum SearchType
     DOC("doc"),
     VIDEO("video"),
     AUDIO("audio"),
-    OTHER("other")
+    OTHERS("others")
     ;
     
     private String type;

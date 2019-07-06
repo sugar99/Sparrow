@@ -19,10 +19,13 @@ public class SearchDao
     
     private SearchAssociationDao searchAssociationDao;
     
-    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao)
+    private SearchResultDao searchResultDao;
+    
+    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao)
     {
         this.searchSuggestionDao = searchSuggestionDao;
         this.searchAssociationDao = searchAssociationDao;
+        this.searchResultDao = searchResultDao;
     }
     
     public List<String> suggestions(String type, String keyword, int size)
@@ -34,7 +37,7 @@ public class SearchDao
         {
             logger.error(ex.getMessage());
             ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERROR_ELASTICSEARCH, ex.getMessage());
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
         }
     }
     
@@ -47,7 +50,20 @@ public class SearchDao
         {
             logger.error(ex.getMessage());
             ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERROR_ELASTICSEARCH, ex.getMessage());
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+        }
+    }
+    
+    public Map<String, Object> searchResults(Map<String, Object> searchResultParams)
+    {
+        try
+        {
+            return searchResultDao.searchResults(searchResultParams);
+        } catch (IOException ex)
+        {
+            logger.error(ex.getMessage());
+            ex.printStackTrace();
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
         }
     }
 }

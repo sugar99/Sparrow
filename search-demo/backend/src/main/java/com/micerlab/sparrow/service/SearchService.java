@@ -33,8 +33,9 @@ public class SearchService
         return Result.OK().data(topAssociations).build();
     }
     
-    public Result getSearchResults()
+    public Result getSearchResults(Map<String, Object> searchResultParams)
     {
-        return null;
+        Map<String, Object> data = searchDao.searchResults(searchResultParams);
+        return Result.OK().data(data).build();
     }
 }

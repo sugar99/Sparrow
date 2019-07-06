@@ -5,10 +5,9 @@ import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Api
 @RestController
@@ -45,8 +44,8 @@ public class SearchController
     
     @ApiOperation("S3.Search Results")
     @PostMapping("/search/results")
-    public Result getSearchResults()
+    public Result getSearchResults(@RequestBody Map<String, Object> searchResultParams)
     {
-        return null;
+        return searchService.getSearchResults(searchResultParams);
     }
 }
