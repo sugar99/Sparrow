@@ -75,9 +75,6 @@
 <div class="ui fluid secondary vertical menu">
   <a class="item" href="#introduction">Sparrow Search</a>
 </div>
-<div class="ui fluid secondary vertical menu">
-  <a class="item" href="#Data-Structure">Data Structure</a>
-</div>
 <div class="ui horizontal divider">
   <a href="#search">Search</a>
 </div>
@@ -176,7 +173,7 @@
 <p>audio - 音频</p>
 </li>
 <li>
-<p>other - 其它文件</p>
+<p>others - 其它文件</p>
 </li>
 </ul>
 <h2><a id="spa_file" href="#spa_file"> <code>spa_file</code> </a></h2>
@@ -1027,6 +1024,14 @@
     &quot;doc&quot;,
     &quot;pdf&quot;
   ],
+  &quot;created_time&quot;: {
+    &quot;from&quot;: &quot;2010-01-01 00:00:00&quot;,
+    &quot;to&quot;: &quot;2019-07-06&quot;
+  },
+  &quot;modified_time&quot;: {
+    &quot;from&quot;: &quot;2010-01-01 00:00:00&quot;,
+    &quot;to&quot;: &quot;2019-07-06&quot;
+  },
   &quot;time_zone&quot;: &quot;+8&quot;,
   &quot;page&quot;: 2,
   &quot;per_page&quot;: 40
@@ -1051,7 +1056,7 @@
             &quot;doc&quot;,
             &quot;video&quot;,
             &quot;audio&quot;,
-            &quot;other&quot;
+            &quot;others&quot;
           ]
         }
       ]
@@ -1081,6 +1086,28 @@
     },
     &quot;exts&quot;: {
       &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;created_time&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;from&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;to&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
+    },
+    &quot;modified_time&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: {
+        &quot;from&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;to&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      }
     },
     &quot;time_zone&quot;: {
       &quot;type&quot;: &quot;string&quot;
@@ -1134,95 +1161,89 @@
   &quot;status&quot;: 200,
   &quot;msg&quot;: &quot;OK&quot;,
   &quot;data&quot;: {
-    &quot;group_by_created_time&quot;: [
-      {
-        &quot;key&quot;: &quot;all&quot;,
-        &quot;count&quot;: 100
-      },
+    &quot;group_by_ext&quot;: [
       {
         &quot;key&quot;: &quot;全部&quot;,
-        &quot;count&quot;: 100,
-        &quot;doc_count&quot;: 33
+        &quot;doc_count&quot;: 100
+      },
+      {
+        &quot;key&quot;: &quot;jpg&quot;,
+        &quot;doc_count&quot;: 50
+      },
+      {
+        &quot;key&quot;: &quot;png&quot;,
+        &quot;doc_count&quot;: 30
+      },
+      {
+        &quot;key&quot;: &quot;gif&quot;,
+        &quot;doc_count&quot;: 20
+      }
+    ],
+    &quot;group_by_created_time&quot;: [
+      {
+        &quot;key&quot;: &quot;全部&quot;,
+        &quot;doc_count&quot;: 100
       },
       {
         &quot;key&quot;: &quot;三天内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 6
       },
       {
         &quot;key&quot;: &quot;一周内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 15
       },
       {
         &quot;key&quot;: &quot;一个月内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 23
       },
       {
         &quot;key&quot;: &quot;三个月内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 25
       },
       {
         &quot;key&quot;: &quot;半年内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 27
       },
       {
         &quot;key&quot;: &quot;一年内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 27
       },
       {
         &quot;key&quot;: &quot;一年前&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 0
       }
     ],
     &quot;group_by_modified_time&quot;: [
       {
-        &quot;key&quot;: &quot;all&quot;,
-        &quot;count&quot;: 100
-      },
-      {
         &quot;key&quot;: &quot;全部&quot;,
-        &quot;count&quot;: 100,
-        &quot;doc_count&quot;: 33
+        &quot;doc_count&quot;: 100
       },
       {
         &quot;key&quot;: &quot;三天内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 6
       },
       {
         &quot;key&quot;: &quot;一周内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 15
       },
       {
         &quot;key&quot;: &quot;一个月内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 23
       },
       {
         &quot;key&quot;: &quot;三个月内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 25
       },
       {
         &quot;key&quot;: &quot;半年内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 27
       },
       {
         &quot;key&quot;: &quot;一年内&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 27
       },
       {
         &quot;key&quot;: &quot;一年前&quot;,
-        &quot;count&quot;: 100,
         &quot;doc_count&quot;: 0
       }
     ],
@@ -1588,6 +1609,9 @@
     &quot;data&quot;: {
       &quot;type&quot;: &quot;object&quot;,
       &quot;properties&quot;: {
+        &quot;group_by_ext&quot;: {
+          &quot;type&quot;: &quot;array&quot;
+        },
         &quot;group_by_created_time&quot;: {
           &quot;type&quot;: &quot;array&quot;
         },
