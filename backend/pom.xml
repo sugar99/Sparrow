@@ -85,6 +85,13 @@
             <artifactId>java-jwt</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>3.0.10</version>
+        </dependency>
+
         <dependency>
             <groupId>org.greenrobot</groupId>
             <artifactId>eventbus</artifactId>
