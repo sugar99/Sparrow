@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.service;
+package com.micerlab.sparrow.service.file;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilter;
@@ -7,14 +7,6 @@ import com.micerlab.sparrow.domain.SpaFilterType;
 import java.util.Map;
 
 public interface FileService {
-
-    Result getPolicy(Map<String, Object> params);
-
-    Result getPresignedUrl(Map<String, Object> params);
-
-    Result deleteFile(Map<String, Object> params);
-
-    Result downloadFile(String file_id);
 
     Result getFileVersions(String file_id);
     

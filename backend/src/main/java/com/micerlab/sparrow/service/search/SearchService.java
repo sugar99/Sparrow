@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.service;
+package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilterType;
@@ -14,4 +14,8 @@ public interface SearchService
     Result getSearchResults(Map<String, Object> searchResultParams);
     
     Result searchSpaFilterTypes(SpaFilterType spaFilterType, String keyword, int size);
+
+    Result searchUser(String keyword);
+
+    Result searchGroup(String keyword);
 }

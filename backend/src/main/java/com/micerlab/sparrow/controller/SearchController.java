@@ -3,7 +3,7 @@ package com.micerlab.sparrow.controller;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.domain.SpaFilterType;
-import com.micerlab.sparrow.service.SearchService;
+import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
