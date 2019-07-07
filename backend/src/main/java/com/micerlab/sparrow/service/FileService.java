@@ -8,14 +8,6 @@ import java.util.Map;
 
 public interface FileService {
 
-    Result getPolicy(Map<String, Object> params);
-
-    Result getPresignedUrl(Map<String, Object> params);
-
-    Result deleteFile(Map<String, Object> params);
-
-    Result downloadFile(String file_id);
-
     Result getFileVersions(String file_id);
     
     Result createFileMeta(String file_id, Map<String, Object> params);

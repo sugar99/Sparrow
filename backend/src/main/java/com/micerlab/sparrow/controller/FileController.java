@@ -4,6 +4,7 @@ import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilter;
 import com.micerlab.sparrow.domain.SpaFilterType;
 import com.micerlab.sparrow.service.FileService;
+import com.micerlab.sparrow.service.FileStoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,32 +20,35 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private FileStoreService fileStoreService;
+
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
     public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         // TODO: ACL(httpServletRequest)
-        return fileService.getPolicy(params);
+        return fileStoreService.getPolicy(params);
     }
 
     @ApiOperation("F2.获取签名URL（Minio）")
     @PostMapping("/v1/files/url")
     public Result getPresignedUrl(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         // TODO: ACL(httpServletRequest)
-        return fileService.getPresignedUrl(params);
+        return fileStoreService.getPresignedUrl(params);
     }
 
     @ApiOperation("F6.删除文件")
     @DeleteMapping("/v1/files")
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         // TODO: ACL(httpServletRequest)
-        return fileService.deleteFile(params);
+        return fileStoreService.deleteFile(params);
     }
 
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
     public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
         // TODO: ACL(httpServletRequest)
-        return fileService.downloadFile(file_id);
+        return fileStoreService.downloadFile(file_id);
     }
 
     @ApiOperation("F8.获取文件历史版本列表")

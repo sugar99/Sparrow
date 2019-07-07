@@ -3,9 +3,11 @@ package com.micerlab.sparrow.service.impl;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.service.FileStoreService;
 import com.micerlab.sparrow.utils.BusinessException;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class FileStoreMinioService implements FileStoreService {
 
     public Result getPolicy(Map<String, Object> params){
