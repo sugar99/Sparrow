@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.service;
+package com.micerlab.sparrow.service.fileStore;
 
 import com.micerlab.sparrow.domain.Result;
 
