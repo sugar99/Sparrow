@@ -48,7 +48,7 @@ public class SearchController
     }
     
     @ApiOperation("S4.搜索类目或标签")
-    @GetMapping("/v1/search/{filter_types:((tags)|(categories))}")
+    @GetMapping("/v1/search/{filter_types:(?:tags|categories)}")
     public Result searchSpaFilterTypes(
             @PathVariable String filter_types,
             @RequestParam(defaultValue = "") String keyword,

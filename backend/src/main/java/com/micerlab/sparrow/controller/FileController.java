@@ -100,7 +100,7 @@ public class FileController {
     
     
     @ApiOperation("F11.创建类目或标签")
-    @PostMapping("/v1/{filter_types:(tags)|(categories)}")
+    @PostMapping("/v1/{filter_types:(?:tags|categories)}")
     public Result createSpaFilter(
             @PathVariable String filter_types,
             @RequestBody SpaFilter spaFilter
@@ -112,7 +112,7 @@ public class FileController {
     
     
     @ApiOperation("F12.获取类目或标签")
-    @GetMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @GetMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result retrieveSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id
@@ -123,7 +123,7 @@ public class FileController {
     }
     
     @ApiOperation("F13. 更新类目或标签")
-    @PutMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @PutMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result updateSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id,
@@ -135,7 +135,7 @@ public class FileController {
     }
     
     @ApiOperation("F14.删除类目或标签")
-    @DeleteMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @DeleteMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result deleteSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id
@@ -146,7 +146,7 @@ public class FileController {
     }
     
     @ApiOperation("F15.获取文件的类目或标签")
-    @GetMapping("/v1/files/{file_id}/{filter_types:(tags)|(categories)}")
+    @GetMapping("/v1/files/{file_id}/{filter_types:(?:tags|categories)}")
     public Result retrieveFileSpaFilters(
             HttpServletRequest request,
             @PathVariable String file_id,
@@ -160,7 +160,7 @@ public class FileController {
     }
     
     @ApiOperation("F16.更新文件的类目或标签")
-    @PutMapping("/v1/files/{file_id}/{filter_types:(tags)|(categories)}")
+    @PutMapping("/v1/files/{file_id}/{filter_types:(?:tags|categories)}")
     public Result updateFileSpaFilters(
             HttpServletRequest request,
             @PathVariable String file_id,
