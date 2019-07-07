@@ -41,6 +41,7 @@ public class FileController {
     @DeleteMapping("/v1/files")
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         // TODO: ACL(httpServletRequest)
+        // TODO: delete es meta
         return fileStoreService.deleteFile(params);
     }
 
