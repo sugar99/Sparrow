@@ -185,7 +185,13 @@
 <p><code>title</code>: <code>算法</code> (string) - 文件标题</p>
 </li>
 <li>
-<p><code>desc</code>: <code>《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。</code> (string)</p>
+<p><code>desc</code>: <code>《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。</code> (string) - 描述</p>
+</li>
+<li>
+<p><code>creator</code>: <code>green</code> (string) - 创建者id</p>
+</li>
+<li>
+<p><code>doc_id</code>: <code>1</code> (string) - 所属文档id</p>
 </li>
 <li>
 <p><code>type</code>: <code>image</code> (search_type)</p>
@@ -194,13 +200,13 @@
 <p><code>ext</code>: <code>jpg</code> (string) - 文件拓展名</p>
 </li>
 <li>
+<p><code>size</code>: 1024 (number) - 文件大小（字节数）</p>
+</li>
+<li>
 <p><code>categories</code>: 0, 1, 6 (array[number], optional) - 类目id数组</p>
 </li>
 <li>
 <p><code>tags</code>: 6, 133, 137, 2552, 2697, 2998, 22409, 24310 (array[number], optional) - 标签id数组</p>
-</li>
-<li>
-<p><code>creator</code>: <code>green</code> (string) - 创建者id</p>
 </li>
 <li>
 <p><code>store_key</code>: <code>http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg</code> (string) - oss存储url</p>
@@ -231,8 +237,11 @@
     <span class="hljs-attr">"id"</span>: <span class="hljs-string">"image_10432347"</span>,
     <span class="hljs-attr">"title"</span>: <span class="hljs-string">"算法"</span>,
     <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。"</span>,
+    <span class="hljs-attr">"creator"</span>: <span class="hljs-string">"green"</span>,
+    <span class="hljs-attr">"doc_id"</span>: <span class="hljs-string">"1"</span>,
     <span class="hljs-attr">"type"</span>: <span class="hljs-string">"image"</span>,
     <span class="hljs-attr">"ext"</span>: <span class="hljs-string">"jpg"</span>,
+    <span class="hljs-attr">"size"</span>: <span class="hljs-number">1024</span>,
     <span class="hljs-attr">"categories"</span>: [
         <span class="hljs-number">0</span>,
         <span class="hljs-number">1</span>,
@@ -248,7 +257,6 @@
         <span class="hljs-number">22409</span>,
         <span class="hljs-number">24310</span>
     ],
-    <span class="hljs-attr">"creator"</span>: <span class="hljs-string">"green"</span>,
     <span class="hljs-attr">"store_key"</span>: <span class="hljs-string">"http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"</span>,
     <span class="hljs-attr">"thumbnail"</span>: <span class="hljs-string">"http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"</span>,
     <span class="hljs-attr">"derived_files"</span>: [],
@@ -348,6 +356,33 @@
 </ul>
 </li>
 </ul>
+<h2><code>time_range_filter</code> (object) - 时间过滤器</h2>
+<ul>
+<li>
+<p>from: <code>2010-01-01 00:00:00</code> (string, optional) - 起始时间</p>
+<p>默认为<code>null</code>，不限制起始时间</p>
+<ul>
+<li>now</li>
+<li>yyyy-MM-dd</li>
+<li>yyyy-MM-dd HH:mm:ss</li>
+</ul>
+  <br/>
+</li>
+<li>
+<p>to: <code>2019-07-06</code> (string, optional) - 截至时间</p>
+<p>默认为<code>null</code>或now，不限制截至时间</p>
+<ul>
+<li>now</li>
+<li>yyyy-MM-dd</li>
+<li>yyyy-MM-dd HH:mm:ss</li>
+</ul>
+  <br/>
+<ul>
+<li>Default: now</li>
+</ul>
+  <br/>
+</li>
+</ul>
 <h2><a id="search_result_params" href="#search_result_params"> <code>search_result_params</code> (object) - 搜索结果参数 </a></h2>
 <ul>
 <li>
@@ -410,6 +445,16 @@
   <br/>
 </li>
 <li>
+<p><code>created_time</code>: (time_range_filter, optional) - 创建时间</p>
+<p>默认不过滤创建时间，返回所有文件</p>
+  <br/>
+</li>
+<li>
+<p><code>modified_time</code>: (time_range_filter, optional) - 最后修改时间</p>
+<p>默认不过滤修改时间，返回所有文件</p>
+  <br/>
+</li>
+<li>
 <p>time_zone: +8 (string, optional) - UTC时区</p>
 <ul>
 <li>Default: +8</li>
@@ -445,7 +490,7 @@
 <p>(key_count)</p>
 <ul>
 <li><code>key</code>: <code>全部</code> (string)</li>
-<li><code>doc_count</code>: <code>33</code> (number)</li>
+<li><code>doc_count</code>: <code>100</code> (number)</li>
 </ul>
 </li>
 <li>
@@ -487,20 +532,55 @@
 <p>(key_count)</p>
 <ul>
 <li><code>key</code>: <code>一年内</code> (string)</li>
-<li><code>doc_count</code>: <code>27</code> (number)</li>
+<li><code>doc_count</code>: <code>50</code> (number)</li>
 </ul>
 </li>
 <li>
 <p>(key_count)</p>
 <ul>
 <li><code>key</code>: <code>一年前</code> (string)</li>
-<li><code>doc_count</code>: <code>0</code> (number)</li>
+<li><code>doc_count</code>: <code>50</code> (number)</li>
 </ul>
 </li>
 </ul>
 <h2><a id="search_result_data" href="#search_result_data"> <code>search_result_data</code> (object) - 搜索结果 </a></h2>
 <h3>Properties</h3>
 <ul>
+<li>
+<p><code>group_by_ext</code> (array[key_count])</p>
+<ul>
+<li>Members
+<ul>
+<li>(key_count)
+<ul>
+<li><code>key</code>: <code>全部</code> (string)</li>
+<li><code>doc_count</code>: <code>100</code> (number)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>(key_count)
+<ul>
+<li><code>key</code>: <code>jpg</code></li>
+<li><code>doc_count</code>: <code>50</code> (number)</li>
+</ul>
+</li>
+<li>(key_count)
+<ul>
+<li><code>key</code>: <code>png</code></li>
+<li><code>doc_count</code>: <code>30</code> (number)</li>
+</ul>
+</li>
+<li>(key_count)
+<ul>
+<li><code>key</code>: <code>gif</code></li>
+<li><code>doc_count</code>: <code>20</code> (number)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li>
 <p><code>group_by_created_time</code> (array)</p>
 <ul>
@@ -1206,11 +1286,11 @@
       },
       {
         &quot;key&quot;: &quot;一年内&quot;,
-        &quot;doc_count&quot;: 27
+        &quot;doc_count&quot;: 50
       },
       {
         &quot;key&quot;: &quot;一年前&quot;,
-        &quot;doc_count&quot;: 0
+        &quot;doc_count&quot;: 50
       }
     ],
     &quot;group_by_modified_time&quot;: [
@@ -1240,11 +1320,11 @@
       },
       {
         &quot;key&quot;: &quot;一年内&quot;,
-        &quot;doc_count&quot;: 27
+        &quot;doc_count&quot;: 50
       },
       {
         &quot;key&quot;: &quot;一年前&quot;,
-        &quot;doc_count&quot;: 0
+        &quot;doc_count&quot;: 50
       }
     ],
     &quot;result&quot;: [
@@ -1252,8 +1332,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1269,7 +1352,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1283,8 +1365,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1300,7 +1385,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1314,8 +1398,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1331,7 +1418,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1345,8 +1431,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1362,7 +1451,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1376,8 +1464,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1393,7 +1484,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1407,8 +1497,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1424,7 +1517,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1438,8 +1530,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1455,7 +1550,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1469,8 +1563,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1486,7 +1583,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1500,8 +1596,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1517,7 +1616,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1531,8 +1629,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1548,7 +1649,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
@@ -1562,8 +1662,11 @@
         &quot;id&quot;: &quot;image_10432347&quot;,
         &quot;title&quot;: &quot;算法&quot;,
         &quot;desc&quot;: &quot;《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。&quot;,
+        &quot;creator&quot;: &quot;green&quot;,
+        &quot;doc_id&quot;: &quot;1&quot;,
         &quot;type&quot;: &quot;image&quot;,
         &quot;ext&quot;: &quot;jpg&quot;,
+        &quot;size&quot;: 1024,
         &quot;categories&quot;: [
           0,
           1,
@@ -1579,7 +1682,6 @@
           22409,
           24310
         ],
-        &quot;creator&quot;: &quot;green&quot;,
         &quot;store_key&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;thumbnail&quot;: &quot;http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg&quot;,
         &quot;derived_files&quot;: [],
