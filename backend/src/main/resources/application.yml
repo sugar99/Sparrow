@@ -2,5 +2,8 @@
 elasticsearch-config:
   host: localhost
   port: 9200
+
 logging.level.*: DEBUG
 
+logging:
+  config: classpath:logback-boot.xml
