@@ -7,20 +7,24 @@ import java.util.Map;
 
 public interface ResourceService {
 
-    public Result createResource(String type, String cur_id);
+    Result createResource(String type, String cur_id);
 
-    public Result getResourceMeta(String resource_id);
+    Result getResourceMeta(String resource_id);
 
-    public Result updateResourceMeta(String resource_id, Map<String, Object> paramMap);
+    Result updateResourceMeta(String resource_id, Map<String, Object> paramMap);
 
-    public Result deleteResource(String resource_id);
+    Result deleteResource(String resource_id);
 
-    public Result getSlavesResource(String resource_id);
+    Result getSlavesResource(String resource_id);
 
-    public Result getAuthGroups(String resource_id);
+    Result getAuthGroups(String resource_id);
 
-    public Result addPermission(String resource_id, Map<String, Object> paramMap);
+    Result addPermission(String resource_id, Map<String, Object> paramMap);
 
-    public Result removePermission(String resource_id, Map<String, Object> paramMap);
+    Result removePermission(String resource_id, Map<String, Object> paramMap);
+
+    Result retrieveDocMeta(String doc_id);
+
+    Result updateDocMeta(String doc_id, Map<String, Object> parms);
 
 }

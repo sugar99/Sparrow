@@ -47,4 +47,16 @@ public class ResourceServiceImpl implements ResourceService{
     public Result removePermission(String resource_id, Map<String, Object> paramMap) {
         return null;
     }
+
+    @Override
+    public Result retrieveDocMeta(String doc_id)
+    {
+        return null;
+    }
+
+    @Override
+    public Result updateDocMeta(String doc_id, Map<String, Object> parms)
+    {
+        return null;
+    }
 }

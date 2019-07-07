@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Api
@@ -65,7 +66,32 @@ public class ResourceController {
         return resourceService.getAuthGroups(resource_id);
     }
 
-    @ApiOperation("D7.授予群组对指定目录或文档的操作权限")
+    @ApiOperation("D7.获取文档Meta")
+    @GetMapping("/v1/docs/{doc_id}")
+    public Result retrieveDocMeta(
+            HttpServletRequest request,
+            @PathVariable String doc_id
+    )
+    {
+        // TODO: ACL 鉴定是否拥有该 doc_id 的读取权限
+
+        return resourceService.retrieveDocMeta(doc_id);
+    }
+
+    @ApiOperation("D8.更新文档Meta")
+    @PatchMapping("/v1/docs/{doc_id}")
+    public Result updateDocMeta(
+            HttpServletRequest request,
+            @PathVariable String doc_id,
+            @RequestBody Map<String, Object> parms
+    )
+    {
+        // TODO: ACL 鉴定是否拥有该 doc_id 的修改权限
+
+        return resourceService.updateDocMeta(doc_id, parms);
+    }
+
+    @ApiOperation("A1.授予群组对指定目录或文档的操作权限")
     @PostMapping("/v1/resources/{resource_id}/permissions")
     @ResponseBody
     public Result addPermission(@PathVariable("resource_id") String resource_id,
@@ -74,7 +100,7 @@ public class ResourceController {
         return resourceService.addPermission(resource_id, paramMap);
     }
 
-    @ApiOperation("D8.移除群组对指定目录或文档的操作权限")
+    @ApiOperation("A2.移除群组对指定目录或文档的操作权限")
     @DeleteMapping("/v1/resources/{resource_id}/permissions")
     @ResponseBody
     public Result removePermission(@PathVariable("resource_id") String resource_id,

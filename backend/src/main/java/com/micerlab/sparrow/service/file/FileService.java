@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.service;
+package com.micerlab.sparrow.service.file;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilter;

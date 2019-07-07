@@ -1,9 +1,9 @@
-package com.micerlab.sparrow.service.impl;
+package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.dao.es.SearchDao;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilterType;
-import com.micerlab.sparrow.service.SearchService;
+import com.micerlab.sparrow.service.search.SearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,16 @@ public class SearchServiceImpl implements SearchService
     
     public Result searchSpaFilterTypes(SpaFilterType spaFilterType, String keyword, int size)
     {
+        return null;
+    }
+
+    @Override
+    public Result searchUser(String keyword) {
+        return null;
+    }
+
+    @Override
+    public Result searchGroup(String keyword) {
         return null;
     }
 }
