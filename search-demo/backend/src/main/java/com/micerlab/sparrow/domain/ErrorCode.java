@@ -14,6 +14,8 @@ public enum ErrorCode
     BAD_REQUEST_COMMON(400_000, "Bad Request"),
 //    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ {all, image, doc, video, audio, others}"),
     PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(SearchType.values()).toString()),
+    PARAM_ERR_FILTER_TYPE(400_002, "filter_type ∈ {tag, category}"),
+    PARAM_ERR_FILTER_TYPES(400_003, "filter_types ∈ {tags, categories}"),
     PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),
     PARAM_ERR_REQUEST_DATA_REQUIRED_FIELD_IS_NULL(400_002, "请求数据必须字段不可为空"),
     

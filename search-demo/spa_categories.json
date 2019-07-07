@@ -1,0 +1,6 @@
+{"_index":"spa_categories","_type":"_doc","_id":"1","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.898Z","title":"文学","id":1}}
+{"_index":"spa_categories","_type":"_doc","_id":"4","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.898Z","title":"生活","id":4}}
+{"_index":"spa_categories","_type":"_doc","_id":"3","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.878Z","title":"文化","id":3}}
+{"_index":"spa_categories","_type":"_doc","_id":"2","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.898Z","title":"流行","id":2}}
+{"_index":"spa_categories","_type":"_doc","_id":"5","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.899Z","title":"经管","id":5}}
+{"_index":"spa_categories","_type":"_doc","_id":"6","_score":1,"_source":{"@version":"1","@timestamp":"2019-06-23T11:40:57.899Z","title":"科技","id":6}}

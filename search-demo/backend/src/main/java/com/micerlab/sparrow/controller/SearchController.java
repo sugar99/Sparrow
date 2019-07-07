@@ -1,10 +1,12 @@
 package com.micerlab.sparrow.controller;
 
+import com.micerlab.sparrow.domain.SpaFilterType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -13,15 +15,11 @@ import java.util.Map;
 @RestController
 public class SearchController
 {
+    @Autowired
     private SearchService searchService;
     
-    public SearchController(SearchService searchService)
-    {
-        this.searchService = searchService;
-    }
-    
-    @ApiOperation("S1.Search Suggestions")
-    @GetMapping("/search/suggestions")
+    @ApiOperation("S1.搜索建议")
+    @GetMapping("/v1/search/suggestions")
     public Result getSearchSuggestions(
             @RequestParam(defaultValue = "all") String type,
             @RequestParam(defaultValue = "") String keyword,
@@ -31,8 +29,8 @@ public class SearchController
         return searchService.getSearchSuggestions(type,keyword,size);
     }
     
-    @ApiOperation("S2.Top Associations")
-    @GetMapping("/search/associations")
+    @ApiOperation("S2.获取高度相关的类目标签")
+    @GetMapping("/v1/search/associations")
     public Result getTopAssociations(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "5") int category_count,
@@ -42,10 +40,24 @@ public class SearchController
         return searchService.getTopAssociations(keyword, category_count, tag_count);
     }
     
-    @ApiOperation("S3.Search Results")
-    @PostMapping("/search/results")
+    @ApiOperation("S3.搜索结果")
+    @PostMapping("/v1/search/results")
     public Result getSearchResults(@RequestBody Map<String, Object> searchResultParams)
     {
         return searchService.getSearchResults(searchResultParams);
     }
+    
+    @ApiOperation("S4.搜索类目或标签")
+    @GetMapping("/v1/search/{filter_types:(tags)|(categories)}")
+    public Result searchSpaFilterTypes(
+            @PathVariable String filter_types,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int size
+    )
+    {
+        SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
+        return searchService.searchSpaFilterTypes(spaFilterType, keyword, size);
+    }
+    
+    
 }

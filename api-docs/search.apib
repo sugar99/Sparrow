@@ -35,12 +35,14 @@ APIs for Sparrow File Searching
 
 - `id`: `image_10432347` (string)
 - `title`: `算法` (string) - 文件标题
-- `desc`: `《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。` (string)
+- `desc`: `《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。` (string) - 描述
+- `creator`: `green` (string) - 创建者id
+- `doc_id`: `1` (string) - 所属文档id
 - `type`: `image` (search_type)
 - `ext`: `jpg` (string) - 文件拓展名
+- `size`: 1024 (number) - 文件大小（字节数）
 - `categories`: 0, 1, 6 (array[number], optional) - 类目id数组
 - `tags`: 6, 133, 137, 2552, 2697, 2998, 22409, 24310 (array[number], optional) - 标签id数组
-- `creator`: `green` (string) - 创建者id
 - `store_key`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - oss存储url
 - `thumbnail`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - 缩略图url
 - `derived_files` (array[string], optional, nullable) - 衍生文件
@@ -55,8 +57,11 @@ APIs for Sparrow File Searching
     "id": "image_10432347",
     "title": "算法",
     "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
+    "creator": "green",
+    "doc_id": "1",
     "type": "image",
     "ext": "jpg",
+    "size": 1024,
     "categories": [
         0,
         1,
@@ -72,7 +77,6 @@ APIs for Sparrow File Searching
         22409,
         24310
     ],
-    "creator": "green",
     "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
     "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
     "derived_files": [],
@@ -132,6 +136,30 @@ APIs for Sparrow File Searching
         - `id`: 5 (number)
         - `title`: 经管
         
+## `time_range_filter` (object) - 时间过滤器
+
++ from: `2010-01-01 00:00:00` (string, optional) - 起始时间
+
+    默认为`null`，不限制起始时间
+    * now
+    * yyyy-MM-dd
+    * yyyy-MM-dd HH:mm:ss 
+
+    <br/>
+
++ to: `2019-07-06` (string, optional) - 截至时间
+
+    默认为`null`或now，不限制截至时间
+    * now
+    * yyyy-MM-dd
+    * yyyy-MM-dd HH:mm:ss 
+
+    <br/>
+
+    + Default: now
+
+    <br/>
+
 ## <a id="search_result_params" href="#search_result_params"> `search_result_params` (object) - 搜索结果参数 </a>
 
 + type: all (search_type, optional) - <a href="#search_type">搜索类型</a>
@@ -185,6 +213,18 @@ APIs for Sparrow File Searching
 
     <br/>
 
++ `created_time`: (time_range_filter, optional) - 创建时间
+
+    默认不过滤创建时间，返回所有文件
+
+    <br/>
+
++ `modified_time`: (time_range_filter, optional) - 最后修改时间
+
+    默认不过滤修改时间，返回所有文件
+
+    <br/>
+
 + time_zone: +8 (string, optional) - UTC时区
     + Default: +8
 
@@ -207,7 +247,7 @@ APIs for Sparrow File Searching
 
 - (key_count)
     - `key`: `全部` (string)
-    - `doc_count`: `33` (number)
+    - `doc_count`: `100` (number)
 - (key_count)
     - `key`: `三天内` (string)
     - `doc_count`: `6` (number)
@@ -225,14 +265,31 @@ APIs for Sparrow File Searching
     - `doc_count`: `27` (number)
 - (key_count)
     - `key`: `一年内` (string)
-    - `doc_count`: `27` (number)
+    - `doc_count`: `50` (number)
 - (key_count)
     - `key`: `一年前` (string)
-    - `doc_count`: `0` (number)
+    - `doc_count`: `50` (number)
     
 ## <a id="search_result_data" href="#search_result_data"> `search_result_data` (object) - 搜索结果 </a>
 
 ### Properties
+
++ `group_by_ext` (array[key_count])
+
+    + Members
+        - (key_count)
+            - `key`: `全部` (string)
+            - `doc_count`: `100` (number)
+        + (key_count)
+            + `key`: `jpg`
+            + `doc_count`: `50` (number)
+        + (key_count)
+            + `key`: `png`
+            + `doc_count`: `30` (number)
+        + (key_count)
+            + `key`: `gif`
+            + `doc_count`: `20` (number)
+
 
 + `group_by_created_time` (array)
 
@@ -280,12 +337,14 @@ APIs for Sparrow File Searching
 
 - `id`: `image_10432347` (string)
 - `title`: `算法` (string) - 文件标题
-- `desc`: `《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。` (string)
+- `desc`: `《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。` (string) - 描述
+- `creator`: `green` (string) - 创建者id
+- `doc_id`: `1` (string) - 所属文档id
 - `type`: `image` (search_type)
 - `ext`: `jpg` (string) - 文件拓展名
+- `size`: 1024 (number) - 文件大小（字节数）
 - `categories`: 0, 1, 6 (array[number], optional) - 类目id数组
 - `tags`: 6, 133, 137, 2552, 2697, 2998, 22409, 24310 (array[number], optional) - 标签id数组
-- `creator`: `green` (string) - 创建者id
 - `store_key`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - oss存储url
 - `thumbnail`: `http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg` (string) - 缩略图url
 - `derived_files` (array[string], optional, nullable) - 衍生文件
@@ -405,9 +464,13 @@ APIs for Sparrow File Searching
         + doc
         + pdf
 
-+ `created_time`: (time_range_filter) - 创建时间
++ `created_time`: (time_range_filter, optional) - 创建时间
+
+    默认不过滤创建时间，返回所有文件
 
 + `modified_time`: (time_range_filter, optional) - 最后修改时间
+
+    默认不过滤修改时间，返回所有文件
 
 + time_zone: +8 (string, optional) - UTC时区
     + Default: +8
@@ -442,10 +505,10 @@ APIs for Sparrow File Searching
     - `doc_count`: `27` (number)
 - (key_count)
     - `key`: `一年内` (string)
-    - `doc_count`: `27` (number)
+    - `doc_count`: `50` (number)
 - (key_count)
     - `key`: `一年前` (string)
-    - `doc_count`: `0` (number)
+    - `doc_count`: `50` (number)
     
 ## `search_result_data` (object) - 搜索结果
 

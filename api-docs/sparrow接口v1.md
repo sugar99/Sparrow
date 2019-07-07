@@ -281,10 +281,10 @@ Response Body
 
 #### S1.搜索建议
 
-[GET] /search/suggestions{?type,keyword,size}
+[GET] `/v1/search/suggestions{?type,keyword,size}`
 
 ```http
-GET /search/suggestions?type=all&keyword=算法&size=10
+GET /v1/search/suggestions?type=all&keyword=算法&size=10
 ```
 
 Response Body
@@ -310,10 +310,10 @@ Response Body
 
 #### S2.获取高度相关的类目标签
 
-[GET] `/search/top-associations{?keyword,tag_count,category_count}`
+[GET] `/v1/search/top-associations{?keyword,tag_count,category_count}`
 
 ```http
-GET /search/top-associations?keyword=算法&tag_count=5&category_count=5
+GET /v1/search/top-associations?keyword=算法&tag_count=5&category_count=5
 ```
 
 Response Body
@@ -377,7 +377,7 @@ Response Body
 
 #### S3.搜索结果
 
-[POST] `/search/results` 
+[POST] `/v1/search/results` 
 
 ```json
 {
@@ -399,6 +399,14 @@ Response Body
     "doc",
     "pdf"
   ],
+  "created_time": {
+    "from": "2010-01-01 00:00:00",
+    "to": "2019-07-06"
+  },
+  "modified_time": {
+    "from": "2010-01-01 00:00:00",
+    "to": "2019-07-06"
+  },
   "time_zone": "+8",
   "page": 2,
   "per_page": 40
@@ -412,10 +420,28 @@ Response Body
   "status": 200,
   "msg": "OK",
   "data": {
+    "group_by_ext": [
+      {
+        "key": "全部",
+        "doc_count": 100
+      },
+      {
+        "key": "jpg",
+        "doc_count": 50
+      },
+      {
+        "key": "png",
+        "doc_count": 30
+      },
+      {
+        "key": "gif",
+        "doc_count": 20
+      }
+    ],
     "group_by_created_time": [
       {
         "key": "全部",
-        "doc_count": 33
+        "doc_count": 100
       },
       {
         "key": "三天内",
@@ -439,17 +465,17 @@ Response Body
       },
       {
         "key": "一年内",
-        "doc_count": 27
+        "doc_count": 50
       },
       {
         "key": "一年前",
-        "doc_count": 0
+        "doc_count": 50
       }
     ],
     "group_by_modified_time": [
       {
         "key": "全部",
-        "doc_count": 33
+        "doc_count": 100
       },
       {
         "key": "三天内",
@@ -473,11 +499,11 @@ Response Body
       },
       {
         "key": "一年内",
-        "doc_count": 27
+        "doc_count": 50
       },
       {
         "key": "一年前",
-        "doc_count": 0
+        "doc_count": 50
       }
     ],
     "result": [
@@ -485,8 +511,11 @@ Response Body
         "id": "image_10432347",
         "title": "算法",
         "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
+        "creator": "green",
+        "doc_id": "1",
         "type": "image",
         "ext": "jpg",
+        "size": 1024,
         "categories": [
           0,
           1,
@@ -502,7 +531,39 @@ Response Body
           22409,
           24310
         ],
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+        "derived_files": [],
+        "created_time": "2017-07-01 21:34:16",
+        "modified_time": "2017-07-06 21:34:16",
+        "version": 0,
+        "original_id": "10432347",
+        "parent_id": null
+      },
+      {
+        "id": "image_10432347",
+        "title": "算法",
+        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
         "creator": "green",
+        "doc_id": "1",
+        "type": "image",
+        "ext": "jpg",
+        "size": 1024,
+        "categories": [
+          0,
+          1,
+          6
+        ],
+        "tags": [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
         "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
         "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
         "derived_files": [],
@@ -519,12 +580,12 @@ Response Body
 
 #### S4.搜索类目或标签
 
-[GET] `/search/tags?{keyword, size}`
+[GET] `/v1/search/tags?{keyword, size}`
 
-[GET] `/search/categories?{keyword, size}`
+[GET] `/v1/search/categories?{keyword, size}`
 
 ```http
-GET /search/tags?keyword=算法&size=5
+GET /v1/search/tags?keyword=算法&size=5
 ```
 
 Response Body
@@ -715,12 +776,12 @@ Response Body
 }
 ```
 
-#### D7.获取文档meta
+#### D7.获取文档Meta
 
-[GET] `/docs/{doc_id}`
+[GET] `/v1/docs/{doc_id}`
 
 ```http
-GET /docs/1
+GET /v1/docs/1
 ```
 
 Response Body
@@ -746,12 +807,12 @@ Response Body
 }
 ```
 
-#### D8.更新文档meta
+#### D8.更新文档Meta
 
-[PATCH] `/docs/{doc_id}`
+[PATCH] `/v1/docs/{doc_id}`
 
 ```http
-PATCH /files/1
+PATCH /v1/files/1
 ```
 
 Request Body
@@ -893,7 +954,7 @@ Request Body:
 }
 ```
 
-#### F5. 上传文件成功后创建Meta（Callback接口）
+#### F5. 创建文件Meta（上传文件成功后Callback接口）
 
 [POST] /v1/files/{id}
 
@@ -984,14 +1045,14 @@ Response Body:
 }
 ```
 
-#### F9.Retrieve File Meta
+#### F9.获取文件Meta
 
 获取文件meta
 
-[GET] `/files/{file_id}`
+[GET] `/v1/files/{file_id}`
 
 ```http
-GET /files/1
+GET /v1/files/1
 ```
 
 Response Body
@@ -1032,16 +1093,14 @@ Response Body
 }
 ```
 
-#### F10.Update File Meta
-
-更新文件meta
+#### F10.更新文件Meta
 
 > 部分更新，仅可更新部分字段
 
-[PATCH] `/files/{file_id}`
+[PATCH] `/v1/files/{file_id}`
 
 ```http
-PATCH /files/1
+PATCH /v1/files/1
 ```
 
 Request Body
@@ -1110,11 +1169,11 @@ Response Body
 }
 ```
 
-#### F11.Create Tag / Category
+#### F11.创建类目或标签
 
-[POST] `/tags/`
+[POST] `/v1/tags/`
 
-[POST] `/categories/`
+[POST] `/v1/categories/`
 
 Request Body
 
@@ -1139,14 +1198,14 @@ Response Body
 }
 ```
 
-#### F12.Retrieve Tag / Category
+#### F12.获取类目或标签
 
-[GET] `/tags/{tag_id}`
+[GET] `/v1/tags/{tag_id}`
 
-[GET] `/categories/{category_id}`
+[GET] `/v1/categories/{category_id}`
 
 ```http
-GET /tags/1
+GET /v1/tags/1
 ```
 
 Response Body
@@ -1163,14 +1222,14 @@ Response Body
 }
 ```
 
-#### F13. Update Tag / Category
+#### F13. 更新类目或标签
 
-[PUT] `/tags/{tag_id}`
+[PUT] `/v1/tags/{tag_id}`
 
-[PUT] `/categories/{category_id}`
+[PUT] `/v1/categories/{category_id}`
 
 ```http
-PUT /tags/1
+PUT /v1/tags/1
 ```
 
 Request Body
@@ -1197,14 +1256,14 @@ Response Body
 ```
 
 
-#### F14.Delete Tag / Category
+#### F14.删除类目或标签
 
-[DELETE] `/tags/{tag_id}`
+[DELETE] `/v1/tags/{tag_id}`
 
-[DELETE] `/categories/{category_id}`
+[DELETE] `/v1/categories/{category_id}`
 
 ```http
-DELETE /tags/1
+DELETE /v1/tags/1
 ```
 
 Response Body
@@ -1217,14 +1276,14 @@ Response Body
 }
 ```
 
-#### F15.Get File Tags / Categories
+#### F15.获取文件的类目或标签
 
-[GET] `/files/{file_id}/tags`
+[GET] `/v1/files/{file_id}/tags`
 
-[GET] `/files/{file_id}/categories`
+[GET] `/v1/files/{file_id}/categories`
 
 ```http
-GET /files/1/tags
+GET /v1/files/1/tags
 ```
 
 Response Body
@@ -1260,14 +1319,14 @@ Response Body
 }
 ```
 
-#### F16.Update File Tags / Categories
+#### F16.更新文件的类目或标签
 
-[PUT] `/files/{file_id}/tags`
+[PUT] `/v1/files/{file_id}/tags`
 
-[PUT] `/files/{file_id}/categories`
+[PUT] `/v1/files/{file_id}/categories`
 
 ```http
-PUT /files/1/tags
+PUT /v1/files/1/tags
 ```
 
 Request Body
