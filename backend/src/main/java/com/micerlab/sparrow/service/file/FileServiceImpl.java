@@ -1,9 +1,9 @@
-package com.micerlab.sparrow.service.impl;
+package com.micerlab.sparrow.service.file;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilter;
 import com.micerlab.sparrow.domain.SpaFilterType;
-import com.micerlab.sparrow.service.FileService;
+import com.micerlab.sparrow.service.file.FileService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
