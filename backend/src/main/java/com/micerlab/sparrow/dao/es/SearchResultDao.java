@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.micerlab.sparrow.domain.KeyCount;
 import com.micerlab.sparrow.domain.SearchRequestParams;
 import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.domain.TimeRangeKeyCount;
@@ -111,7 +112,7 @@ public class SearchResultDao
                     }
                 },
                 "aggs": {
-                    "created_time_range": {
+                    "created_time_ranges": {
                         "date_range": {
                             "field": "created_time",
                             "format": "yyyy-MM-dd",
@@ -148,7 +149,7 @@ public class SearchResultDao
                             ]
                         }
                     },
-                    "modified_time_range": {
+                    "modified_time_ranges": {
                         "date_range": {
                             "field": "modified_time",
                             "format": "yyyy-MM-dd",
@@ -187,7 +188,7 @@ public class SearchResultDao
                     }
                 }
             },
-            "time_limit": {
+            "time_ranges_limit": {
                 "filter": {
                     "bool": {
                         "filter": [
@@ -216,24 +217,36 @@ public class SearchResultDao
                             "field": "ext"
                         }
                     },
-                    "results": {
-                        "top_hits": {
-                            "from": 0,
-                            "size": 10,
-                            "_source": [
-                                "id",
-                                "title",
-                                "desc",
-                                "type",
-                                "ext",
-                                "tags",
-                                "categories",
-                                "thumbnail",
-                                "store_key",
-                                "created_time",
-                                "modified_time",
-                                "version"
-                            ]
+                    "final_exts_limit": {
+                        "filter": {
+                            "terms": {
+                                "ext": [
+                                    "jpg",
+                                    "gif"
+                                ]
+                            }
+                        },
+                        "aggs": {
+                            "results": {
+                                "top_hits": {
+                                    "from": 0,
+                                    "size": 10,
+                                    "_source": [
+                                        "id",
+                                        "title",
+                                        "desc",
+                                        "type",
+                                        "ext",
+                                        "tags",
+                                        "categories",
+                                        "thumbnail",
+                                        "store_key",
+                                        "created_time",
+                                        "modified_time",
+                                        "version"
+                                    ]
+                                }
+                            }
                         }
                     }
                 }
@@ -253,7 +266,7 @@ public class SearchResultDao
         searchRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
         
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
         
         Aggregations aggregations = searchResponse.getAggregations();
         
@@ -295,7 +308,20 @@ public class SearchResultDao
         data.put("group_by_modified_time", group_by_modified_time);
         
         Filter time_ranges_limit = aggregations.get("time_ranges_limit");
-        TopHits result = time_ranges_limit.getAggregations().get("results");
+        
+        Terms group_by_ext = time_ranges_limit.getAggregations().get("group_by_ext");
+        List<KeyCount> extCounts = new LinkedList<>();
+        extCounts.add(new KeyCount("全部", time_ranges_limit.getDocCount()));
+        for (Terms.Bucket bucket : group_by_ext.getBuckets())
+        {
+            extCounts.add(new KeyCount(bucket.getKeyAsString(), bucket.getDocCount()));
+        }
+        data.put("group_by_ext", extCounts);
+        
+        Filter final_ext_limits = time_ranges_limit.getAggregations().get("final_exts_limit");
+        data.put("total", final_ext_limits.getDocCount());
+        
+        TopHits result = final_ext_limits.getAggregations().get("results");
         List<Object> spaFiles = new LinkedList<>();
         SearchHit[] searchHits = result.getHits().getHits();
         for (SearchHit searchHit : searchHits)
@@ -303,17 +329,6 @@ public class SearchResultDao
             spaFiles.add(searchHit.getSourceAsMap());
         }
         data.put("results", spaFiles);
-        
-        Terms group_by_ext = time_ranges_limit.getAggregations().get("group_by_ext");
-        List<Map<String, Object>> extCounts = new LinkedList<>();
-        for (Terms.Bucket bucket : group_by_ext.getBuckets())
-        {
-            Map<String, Object> extBucket = new HashMap<>();
-            extBucket.put("doc_count", bucket.getDocCount());
-            extBucket.put("key", bucket.getKeyAsString());
-            extCounts.add(extBucket);
-        }
-        data.put("group_by_ext", extCounts);
         
         return data;
     }
@@ -398,31 +413,26 @@ public class SearchResultDao
         );
         
         // Agg1 exts_limit
-        QueryBuilder ext_filter;
-        if (params.getExts().contains("all"))
-            ext_filter = QueryBuilders.matchAllQuery();
-        else
-        {
-            params.getExts().remove("all");
-            ext_filter = QueryBuilders.termsQuery("ext", params.getExts());
-        }
-        FilterAggregationBuilder exts_limit = AggregationBuilders.
-                filter("exts_limit", ext_filter)
-                .subAggregation(created_time_ranges)
-                .subAggregation(modified_time_ranges);
+        FilterAggregationBuilder exts_limit = extsLimitAgg("exts_limit", params.getExts());
+        exts_limit.subAggregation(created_time_ranges).subAggregation(modified_time_ranges);
         
         // ----- Agg2 time_ranges_limit -----
         
-        // Agg2.2 results agg
+        // Agg2.2.1 results agg
         Page page = new Page(params.getPage(), params.getPer_page());
         TopHitsAggregationBuilder resultsAgg =
                 AggregationBuilders.topHits("results")
                         .from(page.getFrom())
                         .size(page.getSize());
         
+        // Agg2.2 final_exts_limit
+        FilterAggregationBuilder final_exts_limit = extsLimitAgg("final_exts_limit", params.getExts());
+        final_exts_limit.subAggregation(resultsAgg);
+        
         // Agg2.1 group_by_ext
+        // TODO: size改为配置项
         TermsAggregationBuilder group_by_ext = AggregationBuilders
-                .terms("group_by_ext").field("ext");
+                .terms("group_by_ext").field("ext").size(30);
         
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         if (params.getCreated_time() != null)
@@ -441,10 +451,22 @@ public class SearchResultDao
         FilterAggregationBuilder time_ranges_limit = AggregationBuilders
                 .filter("time_ranges_limit", boolQueryBuilder
                 ).subAggregation(group_by_ext)
-                .subAggregation(resultsAgg);
+                .subAggregation(final_exts_limit);
         
         searchSourceBuilder.aggregation(exts_limit);
         searchSourceBuilder.aggregation(time_ranges_limit);
+    }
+    
+    private static FilterAggregationBuilder extsLimitAgg(String name, List<String> exts)
+    {
+        QueryBuilder ext_filter;
+        if (exts.contains("all"))
+            ext_filter = QueryBuilders.matchAllQuery();
+        else
+        {
+            ext_filter = QueryBuilders.termsQuery("ext", exts);
+        }
+        return AggregationBuilders.filter(name, ext_filter);
     }
     
     private DateRangeAggregationBuilder buildTimeRangesAgg(
