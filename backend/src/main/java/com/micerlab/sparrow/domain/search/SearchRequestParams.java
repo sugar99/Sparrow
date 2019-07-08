@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.domain.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.micerlab.sparrow.domain.file.FileType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
@@ -16,7 +17,7 @@ public class SearchRequestParams
     private String type = "all";
     
     @JsonIgnore
-    private SearchType searchType = SearchType.ALL;
+    private FileType fileType = FileType.ALL;
     
     private String keyword;
     
@@ -39,7 +40,7 @@ public class SearchRequestParams
     public void setType(String type)
     {
         this.type = type;
-        this.searchType = SearchType.fromType(type);
+        this.fileType = FileType.fromType(type);
     }
     
     @Setter

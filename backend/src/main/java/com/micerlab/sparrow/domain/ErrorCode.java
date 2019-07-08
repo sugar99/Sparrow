@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.domain;
 
-import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.file.FileType;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ public enum ErrorCode
     // 400 BadRequest 参数错误等
     BAD_REQUEST_COMMON(400_000, "Bad Request"),
 //    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ {all, image, doc, video, audio, others}"),
-    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(SearchType.values()).toString()),
+    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(FileType.values()).toString()),
     PARAM_ERR_FILTER_TYPE(400_002, "filter_type ∈ {tag, category}"),
     PARAM_ERR_FILTER_TYPES(400_003, "filter_types ∈ {tags, categories}"),
     PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),

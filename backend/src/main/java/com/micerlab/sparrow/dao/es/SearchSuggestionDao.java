@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.file.FileType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -113,7 +113,7 @@ public class SearchSuggestionDao
     private static void query(SearchSourceBuilder searchSourceBuilder, String keyword, String type)
     {
         boolean empty_keyword = StringUtils.isEmpty(keyword);
-        boolean all_type = SearchType.ALL.getType().equals(type);
+        boolean all_type = FileType.ALL.getType().equals(type);
         if (empty_keyword && all_type)
         {
             searchSourceBuilder.query(QueryBuilders.matchAllQuery());

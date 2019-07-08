@@ -2,7 +2,7 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.search.SearchRequestParams;
-import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
@@ -28,7 +28,7 @@ public class SearchController
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "10") int size)
     {
-        SearchType.validateSearchType(type);
+        FileType.validateFileType(type);
         return searchService.getSearchSuggestions(type,keyword,size);
     }
     

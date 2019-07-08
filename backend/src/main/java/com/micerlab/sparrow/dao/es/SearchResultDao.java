@@ -2,7 +2,7 @@ package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.search.KeyCount;
 import com.micerlab.sparrow.domain.search.SearchRequestParams;
-import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.TimeRangeKeyCount;
 import com.micerlab.sparrow.utils.Page;
 import org.elasticsearch.action.search.SearchRequest;
@@ -337,7 +337,7 @@ public class SearchResultDao
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         
         // [过滤/匹配]条件1 <type> 匹配文件类型
-        if (!SearchType.ALL.equals(params.getSearchType()))
+        if (!FileType.ALL.equals(params.getFileType()))
             boolQueryBuilder.filter().add(QueryBuilders.termQuery("type", params.getType()));
         
         // [过滤/匹配]条件2 <keyword> 匹配文件标题、文件描述
