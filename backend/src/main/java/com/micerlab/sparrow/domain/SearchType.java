@@ -4,19 +4,19 @@ import com.micerlab.sparrow.utils.BusinessException;
 
 public enum SearchType
 {
-    ALL("all"),
-    IMAGE("image"),
-    DOC("doc"),
-    VIDEO("video"),
-    AUDIO("audio"),
-    OTHERS("others")
+    ALL(),
+    IMAGE(),
+    DOC(),
+    VIDEO(),
+    AUDIO(),
+    OTHERS()
     ;
     
     private String type;
     
-    SearchType(String type)
+    SearchType()
     {
-        this.type = type;
+        this.type = name().toLowerCase();
     }
     
     public String getType()
@@ -24,14 +24,25 @@ public enum SearchType
         return type;
     }
     
-    public static void validateSearchType(String type)
+    @Override
+    public String toString()
+    {
+        return type;
+    }
+    
+    public static SearchType fromType(String type)
     {
         try
         {
-            SearchType searchType = SearchType.valueOf(type.toUpperCase());
+            return SearchType.valueOf(type.toUpperCase());
         }catch (Exception ex)
         {
             throw new BusinessException(ErrorCode.PARAM_ERR_SEARCH_TYPE, "error search type <" + type + ">");
         }
+    }
+    
+    public static void validateSearchType(String type)
+    {
+        fromType(type);
     }
 }

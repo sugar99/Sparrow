@@ -1,20 +1,23 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.SearchRequestParams;
 import com.micerlab.sparrow.domain.SearchType;
 import com.micerlab.sparrow.domain.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Api
 @RestController
 public class SearchController
 {
+    private Logger logger = LoggerFactory.getLogger(SearchController.class);
+    
     @Autowired
     private SearchService searchService;
     
@@ -40,11 +43,15 @@ public class SearchController
         return searchService.getTopAssociations(keyword, category_count, tag_count);
     }
     
+    
     @ApiOperation("S3.搜索结果")
     @PostMapping("/v1/search/results")
-    public Result getSearchResults(@RequestBody Map<String, Object> searchResultParams)
+    public Result getSearchResults(
+        @RequestBody SearchRequestParams params
+    )
     {
-        return searchService.getSearchResults(searchResultParams);
+//        return Result.OK().data(params).build();
+        return searchService.getSearchResults(params);
     }
     
     @ApiOperation("S4.搜索类目或标签")

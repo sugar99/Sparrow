@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.SearchRequestParams;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,11 @@ public class SearchDao
         }
     }
     
-    public Map<String, Object> searchResults(Map<String, Object> searchResultParams)
+    public Map<String, Object> searchResults(SearchRequestParams params)
     {
         try
         {
-            return searchResultDao.searchResults(searchResultParams);
+            return searchResultDao.searchResults(params);
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
