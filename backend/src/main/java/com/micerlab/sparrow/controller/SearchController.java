@@ -1,9 +1,9 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SearchRequestParams;
-import com.micerlab.sparrow.domain.SearchType;
-import com.micerlab.sparrow.domain.SpaFilterType;
+import com.micerlab.sparrow.domain.search.SearchRequestParams;
+import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,14 +56,14 @@ public class SearchController
     
     @ApiOperation("S4.搜索类目或标签")
     @GetMapping("/v1/search/{filter_types:(?:tags|categories)}")
-    public Result searchSpaFilterTypes(
+    public Result searchSpaFilters(
             @PathVariable String filter_types,
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "10") int size
     )
     {
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
-        return searchService.searchSpaFilterTypes(spaFilterType, keyword, size);
+        return searchService.searchSpaFilters(spaFilterType, keyword, size);
     }
     
     

@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.Category;
-import com.micerlab.sparrow.domain.Tag;
+import com.micerlab.sparrow.domain.search.Category;
+import com.micerlab.sparrow.domain.search.Tag;
 import org.elasticsearch.action.search.MultiSearchRequest;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;

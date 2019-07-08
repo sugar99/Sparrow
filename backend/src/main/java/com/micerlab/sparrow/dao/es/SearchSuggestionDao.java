@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.SearchType;
+import com.micerlab.sparrow.domain.search.SearchType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;

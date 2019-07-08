@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.domain;
 
+import com.micerlab.sparrow.domain.search.SearchType;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;

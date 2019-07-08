@@ -1,23 +1,23 @@
-package com.micerlab.sparrow.domain;
+package com.micerlab.sparrow.domain.search;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class SpaFilter
+public class Category
 {
     private int id;
     private String title;
     private String desc;
     
-    public SpaFilter(int id, String title)
+    public Category(int id, String title)
     {
         this.id = id;
         this.title = title;
     }
     
-    public SpaFilter(int id, String title, String desc)
+    public Category(int id, String title, String desc)
     {
         this.id = id;
         this.title = title;

@@ -1,8 +1,8 @@
 package com.micerlab.sparrow.service.file;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SpaFilter;
-import com.micerlab.sparrow.domain.SpaFilterType;
+import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 
 import java.util.Map;
 

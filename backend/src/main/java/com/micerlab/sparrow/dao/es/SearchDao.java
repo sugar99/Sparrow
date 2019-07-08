@@ -1,7 +1,9 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.ErrorCode;
-import com.micerlab.sparrow.domain.SearchRequestParams;
+import com.micerlab.sparrow.domain.search.SearchRequestParams;
+import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +24,14 @@ public class SearchDao
     
     private SearchResultDao searchResultDao;
     
-    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao)
+    private SearchSpaFilterDao searchSpaFilterDao;
+    
+    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao, SearchSpaFilterDao searchSpaFilterDao)
     {
         this.searchSuggestionDao = searchSuggestionDao;
         this.searchAssociationDao = searchAssociationDao;
         this.searchResultDao = searchResultDao;
+        this.searchSpaFilterDao = searchSpaFilterDao;
     }
     
     public List<String> suggestions(String type, String keyword, int size)
@@ -60,6 +65,19 @@ public class SearchDao
         try
         {
             return searchResultDao.searchResults(params);
+        } catch (IOException ex)
+        {
+            logger.error(ex.getMessage());
+            ex.printStackTrace();
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+        }
+    }
+    
+    public List<Map<String, Object>> searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size)
+    {
+        try
+        {
+            return searchSpaFilterDao.searchSpaFilters(spaFilterType, keyword, size);
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

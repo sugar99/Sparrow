@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain;
+package com.micerlab.sparrow.domain.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SpaFilter;
-import com.micerlab.sparrow.domain.SpaFilterType;
+import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.file.FileService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import io.swagger.annotations.Api;

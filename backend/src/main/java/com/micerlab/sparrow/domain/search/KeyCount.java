@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain;
+package com.micerlab.sparrow.domain.search;
 
 import lombok.Getter;
 import lombok.Setter;

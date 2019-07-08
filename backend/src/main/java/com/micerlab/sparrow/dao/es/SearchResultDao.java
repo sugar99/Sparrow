@@ -1,9 +1,9 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.KeyCount;
-import com.micerlab.sparrow.domain.SearchRequestParams;
-import com.micerlab.sparrow.domain.SearchType;
-import com.micerlab.sparrow.domain.TimeRangeKeyCount;
+import com.micerlab.sparrow.domain.search.KeyCount;
+import com.micerlab.sparrow.domain.search.SearchRequestParams;
+import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.search.TimeRangeKeyCount;
 import com.micerlab.sparrow.utils.Page;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -25,7 +25,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
