@@ -24,3 +24,13 @@ oss:
   accessKeySecret: RXxpqMZIlo7bwTIbX3MiAGgxdKX4v7
   bucketName: douban-test
   callbackHost: localhost:8080
+
+spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8081

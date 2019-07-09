@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.controller;
 
+import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilter;
 import com.micerlab.sparrow.domain.SpaFilterType;
@@ -25,7 +26,10 @@ public class FileController {
     private FileService fileService;
 
     @Autowired
-    @Qualifier("aliyunOssService")
+    private MsgProducer msgProducer;
+
+    @Autowired
+    @Qualifier("minioService")
     private FileStoreService fileStoreService;
 
     @ApiOperation("F1.获取policy（阿里云OSS）")
@@ -49,7 +53,7 @@ public class FileController {
         // TODO: delete es meta,并从es里查找这些文件的keys
         List<String> keys = new LinkedList<>();
         for (String file_id: (List<String>) params.get("file_id")) {
-            keys.add("/image/" + file_id);
+            keys.add("image/" + file_id);
         }
         return fileStoreService.deleteFile(keys);
     }
@@ -60,7 +64,7 @@ public class FileController {
         // TODO: ACL(httpServletRequest)
         // TODO: 从es里查找该文件的title、key
         String title = "a.jpg";
-        String key = "/image/" + file_id;
+        String key = "image/" + file_id;
         fileStoreService.downloadFile(title, key, httpServletResponse);
     }
 
@@ -86,8 +90,8 @@ public class FileController {
     {
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
-        
-        
+        System.out.println(file_id);
+        msgProducer.sendMsg(file_id);
         return fileService.createFileMeta(file_id, params);
     }
     

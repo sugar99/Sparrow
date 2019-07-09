@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.utils;
 
 import com.aliyun.oss.HttpMethod;
+import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.*;
@@ -68,39 +69,25 @@ public class AliyunOssUtil {
         return respMap;
     }
 
-    public String getPutUrl(String objectName1){
-        // Endpoint以杭州为例，其它Region请按实际情况填写。
-        String endpoint = "http://oss-cn-beijing.aliyuncs.com";
-        // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
-        String accessKeyId = "LTAInhMpeCqDsM4c";
-        String accessKeySecret = "RXxpqMZIlo7bwTIbX3MiAGgxdKX4v7";
-        String bucketName = "douban-test";
-        String objectName = "image/a.jpg";
+    public String getPutUrl(String objectName){
 
         // 创建OSSClient实例。
-        OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSS ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
 
-        try {
-            // 生成签名URL。
-            Date expiration = new Date(new Date().getTime() + 3600 * 1000);
-            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, objectName, HttpMethod.PUT);
-            // 设置过期时间。
-            request.setExpiration(expiration);
-            // 设置Content-Type。
-            request.setContentType("application/octet-stream");
-            // 添加用户自定义元信息。
-            request.addUserMetadata("author", "aliy");
-            // 生成签名URL（HTTP PUT请求）。
-            URL signedUrl = ossClient.generatePresignedUrl(request);
-            System.out.println("signed url for putObject: " + signedUrl);
-            return signedUrl.toString();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        // 关闭OSSClient。
-        ossClient.shutdown();
-        return null;
+// 创建请求。
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, objectName, HttpMethod.PUT);
+// HttpMethod为PUT。
+        generatePresignedUrlRequest.setMethod(HttpMethod.PUT);
+// 添加用户自定义元信息。
+        // generatePresignedUrlRequest.addUserMetadata("author", "micer");
+// 添加Content-Type。
+        generatePresignedUrlRequest.setContentType("application/octet-stream");
+// 设置URL过期时间为1小时。
+        Date expiration = new Date(new Date().getTime() + 3600 * 1000);
+        generatePresignedUrlRequest.setExpiration(expiration);
+// 生成签名URL。
+        URL url = ossClient.generatePresignedUrl(generatePresignedUrlRequest);
+        return url.toString();
     }
 
     public void deleteFile(String objectName){
