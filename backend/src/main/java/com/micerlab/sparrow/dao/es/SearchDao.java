@@ -22,17 +22,13 @@ public class SearchDao
     private SearchAssociationDao searchAssociationDao;
     
     private SearchResultDao searchResultDao;
+
+    private SearchUserGroupDao searchUserGroupDao;
     
     private SpaFilterDao spaFilterDao;
     
-    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao, SpaFilterDao spaFilterDao)
-    {
-        this.searchSuggestionDao = searchSuggestionDao;
-        this.searchAssociationDao = searchAssociationDao;
-        this.searchResultDao = searchResultDao;
-        this.spaFilterDao = spaFilterDao;
-    }
     
+
     public List<String> suggestions(String type, String keyword, int size)
     {
         try
@@ -80,6 +76,17 @@ public class SearchDao
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
+            ex.printStackTrace();
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+        }
+    }
+
+    public List<Map<String, Object>> searchUserOrGroup(String keyword, String index, int size) {
+        try
+        {
+            return searchUserGroupDao.search(keyword, index, size);
+        } catch (IOException ex)
+        {
             ex.printStackTrace();
             throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
         }

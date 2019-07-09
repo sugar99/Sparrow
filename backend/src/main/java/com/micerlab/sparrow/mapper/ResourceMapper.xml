@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micerlab.sparrow.dao.postgre.ResourceDao">
+    <insert id="createResource" parameterType="resource">
+        insert into spa_resource(resource_id, resource_name, resource_type, creator_id, created_at, isroot,
+         modifiable, ishome, thumbnail) values (#{resource.resource_id}, #{resource.resource_name}, #{resource.resource_type},
+         #{resource.creator_id}, #{resource.created_at}, #{resource.isRoot}, #{resource.modifiable}, #{resource.isHome},
+         #{resource.thumbnail})
+    </insert>
+    <select id="getResourceMeta" resultType="resource">
+        select * from spa_resource where resource_id = #{resource_id}
+    </select>
+    <update id="updateResourceMeta">
+        update spa_resource set resource_name = #{resource_name} where resource_id = #{resource_id}
+    </update>
+    <delete id="deleteResource">
+        delete from spa_resource where resource_id = #{resource_id}
+    </delete>
+    <insert id="createMasterSlaveRelation">
+        insert into master_slaves(master_id, slave_id) values (#{master_id}, #{slave_id})
+    </insert>
+    <delete id="deleteMasterSlaveRelation">
+        delete from master_slaves where master_id = #{master_id} and slave_id = #{slave_id}
+    </delete>
+    <select id="getSlaveResources" resultType="java.util.Map">
+        select d.resource_id as id, d.resource_name as title, d.thumbnail, d.resource_type, d.creator_id as creator,
+         d.created_at as created_time from master_slaves r inner join spa_resource d on r.slave_id = d.resource_id
+         and r.master_id = #{master_id}
+    </select>
+    <select id="getTotalSlavesResourceId" resultType="String">
+        with RECURSIVE r as
+        (
+          select * from master_salves where master_id = #{master_id}
+          union all
+          select master_slaves.* from master_slaves, r where master_slaves.master_id = r.slave_id
+        ) select r.slave_id from r;
+    </select>
+    <select id="getRootPathResource" resultType="String">
+        with RECURSIVE r as
+        (
+          select * from master_slaves where slave_id = #{slave_id}
+          union all
+          select master_slaves.* from master_slaves, r where master_slaves.slave_id = r.master_id
+        ) select r.master_id from r;
+    </select>
+    <select id="getResourceGroups" resultType="group">
+        select g.* from group_resource r inner join spa_group g on r.group_id = g.group_id and r.resource_id = #{resource_id}
+    </select>
+    <select id="getMasterResourceMeta" resultType="resource">
+        select d.* from master_slaves r inner join spa_resource d on r.master_id = d.resource_id and r.slave_id = #{slave_id}
+    </select>
+    <select id="getHomeDirId" resultType="String">
+        select resource_id from spa_resource where ishome = 1;
+    </select>
+</mapper>

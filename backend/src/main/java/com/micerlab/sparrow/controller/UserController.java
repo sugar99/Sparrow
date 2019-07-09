@@ -21,24 +21,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
-
     @ApiOperation("U1.新建用户")
-    @PostMapping("/users")
+    @PostMapping("/v1/users")
     @ResponseBody
     public Result createUser(@RequestBody Map<String, Object> paramMap) {
         return userService.createUser(paramMap);
     }
 
     @ApiOperation("U2.用户登录")
-    @PostMapping("/login")
+    @PostMapping("/v1/login")
     @ResponseBody
     public Result userLogin(HttpServletResponse response, @RequestBody Map<String, Object> paramMap) {
         return userService.userLogin(response, paramMap);
     }
 
     @ApiOperation("U3.获取用户meta")
-    @GetMapping("/users/{user_id}")
+    @GetMapping("/v1/users/{user_id}")
     @ResponseBody
     public Result getUserMeta(HttpServletRequest request, @PathVariable("user_id") String user_id) {
         if (user_id.equals("current")) {
@@ -49,14 +47,14 @@ public class UserController {
     }
 
     @ApiOperation("U4.注销登录")
-    @PostMapping("/users/logout")
+    @PostMapping("/v1/users/logout")
     @ResponseBody
     public Result userLogout(HttpServletRequest request) {
         return userService.userLogout(BaseService.getUser_Id(request));
     }
 
     @ApiOperation("U5.获取用户所在群组")
-    @GetMapping("/users/{user_id}/groups")
+    @GetMapping("/v1/users/{user_id}/groups")
     @ResponseBody
     public Result getUserGroups(HttpServletRequest request, @PathVariable("user_id") String user_id) {
         if (user_id.equals("current")) {

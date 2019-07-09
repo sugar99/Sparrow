@@ -23,7 +23,13 @@ public enum ErrorCode
     
     // 403 Forbidden 权限：未授权 / 非法访问
     FORBIDDEN_COMMON(403_000, "Forbidden"),
-    
+    FORBIDDEN_NO_WRITE_CUR_DIR(403_001, "用户对当前目录没有可写权限，无法进行该操作"),
+    FORBIDDEN_NO_READ_CUR_DIR(403_002, "用户对当前目录没有可读权限，无法进行该操作"),
+    FORBIDDEN_NO_WRITE_CUR_DOC(403_003, "用户对当前文档没有可写权限，无法进行该操作"),
+    FORBIDDEN_NO_READ_CUR_DOC(403_004, "用户对当前文档没有可读权限，无法进行该操作"),
+    FORBIDDEN_NO_READ_TARGET_RESOURCE(403_005, "用户对目标资源没有可读权限，无法进行该操作"),
+    FORBIDDEN_NOT_GROUP_OWNER(403_006, "只有群主才有权限进行该操作"),
+    FORBIDDEN_NOT_RESOURCE_OWNER(403_007, "只有资源的创建者才有权限进行该操作"),
     // 404 Not Found
     NOT_FOUND_COMMON(404_000, "Not Found"),
     NOT_FOUND_USERNAME_OR_PASSWORD_INVALID(404_001, "用户不存在或密码错误"),

@@ -6,7 +6,8 @@ public enum SparrowIndex
     SPA_FILES("spa_files"),
     SPA_CATEGORIES("spa_categories"),
     SPA_TAGS("spa_tags"),
-    
+    SPA_USER("spa_user"),
+    SPA_GROUP("spa_group")
     ;
     
     private String index;

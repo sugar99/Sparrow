@@ -14,7 +14,7 @@ public interface SearchService
     
     Result searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size);
 
-    Result searchUser(String keyword);
+    Result searchUser(String keyword, int size);
 
-    Result searchGroup(String keyword);
+    Result searchGroup(String keyword, int size);
 }

@@ -6,9 +6,13 @@ import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
 import com.micerlab.sparrow.domain.params.UpdateFileSpaFiltersParams;
 import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.*;
+import com.micerlab.sparrow.service.acl.ACLService;
+import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.file.FileService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.utils.FileUtil;
+import com.micerlab.sparrow.utils.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,39 +32,53 @@ public class FileController {
     @Autowired
     private FileStoreService fileStoreService;
 
+    @Autowired
+    private ACLService aclService;
+
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
-    public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
-        // TODO: ACL(httpServletRequest)
+    public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request){
+        String cur_id = params.get("cur_id").toString();
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+                ActionType.WRITE)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
         return fileStoreService.getPolicy(params);
     }
 
     @ApiOperation("F2.获取签名URL（Minio）")
     @PostMapping("/v1/files/url")
-    public Result getPresignedUrl(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
-        // TODO: ACL(httpServletRequest)
+    public Result getPresignedUrl(@RequestBody Map<String, Object> params, HttpServletRequest request){
+        String cur_id = params.get("cur_id").toString();
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+                ActionType.WRITE)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
         return fileStoreService.getPresignedUrl(params);
     }
 
     @ApiOperation("F6.删除文件")
     @DeleteMapping("/v1/files")
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
-        // TODO: ACL(httpServletRequest)
-        // TODO: delete es meta
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可写权限
+        // TODO: delete es meta 文件
         return fileStoreService.deleteFile(params);
     }
 
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
     public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
-        // TODO: ACL(httpServletRequest)
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可读权限
         return fileStoreService.downloadFile(file_id);
     }
 
     @ApiOperation("F8.获取文件历史版本列表")
     @GetMapping("/v1/files/{file_id}/versions")
     public Result getFileVersions(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
-        // TODO: ACL(httpServletRequest)
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可读权限
         return fileService.getFileVersions(file_id);
     }
     
@@ -77,10 +95,7 @@ public class FileController {
             @RequestBody CreateSpaFileParams params
             )
     {
-        // TODO: params中含有 creator, doc_id 字段
-        // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
-        
-        
+        //回调接口不需要认证？
         return fileService.createFileMeta(file_id, params);
     }
     
@@ -91,8 +106,8 @@ public class FileController {
             @PathVariable("file_id") String file_id
     )
     {
-        // TODO: ACL 验证是否拥有该文件的读取权限
-        
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可读权限
         return fileService.retrieveFileMeta(file_id);
     }
     
@@ -104,7 +119,8 @@ public class FileController {
             @RequestBody UpdateFileMetaParams params
             )
     {
-        // TODO: ACL 验证是否拥有该文件的修改权限
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可写权限
         return fileService.updateFileMeta(file_id, params);
     }
     
@@ -163,8 +179,8 @@ public class FileController {
             @PathVariable String filter_types
     )
     {
-        // TODO: ACL 验证是否拥有该文件的读取权限
-        
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可读权限
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
         return fileService.retrieveFileSpaFilters(file_id, spaFilterType);
     }
@@ -178,7 +194,8 @@ public class FileController {
             @RequestBody UpdateFileSpaFiltersParams params
             )
     {
-        // TODO: ACL 验证是否拥有该文件的修改权限
+        // TODO: 通过file_id获取doc_id (ES)
+        // TODO: ACL 判断用户对当前文档是否具有可写权限
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
         List<Long> spaFilterIds;
         if(SpaFilterType.TAG == spaFilterType)
