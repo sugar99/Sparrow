@@ -160,5 +160,10 @@ public class UserServiceImpl implements UserService{
         return resultMap;
     }
 
+    @Override
+    public List<String> getUserGroupsIdList(String user_id) {
+        return userDao.getUserGroupIds(user_id);
+    }
+
 
 }

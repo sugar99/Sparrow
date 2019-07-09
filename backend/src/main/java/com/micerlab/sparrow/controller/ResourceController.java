@@ -33,16 +33,17 @@ public class ResourceController {
     private ResourceDao resourceDao;
 
     @ApiOperation("D1.新建资源")
-    @PostMapping("/v1/resources/{type}")
+    @PostMapping("/v1/resources")
     @ResponseBody
-    public Result createResource(HttpServletRequest request, @PathVariable("type") String type, @RequestBody Map<String, Object> paramMap) {
+    public Result createResource(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
         String cur_id = paramMap.get("cur_id").toString();
+        String type = paramMap.get("type").toString();
         String user_id = BaseService.getUser_Id(request);
         //判断用户对当前目录是否具有可写权限
         if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
-        return resourceService.createResource(user_id, type, cur_id);
+        return resourceService.createResource(user_id, cur_id, type);
     }
 
     @ApiOperation("D2.获取资源元数据")
