@@ -49,7 +49,7 @@ public class ResourceServiceImpl implements ResourceService{
      * @return Result (data: resource)
      */
     @Override
-    public Result createResource(String user_id, String type, String cur_id) {
+    public Result createResource(String user_id, String cur_id, String type) {
         String resource_id = UUID.randomUUID().toString();
         Resource resource = new Resource();
         if (type.equals("doc")) {
@@ -61,7 +61,7 @@ public class ResourceServiceImpl implements ResourceService{
             resource.setCreator_id(user_id);
             resource.setCreated_at(timestamp);
             resource.setThumbnail("./assets/images/doc.png");
-            //TODO 新建文档事件订阅者 (ES)
+            // 新建文档事件订阅者 (ES)
             //产生InsertDocEvent,在ES和PostgreSQL中同步文档的元数据
             EventBus.getDefault().post(new InsertDocEvent(resource_id, "doc", user_id, timestamp, timestamp));
         } else {
