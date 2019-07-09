@@ -875,8 +875,8 @@ Response Body:
         "expire": "", // policy 有效时间
         "host": "http://graduation-pro.oss-cn-hangzhou.aliyuncs.com", // oss 的域名
         "policy": "", 
-        "signature": ""，
-        "file_uuid": "" // 后面文件直传 oss 时需要的 filename
+        "signature": "",
+        "file_uuid": "", // 后面文件直传 oss 时需要的 filename
         "creator": "" //创建者id
     }
 }
@@ -901,7 +901,8 @@ Response Body:
     "statusCode": 200,
     "msg": "success",
     "data": {
-        "url" : "" // 后续使用 PUT 方法上传文件
+        "url" : "", // 后续使用 PUT 方法上传文件
+        "creator": "" //创建者id
     }
 }
 ```
@@ -925,7 +926,7 @@ Request Body:
     "filename": "", //存储在OSS里的文件名
     "policy": "",  //获取policy请求返回的policy字段
     "accessKey": "",  //获取policy请求返回的accessid字段
-    "success_action_status": 200  //回调成功返回的状态码
+    "success_action_status": 200,  //回调成功返回的状态码
     "callback": "",  //获取policy请求返回的callback字段
     "signature": "",  //获取policy请求返回的signature字段
     "file": (binary)  //所上传文件的二进制文件

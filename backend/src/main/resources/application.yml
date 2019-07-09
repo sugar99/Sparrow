@@ -7,3 +7,20 @@ logging.level.*: DEBUG
 
 logging:
   config: classpath:logback-boot.xml
+
+minio:
+  endpoint: 39.108.210.48:9000
+  accessKey: SWLNR4NMXK02HG0K6BM6
+  secretKey: 1sPE5q7oNEHpWPBZWdOgttFZyOg+YroItnq9P7wn
+  bucketName: douban-test
+
+file:
+  temp:
+    path: D:\\test\\temp
+
+oss:
+  endpoint: http://oss-cn-beijing.aliyuncs.com
+  accessKeyId: LTAInhMpeCqDsM4c
+  accessKeySecret: RXxpqMZIlo7bwTIbX3MiAGgxdKX4v7
+  bucketName: douban-test
+  callbackHost: localhost:8080

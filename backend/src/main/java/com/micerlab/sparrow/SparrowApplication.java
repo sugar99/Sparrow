@@ -52,7 +52,7 @@ public class SparrowApplication
     }
 
 
-    @Bean
+//    @Bean
     public FilterRegistrationBean authenticateFilter() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new AuthenticateFilter());
