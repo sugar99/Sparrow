@@ -129,7 +129,7 @@ public class FileController {
             @RequestBody CreateSpaFileParams params
             )
     {
-        msgProducer.sendMsg("file_id");
+        msgProducer.sendMsg(file_id);
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
         //回调接口不需要认证？

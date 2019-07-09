@@ -2,12 +2,14 @@ package com.micerlab.sparrow.eventBus.subscriber;
 
 import com.micerlab.sparrow.dao.es.CUDUserGroupDao;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
+import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.doc.SpaDoc;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
+import com.micerlab.sparrow.eventBus.event.file.UpdateFileThumbnailEvent;
 import com.micerlab.sparrow.eventBus.event.group.InsertGroupEvent;
 import com.micerlab.sparrow.eventBus.event.group.UpdateGroupEvent;
 import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
@@ -34,6 +36,9 @@ public class ElasticSearchSubscriber {
     
     @Autowired
     private SpaDocDao spaDocDao;
+    
+    @Autowired
+    private SpaFileDao spaFileDao;
 
     public ElasticSearchSubscriber() {
         EventBus.getDefault().register(this);
@@ -109,5 +114,11 @@ public class ElasticSearchSubscriber {
     public void deleteDocMeta(DeleteDocEvent deleteDocEvent)
     {
         spaDocDao.deleteDocMeta(deleteDocEvent.getResource_id());
+    }
+    
+    @Subscribe
+    public void updateFileThumbnail(UpdateFileThumbnailEvent event)
+    {
+        spaFileDao.updateFileThumbnail(event.getFile_id(),event.getThumbnail());
     }
 }

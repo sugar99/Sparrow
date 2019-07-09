@@ -84,4 +84,11 @@ public class SpaFileDao
         docMap.put(spaFilterType.getTypes(), spaFilterIds);
         elasticsearchBaseDao.updateESDoc(index, file_id, docMap);
     }
+    
+    public void updateFileThumbnail(String file_id, String thumbnail)
+    {
+        Map<String, Object> docMap = new HashMap<>();
+        docMap.put("thumbnail", thumbnail);
+        elasticsearchBaseDao.updateESDoc(index, file_id, docMap);
+    }
 }
