@@ -62,6 +62,7 @@ public interface ResourceDao {
      * @param master_id 父目录id
      * @return 资源id
      */
+
     List<String> getTotalSlaveResourcesId(@Param("master_id") String master_id);
 
     /**
