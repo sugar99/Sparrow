@@ -30,10 +30,12 @@ public class SparrowApplication
 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    @Value("${elasticsearch-config.host}")
+//    @Value("${elasticsearch-config.host}")
+    @Value("localhost")
     private String elasticsearchHost;
     
-    @Value("${elasticsearch-config.port}")
+//    @Value("${elasticsearch-config.port}")
+    @Value("9200")
     private int elasticsearchPort;
 
     @Bean
