@@ -13,8 +13,8 @@ logging:
 spring:
   datasource:
     username: postgres
-    url: jdbc:postgresql://localhost:5432/sparrow
-    password: ifihadyou
+    url: jdbc:postgresql://39.108.210.48:5432/sparrow
+    password: sparrowbackend
     driver-class-name: org.postgresql.Driver
 
     tomcat:
@@ -33,7 +33,7 @@ spring:
         max-idle: 10
         max-wait: 2000ms
   rabbitmq:
-    host: 127.0.0.1
+    host: 192.168.43.98
     port: 5672
     username: guest
     password: guest
