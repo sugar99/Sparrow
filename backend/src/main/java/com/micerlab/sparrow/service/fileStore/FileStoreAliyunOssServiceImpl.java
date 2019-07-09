@@ -31,7 +31,7 @@ public class FileStoreAliyunOssServiceImpl implements FileStoreService {
     @Autowired
     private AliyunOssUtil aliyunOssUtil;
 
-    @Value("${file.temp.path}")
+    @Value("/root/sparrow/temp")
     private String tempFilePath;
 
     @Override

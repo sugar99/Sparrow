@@ -53,16 +53,6 @@ oss:
   callbackHost: ${server.port}
 
 
-
-# elasticSearch连接配置
-elasticsearch-config:
-  host: localhost
-  port: 9200
-
-file:
-  temp:
-    path: /root/sparrow/temp
-
 server:
   port: 8089
 

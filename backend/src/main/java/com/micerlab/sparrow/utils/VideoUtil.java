@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 public class VideoUtil {
 
-    @Value("${file.temp.path}")
+    @Value("/root/sparrow/temp")
     private String tempFilePath;
 
     public File getVideoFrame(File videoFile) throws IOException {
