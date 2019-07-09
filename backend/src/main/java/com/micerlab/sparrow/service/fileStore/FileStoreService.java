@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.service.fileStore;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.file.SpaFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,4 +20,6 @@ public interface FileStoreService {
     void downloadFile(String title, String key, HttpServletResponse httpServletResponse);
 
     Map<String, Object> uploadThumbnail(File file);
+
+    File getFile(SpaFile fileMeta);
 }

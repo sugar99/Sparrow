@@ -51,7 +51,7 @@ minio:
 
 file:
   temp:
-    path: D:\\test\\temp
+    path: D:\\test\\temp\\
 
 oss:
   endpoint: http://oss-cn-beijing.aliyuncs.com

@@ -2,11 +2,13 @@ package com.micerlab.sparrow.service.fileStore;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.MinioUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,9 @@ public class FileStoreMinioServiceImpl implements FileStoreService {
 
     @Autowired
     private FileUtil fileUtil;
+
+    @Value("${file.temp.path}")
+    private String tempFilePath;
 
     @Override
     public Result getPolicy(Map<String, Object> params, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
@@ -43,8 +48,7 @@ public class FileStoreMinioServiceImpl implements FileStoreService {
         String url = minioUtil.getPutUrl(objectName);
         Map<String, String> respMap = new HashMap<>();
         respMap.put("url", url);
-        // TODO: respMap.put("creator", BaseService.getUser_Id(httpServletRequest));
-        respMap.put("creator", "");
+        respMap.put("creator", BaseService.getUser_Id(httpServletRequest));
         return Result.OK().data(respMap).build();
     }
 
@@ -64,5 +68,11 @@ public class FileStoreMinioServiceImpl implements FileStoreService {
     @Override
     public Map<String, Object> uploadThumbnail(File file){
         return minioUtil.uploadThumbnail(file);
+    }
+
+    @Override
+    public File getFile(SpaFile fileMeta){
+        String path = tempFilePath + fileMeta.getId() + "." + fileMeta.getExt();
+        return minioUtil.getFileFromMinio(fileMeta.getStore_key(), path);
     }
 }

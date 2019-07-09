@@ -177,4 +177,11 @@ public class AliyunOssUtil {
         }
         return thumbnailInfo;
     }
+
+    public File getFileFromOSS(String objectName, String path){
+        File file = new File(path);
+        OSSClient ossClient = new OSSClient(endpoint,accessKeyId,accessKeySecret);
+        ossClient.getObject(new GetObjectRequest(bucketName, objectName),file);
+        return file;
+    }
 }

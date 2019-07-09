@@ -1,7 +1,9 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.amqp.MsgProducer;
+import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
 import com.micerlab.sparrow.domain.params.UpdateFileSpaFiltersParams;
@@ -42,6 +44,12 @@ public class FileController {
     @Autowired
     private ACLService aclService;
 
+    @Autowired
+    private MsgProducer msgProducer;
+
+    @Autowired
+    private SpaFileDao spaFileDao;
+
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
     public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
@@ -67,12 +75,19 @@ public class FileController {
     @ApiOperation("F6.删除文件")
     @DeleteMapping("/v1/files")
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可写权限
-        // TODO: delete es meta 文件
+        List<String> file_ids = (List<String>) params.get("file_id");
+        if(file_ids.isEmpty() || file_ids == null){
+            return null;
+        }
+        String doc_id = spaFileDao.getDocId(file_ids.get(0));
+        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
+
         List<String> keys = new LinkedList<>();
-        for (String file_id: (List<String>) params.get("file_id")) {
-            keys.add("image/" + file_id);
+        for (String file_id: file_ids) {
+            keys.add(spaFileDao.getFileMeta(file_id).getStore_key());
+            spaFileDao.deleteFileMeta(file_id);
         }
         return fileStoreService.deleteFile(keys);
     }
@@ -80,20 +95,24 @@ public class FileController {
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
     public void downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可读权限
-        // TODO: ACL(httpServletRequest)
-        // TODO: 从es里查找该文件的title、key
-        String title = "a.jpg";
-        String key = "image/" + file_id;
-        fileStoreService.downloadFile(title, key, httpServletResponse);
+        String doc_id = spaFileDao.getDocId(file_id);
+        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
+        }
+        SpaFile fileMeta = spaFileDao.getFileMeta(file_id);
+        String title = fileMeta.getTitle();
+        String key = fileMeta.getStore_key();
+        String ext = fileMeta.getExt();
+        fileStoreService.downloadFile(title + "." + ext, key, httpServletResponse);
     }
 
-    @ApiOperation("F8.获取文件历史版本列表")
+    @ApiOperation("F8.获取文件历史版本列表(待完成)")
     @GetMapping("/v1/files/{file_id}/versions")
     public Result getFileVersions(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可读权限
+        String doc_id = spaFileDao.getDocId(file_id);
+        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
+        }
         return fileService.getFileVersions(file_id);
     }
     
@@ -110,6 +129,7 @@ public class FileController {
             @RequestBody CreateSpaFileParams params
             )
     {
+        msgProducer.sendMsg("file_id");
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
         //回调接口不需要认证？

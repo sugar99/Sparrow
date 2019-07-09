@@ -2,6 +2,7 @@ package com.micerlab.sparrow.service.fileStore;
 
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.AliyunOssUtil;
@@ -30,6 +31,9 @@ public class FileStoreAliyunOssServiceImpl implements FileStoreService {
     @Autowired
     private AliyunOssUtil aliyunOssUtil;
 
+    @Value("${file.temp.path}")
+    private String tempFilePath;
+
     @Override
     public Result getPolicy(Map<String, Object> params, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         // callbackUrl为 上传回调服务器的URL，请将下面的IP和Port配置为您自己的真实信息。
@@ -39,8 +43,7 @@ public class FileStoreAliyunOssServiceImpl implements FileStoreService {
 
         Map<String, String> respMap = aliyunOssUtil.getPolicy(params);
         respMap.put("file_uuid", file_id + "." + params.get("ext"));
-        // TODO: respMap.put("creator",BaseService.getUser_Id(httpServletRequest));
-        respMap.put("creator", "");
+        respMap.put("creator",BaseService.getUser_Id(httpServletRequest));
         try {
             JSONObject jasonCallback = new JSONObject();
             jasonCallback.put("callbackUrl", callbackUrl);
@@ -105,5 +108,11 @@ public class FileStoreAliyunOssServiceImpl implements FileStoreService {
     @Override
     public Map<String, Object> uploadThumbnail(File file){
         return aliyunOssUtil.uploadThumbnail(file);
+    }
+
+    @Override
+    public File getFile(SpaFile fileMeta){
+        String path = tempFilePath + fileMeta.getId() + "." + fileMeta.getExt();
+        return aliyunOssUtil.getFileFromOSS(fileMeta.getStore_key(), path);
     }
 }
