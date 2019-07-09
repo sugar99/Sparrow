@@ -90,7 +90,7 @@ elasticsearch-config:
 
 file:
   temp:
-    path: /etc/sparrow/temp
+    path: /root/sparrow/temp
 
 server:
   port: 8089
