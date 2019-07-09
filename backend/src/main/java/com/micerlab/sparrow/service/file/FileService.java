@@ -1,20 +1,24 @@
 package com.micerlab.sparrow.service.file;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SpaFilter;
-import com.micerlab.sparrow.domain.SpaFilterType;
+import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
+import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
+import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 
-import java.util.Map;
+import java.util.List;
 
 public interface FileService {
 
     Result getFileVersions(String file_id);
     
-    Result createFileMeta(String file_id, Map<String, Object> params);
+    Result createFileMeta(String file_id, CreateSpaFileParams params);
     
     Result retrieveFileMeta(String file_id);
     
-    Result updateFileMeta(String file_id, Map<String, Object> params);
+    Result updateFileMeta(String file_id, UpdateFileMetaParams params);
+    
+    Result deleteFileMeta(String file_id);
     
     Result createSpaFilter(SpaFilterType spaFilterType, SpaFilter spaFilter);
     
@@ -26,5 +30,5 @@ public interface FileService {
     
     Result retrieveFileSpaFilters(String file_id, SpaFilterType spaFilterType);
     
-    Result updateFileSpaFilters(String file_id, SpaFilterType spaFilterType);
+    Result updateFileSpaFilters(String file_id, SpaFilterType spaFilterType, List<Long> spaFilterIds);
 }

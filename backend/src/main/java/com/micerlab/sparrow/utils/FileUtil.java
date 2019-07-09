@@ -42,6 +42,23 @@ public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
     private static final String exts_dir = "classpath:static/type_exts/";
 
+=======
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+
+public class FileUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    private static final String exts_dir = "classpath:static/type_exts/";
+
     /**
      * 加载拓展名配置文件，获取特定类型下的拓展名
      * @param type 文档类型

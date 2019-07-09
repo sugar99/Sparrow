@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain;
+package com.micerlab.sparrow.domain.search;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +10,10 @@ public class SpaFilter
     private int id;
     private String title;
     private String desc;
+    
+    public SpaFilter()
+    {
+    }
     
     public SpaFilter(int id, String title)
     {

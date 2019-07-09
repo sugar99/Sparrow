@@ -15,13 +15,13 @@ import java.util.Map;
 
 @Component
 public class MinioUtil {
-    @Value("${minio.endpoint}")
+//    @Value("${minio.endpoint}")
     private String endpoint;
-    @Value("${minio.accessKey}")
+//    @Value("${minio.accessKey}")
     private String accessKey;
-    @Value("${minio.secretKey}")
+//    @Value("${minio.secretKey}")
     private String secretKey;
-    @Value("${minio.bucketName}")
+//    @Value("${minio.bucketName}")
     private String bucketName;
 
     private MinioClient minioClient;

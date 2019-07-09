@@ -2,21 +2,29 @@ package com.micerlab.sparrow.utils;
 
 import com.micerlab.sparrow.SparrowApplicationTests;
 import org.junit.Test;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+=======
+
+import java.io.FileNotFoundException;
+>>>>>>> origin/chenlvjia
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class FileUtilTest extends SparrowApplicationTests
 {
+<<<<<<< HEAD
     @Autowired
     private FileUtil fileUtil;
 
 
+=======
+>>>>>>> origin/chenlvjia
     @Test
     public void testLoadTypeExtsConfig()
     {
@@ -27,6 +35,7 @@ public class FileUtilTest extends SparrowApplicationTests
             System.out.println(type + "_exts: " + exts);
         }
     }
+<<<<<<< HEAD
 
     @Test
     public void testGetThumbnailInfo(){
@@ -38,4 +47,6 @@ public class FileUtilTest extends SparrowApplicationTests
         }
     }
 
+=======
+>>>>>>> origin/chenlvjia
 }

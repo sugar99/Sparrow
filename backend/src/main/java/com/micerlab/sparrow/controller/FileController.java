@@ -2,10 +2,14 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SpaFilter;
-import com.micerlab.sparrow.domain.SpaFilterType;
+import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
+import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
+import com.micerlab.sparrow.domain.params.UpdateFileSpaFiltersParams;
+import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.file.FileService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
+import com.micerlab.sparrow.utils.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +17,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -85,8 +91,8 @@ public class FileController {
     public Result createFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id,
-            @RequestBody Map<String, Object> params
-    )
+            @RequestBody CreateSpaFileParams params
+            )
     {
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
@@ -112,8 +118,8 @@ public class FileController {
     public Result updateFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id,
-            @RequestBody Map<String, Object> params
-    )
+            @RequestBody UpdateFileMetaParams params
+            )
     {
         // TODO: ACL 验证是否拥有该文件的修改权限
         return fileService.updateFileMeta(file_id, params);
@@ -121,7 +127,7 @@ public class FileController {
     
     
     @ApiOperation("F11.创建类目或标签")
-    @PostMapping("/v1/{filter_types:(tags)|(categories)}")
+    @PostMapping("/v1/{filter_types:(?:tags|categories)}")
     public Result createSpaFilter(
             @PathVariable String filter_types,
             @RequestBody SpaFilter spaFilter
@@ -133,7 +139,7 @@ public class FileController {
     
     
     @ApiOperation("F12.获取类目或标签")
-    @GetMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @GetMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result retrieveSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id
@@ -144,7 +150,7 @@ public class FileController {
     }
     
     @ApiOperation("F13. 更新类目或标签")
-    @PutMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @PutMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result updateSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id,
@@ -156,7 +162,7 @@ public class FileController {
     }
     
     @ApiOperation("F14.删除类目或标签")
-    @DeleteMapping("/v1/{filter_types:(tags)|(categories)}/{filter_id}")
+    @DeleteMapping("/v1/{filter_types:(?:tags|categories)}/{filter_id}")
     public Result deleteSpaFilter(
             @PathVariable String filter_types,
             @PathVariable String filter_id
@@ -167,7 +173,7 @@ public class FileController {
     }
     
     @ApiOperation("F15.获取文件的类目或标签")
-    @GetMapping("/v1/files/{file_id}/{filter_types:(tags)|(categories)}")
+    @GetMapping("/v1/files/{file_id}/{filter_types:(?:tags|categories)}")
     public Result retrieveFileSpaFilters(
             HttpServletRequest request,
             @PathVariable String file_id,
@@ -181,16 +187,33 @@ public class FileController {
     }
     
     @ApiOperation("F16.更新文件的类目或标签")
-    @PutMapping("/v1/files/{file_id}/{filter_types:(tags)|(categories)}")
+    @PutMapping("/v1/files/{file_id}/{filter_types:(?:tags|categories)}")
     public Result updateFileSpaFilters(
             HttpServletRequest request,
             @PathVariable String file_id,
-            @PathVariable String filter_types
-    )
+            @PathVariable String filter_types,
+            @RequestBody UpdateFileSpaFiltersParams params
+            )
     {
         // TODO: ACL 验证是否拥有该文件的修改权限
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
-        return fileService.updateFileSpaFilters(file_id, spaFilterType);
+        List<Long> spaFilterIds;
+        if(SpaFilterType.TAG == spaFilterType)
+            spaFilterIds = params.getTags();
+        else spaFilterIds = params.getCategories();
+        return fileService.updateFileSpaFilters(file_id, spaFilterType, spaFilterIds);
     }
     
+    /**
+     * added by chenlvjia
+     * 请勿删除
+     * @param type 文件类型
+     */
+    @ApiOperation("测试接口：获取文件类型的拓展名")
+    @GetMapping("/v1/files/exts")
+    public Result testLoadExts(@RequestParam String type)
+    {
+        List<String> exts = FileUtil.loadTypeExtsConfig(type);
+        return Result.OK().data(exts).build();
+    }
 }

@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.domain;
 
+import com.micerlab.sparrow.domain.file.FileType;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public enum ErrorCode
     // 400 BadRequest 参数错误等
     BAD_REQUEST_COMMON(400_000, "Bad Request"),
 //    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ {all, image, doc, video, audio, others}"),
-    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(SearchType.values()).toString()),
+    PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(FileType.values()).toString()),
     PARAM_ERR_FILTER_TYPE(400_002, "filter_type ∈ {tag, category}"),
     PARAM_ERR_FILTER_TYPES(400_003, "filter_types ∈ {tags, categories}"),
     PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),
@@ -26,7 +27,10 @@ public enum ErrorCode
     // 404 Not Found
     NOT_FOUND_COMMON(404_000, "Not Found"),
     NOT_FOUND_USERNAME_OR_PASSWORD_INVALID(404_001, "用户不存在或密码错误"),
-    
+    NOT_FOUND_FILE_ID(404_002, "文件id不存在"),
+    NOT_FOUND_DOC_ID(404_002, "文档id不存在"),
+    NOT_FOUND_TAG_ID(404_002, "标签id不存在"),
+    NOT_FOUND_CATEGORY_ID(404_002, "类目id不存在"),
     
     
     // 500 Internal Server Error 服务器错误
