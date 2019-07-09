@@ -2,6 +2,7 @@ package com.micerlab.sparrow.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
@@ -47,8 +48,9 @@ public class FileUtil {
     private VideoUtil videoUtil;
 
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
-    private static final String exts_dir = "classpath:static/type_exts/";
-
+//    private static final String exts_dir = "classpath:static/type_exts/";
+    private static final String exts_dir = "/static/type_exts/";
+    
     /**
      * 加载拓展名配置文件，获取特定类型下的拓展名
      * @param type 文档类型
@@ -60,7 +62,9 @@ public class FileUtil {
         try
         {
             filePath = exts_dir + type + "_exts.txt";
-            File type_exts_file = ResourceUtils.getFile(filePath);
+            ClassPathResource classPathResource = new ClassPathResource(filePath);
+            File type_exts_file = classPathResource.getFile();
+//            File type_exts_file = ResourceUtils.getFile(filePath);
             Scanner scanner = new Scanner(type_exts_file);
             List<String> exts = new ArrayList<>();
             while (scanner.hasNext())
@@ -70,6 +74,9 @@ public class FileUtil {
         {
             String errorMsg = "无法加载拓展名配置文件:" + filePath;
             logger.error(errorMsg);
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
         return Collections.emptyList();
     }

@@ -14,7 +14,7 @@
         select creator_id from spa_group where group_id = #{group_id}
     </select>
     <update id="updateGroupMeta">
-        update spa_group set group_name = #{group_name} and group_desc = #{group_desc} where group_id = #{group_id}
+        update spa_group set group_name = #{group_name} , group_desc = #{group_desc} where group_id = #{group_id}
     </update>
     <delete id="deleteGroup">
         delete from spa_group where group_id = #{group_id}

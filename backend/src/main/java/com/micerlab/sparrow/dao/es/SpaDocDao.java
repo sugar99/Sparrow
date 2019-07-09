@@ -1,6 +1,8 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.doc.SpaDoc;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -62,5 +64,16 @@ public class SpaDocDao
     public void updateDocMeta(String doc_id, Map<String, Object> docMap)
     {
         elasticsearchBaseDao.updateESDoc(index, doc_id, docMap);
+    }
+    
+    public void createDocMeta(SpaDoc spaDoc)
+    {
+        JSONObject srcMap = (JSONObject) JSONObject.toJSON(spaDoc);
+        elasticsearchBaseDao.indexESDoc(index,spaDoc.getId(), srcMap);
+    }
+    
+    public void deleteDocMeta(String doc_id)
+    {
+        elasticsearchBaseDao.deleteESDoc(index, doc_id);
     }
 }

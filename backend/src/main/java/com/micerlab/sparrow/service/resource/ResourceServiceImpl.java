@@ -55,6 +55,12 @@ public class ResourceServiceImpl implements ResourceService{
         if (type.equals("doc")) {
             //新建文档
             Timestamp timestamp = TimeUtil.currentTime();
+            resource.setResource_id(resource_id);
+            resource.setResource_name("未命名");
+            resource.setResource_type("doc");
+            resource.setCreator_id(user_id);
+            resource.setCreated_at(timestamp);
+            resource.setThumbnail("./assets/images/doc.png");
             //TODO 新建文档事件订阅者 (ES)
             //产生InsertDocEvent,在ES和PostgreSQL中同步文档的元数据
             EventBus.getDefault().post(new InsertDocEvent(resource_id, "doc", user_id, timestamp, timestamp));
@@ -152,7 +158,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result deleteResource(String resource_id, String type) {
         if (type.equals("doc")) {
-            //TODO 删除文档事件订阅者 (ES)
+            // 删除文档事件订阅者
             //产生DeleteDocEvent,在ES和PostgreSQL中同步删除文档
             EventBus.getDefault().post(new DeleteDocEvent(resource_id));
         } else {
@@ -251,7 +257,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Autowired
     private SpaDocDao spaDocDao;
     
-    // @Override
+    @Override
     public Result retrieveDocMeta(String doc_id)
     {
         Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
@@ -261,18 +267,13 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
-        //TODO 更新文档元数据的事件订阅者
-        String title = params.getTitle().toString();
-        String desc = params.getDesc().toString();
+        // TODO 更新文档元数据的事件订阅者
+        String title = params.getTitle();
+        String desc = params.getDesc();
         Timestamp modified_time = TimeUtil.currentTime();
         EventBus.getDefault().post(new UpdateDocEvent(doc_id, title, desc, modified_time));
         
-        Map<String, Object> jsonMap = params.toMap();
-        // TODO: current time
-//        String modified_time = "2019-07-09 18:03:00.888";
-        jsonMap.put("modified_time", modified_time);
-        jsonMap.put("meta_state", 1);
-        spaDocDao.updateDocMeta(doc_id, jsonMap);
+        // 调用ES / Postgre 订阅者处理
         return Result.OK().build();
     }
     

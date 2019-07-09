@@ -1,7 +1,9 @@
 package com.micerlab.sparrow.utils;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class TimeUtil {
 
@@ -14,5 +16,11 @@ public class TimeUtil {
         Timestamp timestamp = new Timestamp(currentTime.getTime());
         return timestamp;
     }
-
+    
+    public static String currentTimeStr()
+    {
+        String timeStr = currentTime().toString();
+        timeStr = timeStr.substring(0, timeStr.lastIndexOf("."));
+        return timeStr;
+    }
 }

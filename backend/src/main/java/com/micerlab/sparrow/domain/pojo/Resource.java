@@ -9,7 +9,7 @@ public class Resource {
 
     private String resource_id;
 
-    private String resource_name = "undefined";
+    private String resource_name = "未命名";
 
     private String resource_type;
 

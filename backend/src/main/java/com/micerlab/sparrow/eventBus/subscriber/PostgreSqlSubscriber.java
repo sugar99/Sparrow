@@ -127,6 +127,7 @@ public class PostgreSqlSubscriber {
         resourceDao.createResource(resource);
     }
 
+    @Subscribe
     public void updateDoc(UpdateDocEvent updateDocEvent) {
         resourceDao.updateResourceMeta(updateDocEvent.getId(), updateDocEvent.getTitle());
     }
