@@ -65,6 +65,7 @@ public class SparrowApplication
         registrationBean.addUrlPatterns("/v1/resources/*");
         registrationBean.addUrlPatterns("/v1/dirs/*");
         registrationBean.addUrlPatterns("/v1/docs/*");
+        registrationBean.addUrlPatterns("/v1/files/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }
