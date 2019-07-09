@@ -7,15 +7,31 @@ public class InsertDocEvent {
 
     private final String resource_type;
 
-    private final String creator_id;
+    private final String creator;
 
-    private final Timestamp created_at;
+    private final Timestamp created_time;
 
-    public InsertDocEvent(String resource_id, String resource_type, String creator_id, Timestamp created_at) {
+    private final Timestamp modified_time;
+
+    private final String title;
+
+    private final String desc;
+
+    private final String[] files;
+
+    private final byte meta_state;
+
+    public InsertDocEvent(String resource_id, String resource_type, String creator, Timestamp created_time,
+                          Timestamp modified_time) {
         this.resource_id = resource_id;
         this.resource_type = resource_type;
-        this.creator_id = creator_id;
-        this.created_at = created_at;
+        this.creator = creator;
+        this.created_time = created_time;
+        this.modified_time = modified_time;
+        this.title = "未命名";
+        this.desc = "";
+        this.files = null;
+        this.meta_state = 0;
     }
 
     public String getResource_id() {
@@ -26,11 +42,32 @@ public class InsertDocEvent {
         return resource_type;
     }
 
-    public String getCreator_id() {
-        return creator_id;
+    public String getCreator() {
+        return creator;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Timestamp getCreated_time() {
+        return created_time;
     }
+
+    public Timestamp getModified_time() {
+        return modified_time;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public String[] getFiles() {
+        return files;
+    }
+
+    public byte getMeta_state() {
+        return meta_state;
+    }
+
 }

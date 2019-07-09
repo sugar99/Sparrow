@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.dao.es.SearchDao;
+import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
@@ -47,12 +48,14 @@ public class SearchServiceImpl implements SearchService
     }
 
     @Override
-    public Result searchUser(String keyword) {
-        return null;
+    public Result searchUser(String keyword, int size) {
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_USER.getIndex(), size);
+        return Result.OK().data(data).build();
     }
 
     @Override
-    public Result searchGroup(String keyword) {
-        return null;
+    public Result searchGroup(String keyword, int size) {
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_GROUP.getIndex(), size);
+        return Result.OK().data(data).build();
     }
 }

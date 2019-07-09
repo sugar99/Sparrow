@@ -15,4 +15,6 @@ public interface UserService {
     Result userLogout(String user_id);
 
     Result getUserGroups(String user_id);
+
+    Map<String, Object> defaultUserState(String user_id);
 }

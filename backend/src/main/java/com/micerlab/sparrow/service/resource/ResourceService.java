@@ -7,23 +7,29 @@ import java.util.Map;
 
 public interface ResourceService {
 
-    Result createResource(String type, String cur_id);
+    Result createResource(String user_id, String cur_id, String type);
 
-    Result getResourceMeta(String resource_id);
+    String createPersonalDir(String user_id, String username);
 
-    Result updateResourceMeta(String resource_id, Map<String, Object> paramMap);
+    Result getDirMeta(String dir_id);
 
-    Result deleteResource(String resource_id);
+    String getCreatorId(String resource_id);
 
-    Result getSlavesResource(String resource_id);
+    String getMasterDirId(String resource_id);
 
-    Result getAuthGroups(String resource_id);
+    Result updateDirMeta(String dir_id, Map<String, Object> paramMap);
+
+    Result deleteResource(String resource_id, String type);
+
+    Result getSlavesResource(String user_id, String resource_id, String type);
+
+    Result getAuthGroups(String user_id, String resource_id);
 
     Result addPermission(String resource_id, Map<String, Object> paramMap);
 
     Result removePermission(String resource_id, Map<String, Object> paramMap);
 
-    Result retrieveDocMeta(String doc_id);
+    Result getDocMeta(String doc_id);
 
     Result updateDocMeta(String doc_id, Map<String, Object> parms);
 

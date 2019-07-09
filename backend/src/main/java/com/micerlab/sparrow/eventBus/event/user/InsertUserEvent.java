@@ -1,10 +1,24 @@
 package com.micerlab.sparrow.eventBus.event.user;
 
 public class InsertUserEvent {
+
     private String user_id;
+
     private String username;
+
     private String password;
+
     private String email;
+
+    private String work_no;
+
+    public InsertUserEvent(String user_id, String username, String work_no, String password, String email) {
+        this.user_id = user_id;
+        this.username = username;
+        this.work_no = work_no;
+        this.password = password;
+        this.email = email;
+    }
 
     public String getPassword() {
         return password;
@@ -19,17 +33,6 @@ public class InsertUserEvent {
     }
 
     public void setEmail(String email) {
-        this.email = email;
-    }
-
-    private String work_no;
-
-
-    public InsertUserEvent(String user_id, String username, String work_no, String password, String email) {
-        this.user_id = user_id;
-        this.username = username;
-        this.work_no = work_no;
-        this.password = password;
         this.email = email;
     }
 

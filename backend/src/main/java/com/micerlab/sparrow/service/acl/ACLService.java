@@ -11,5 +11,5 @@ public interface ACLService {
 
     void deleteGroupPermission(String group_id, String resource_id);
 
-    boolean deleteResourcePermission(String user_id, String resource_id);
+    void deleteResourcePermission(String resource_id);
 }
