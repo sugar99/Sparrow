@@ -49,7 +49,7 @@ public class ResourceServiceImpl implements ResourceService{
      * @return Result (data: resource)
      */
     @Override
-    public Result createResource(String user_id, String cur_id, String type) {
+    public Result createResource(String user_id, String type, String cur_id) {
         String resource_id = UUID.randomUUID().toString();
         Resource resource = new Resource();
         if (type.equals("doc")) {
