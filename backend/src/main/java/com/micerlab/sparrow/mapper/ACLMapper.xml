@@ -13,7 +13,7 @@
         update group_resource set permission = #{permission} where resource_id = #{resource_id} and group_id = #{group_id}
     </update>
     <delete id="deleteGroupPermission">
-        delete from group_resource where group_id = #{group_id} and resource_id = #{group_id}
+        delete from group_resource where group_id = #{group_id} and resource_id = #{resource_id}
     </delete>
     <delete id="deleteResourceAllPermission">
         delete from group_resource where resource_id = #{resource_id}

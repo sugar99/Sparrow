@@ -1,6 +1,6 @@
 # elasticSearch连接配置
 elasticsearch-config:
-  host: localhost
+  host: 192.168.43.211
   port: 9200
 
 # 日志配置

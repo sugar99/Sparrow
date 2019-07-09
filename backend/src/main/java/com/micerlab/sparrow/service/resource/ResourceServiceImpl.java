@@ -55,7 +55,13 @@ public class ResourceServiceImpl implements ResourceService{
         if (type.equals("doc")) {
             //新建文档
             Timestamp timestamp = TimeUtil.currentTime();
-            // 新建文档事件订阅者 (ES) ✓
+            resource.setResource_id(resource_id);
+            resource.setResource_name("未命名");
+            resource.setResource_type("doc");
+            resource.setCreator_id(user_id);
+            resource.setCreated_at(timestamp);
+            resource.setThumbnail("./assets/images/doc.png");
+            //TODO 新建文档事件订阅者 (ES)
             //产生InsertDocEvent,在ES和PostgreSQL中同步文档的元数据
             EventBus.getDefault().post(new InsertDocEvent(resource_id, "doc", user_id, timestamp, timestamp));
         } else {
