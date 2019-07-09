@@ -8,8 +8,6 @@ logging:
 
 # postgreSQL, redis连接配置
 spring:
-  profiles:
-    active: dev
   datasource:
     username: postgres
     url: jdbc:postgresql://39.108.210.48:5432/sparrow
@@ -30,7 +28,11 @@ spring:
         max-active: 10
         max-idle: 10
         max-wait: 2000ms
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 # mybatis配置
 mybatis:
@@ -51,37 +53,6 @@ oss:
   callbackHost: ${server.port}
 
 
----
-
-spring:
-  profiles: dev
-  rabbitmq:
-    host: 192.168.43.98
-    port: 5672
-    username: guest
-    password: guest
-
-# elasticSearch连接配置
-elasticsearch-config:
-  host: 192.168.43.211
-  port: 9200
-
-file:
-  temp:
-    path: D:\\test\\temp\\
-
-server:
-  port: 8080
-
----
-
-spring:
-  profiles: prod
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 
 # elasticSearch连接配置
 elasticsearch-config:
@@ -95,4 +66,3 @@ file:
 server:
   port: 8089
 
----
