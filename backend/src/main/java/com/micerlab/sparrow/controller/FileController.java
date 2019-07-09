@@ -14,6 +14,7 @@ import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.file.FileService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
+import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.BusinessException;
 import io.swagger.annotations.Api;
@@ -49,6 +50,9 @@ public class FileController {
 
     @Autowired
     private SpaFileDao spaFileDao;
+
+    @Autowired
+    private UserService userService;
 
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
@@ -129,10 +133,12 @@ public class FileController {
             @RequestBody CreateSpaFileParams params
             )
     {
-        msgProducer.sendMsg("file_id");
-        // TODO: params中含有 creator, doc_id 字段
-        // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
-        //回调接口不需要认证？
+        String creator = params.getCreator();
+        String doc_id = params.getDoc_id();
+        if(!aclService.hasPermission(creator, doc_id, userService.getUserGroupsIdList(creator), ActionType.WRITE)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
+        msgProducer.sendMsg(file_id);
         return fileService.createFileMeta(file_id, params);
     }
     

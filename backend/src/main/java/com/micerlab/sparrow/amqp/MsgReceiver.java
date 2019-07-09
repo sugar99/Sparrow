@@ -44,7 +44,9 @@ public class MsgReceiver {
             Map<String, Object> thumbnailInfo = fileUtil.getThumbnailInfo(file);
             EventBus.getDefault().post(new UpdateFileThumbnailEvent(content, (String)thumbnailInfo.get("thumbnail_url")));
         } catch (IOException e) {
-            logger.error("生成缩略图失败");
+            logger.error("生成缩略图失败: " + e.getMessage());
+        } catch (IllegalArgumentException e){
+            logger.error("生成缩略图失败: " + e.getMessage());
         }
 
     }
