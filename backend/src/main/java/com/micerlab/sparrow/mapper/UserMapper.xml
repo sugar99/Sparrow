@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micerlab.sparrow.dao.postgre.UserDao">
+    <insert id="createUser" parameterType="user">
+        insert into spa_user(user_id, username, password, work_no, email, isAdmin, personal_dir, personal_group) values (#{user.user_id},
+         #{user.username}, #{user.password}, #{user.work_no}, #{user.email}, #{user.isAdmin}, #{user.personal_dir}, #{user.personal_group})
+    </insert>
+    <select id="getUserMetaById" resultType="user">
+        select * from spa_user where user_id = #{user_id}
+    </select>
+    <select id="getUserMetaByWorkNo" resultType="user">
+        select * from spa_user where work_no = #{work_no}
+    </select>
+    <delete id="deleteUser">
+        delete from spa_user where user_id = #{user_id}
+    </delete>
+    <select id="getUserGroupIds" resultType="String">
+        select g.group_id from group_user r inner join spa_group g on g.group_id = r.group_id and r.user_id = #{user_id}
+    </select>
+    <select id="getUserGroups" resultType="group">
+        select g.* from group_user r inner join spa_group g on g.group_id = r.group_id and r.user_id = #{user_id}
+    </select>
+    <select id="getAdminId" resultType="String">
+        select user_id from spa_user where isadmin = 1
+    </select>
+</mapper>
