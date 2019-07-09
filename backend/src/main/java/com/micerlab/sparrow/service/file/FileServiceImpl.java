@@ -11,6 +11,7 @@ import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
 import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
+import com.micerlab.sparrow.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +40,8 @@ public class FileServiceImpl implements FileService
         SpaFile spaFile = new SpaFile(file_id, params);
         
         spaFile.setOriginal_id(file_id);
-        // TODO: current time
-        String created_time = "2019-07-09 18:03:00";
-        String modified_time = "2019-07-09 18:03:00";
+        String created_time = TimeUtil.currentTimeStr();
+        String modified_time = created_time;
         spaFile.setCreated_time(created_time);
         spaFile.setModified_time(modified_time);
         JSONObject jsonMap = (JSONObject) JSONObject.toJSON(spaFile);

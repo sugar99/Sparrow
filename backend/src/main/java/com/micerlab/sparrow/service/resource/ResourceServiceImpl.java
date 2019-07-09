@@ -261,7 +261,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
-        // TODO 更新文档元数据的事件订阅者
+        // 更新文档元数据的事件订阅者
         String title = params.getTitle();
         String desc = params.getDesc();
         Timestamp modified_time = TimeUtil.currentTime();
