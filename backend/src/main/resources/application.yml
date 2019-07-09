@@ -8,7 +8,6 @@ logging.level.*: DEBUG
 
 logging:
   config: classpath:logback-boot.xml
-<<<<<<< HEAD
 
 minio:
   endpoint: 39.108.210.48:9000
@@ -36,7 +35,3 @@ spring:
 
 server:
   port: 8081
-=======
-server:
-  port: 18080
->>>>>>> origin/chenlvjia

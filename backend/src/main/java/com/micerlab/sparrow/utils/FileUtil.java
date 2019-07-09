@@ -1,5 +1,15 @@
 package com.micerlab.sparrow.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 import com.micerlab.sparrow.domain.file.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,23 +52,6 @@ public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
     private static final String exts_dir = "classpath:static/type_exts/";
 
-=======
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.ResourceUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
-
-public class FileUtil {
-
-    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
-    private static final String exts_dir = "classpath:static/type_exts/";
-
     /**
      * 加载拓展名配置文件，获取特定类型下的拓展名
      * @param type 文档类型
@@ -84,56 +77,8 @@ public class FileUtil {
         return Collections.emptyList();
     }
 
-    public String getFileType(String suffix){
+    public String getFileType(String suffix) {
         return FileType.fromExt(suffix).toString();
-//        String type = "others";
-//
-//        FileSuffixType[] pics = {FileSuffixType.BMP, FileSuffixType.JPG, FileSuffixType.JPEG, FileSuffixType.PNG, FileSuffixType.GIF, FileSuffixType.TIFF, FileSuffixType.ICO
-//                /*, FileSuffixType.WEBP, FileSuffixType.PCX, FileSuffixType.TGA, FileSuffixType.EXIF, FileSuffixType.FPX, FileSuffixType.SVG, FileSuffixType.PSD, FileSuffixType.CDR,
-//                FileSuffixType.PCD, FileSuffixType.DXF, FileSuffixType.UFO, FileSuffixType.EPS, FileSuffixType.AI, FileSuffixType.HDRI, FileSuffixType.RAW, FileSuffixType.WNF,
-//                FileSuffixType.FLIC, FileSuffixType.EMF*/
-//        };
-//
-//        FileSuffixType[] videos = { FileSuffixType.MP4, FileSuffixType.AVI, FileSuffixType.FLV, FileSuffixType.MKV, FileSuffixType.WMV, FileSuffixType.MOV
-//                /*, FileSuffixType.ASF, FileSuffixType.ASX, FileSuffixType.RM, FileSuffixType.RA, FileSuffixType.RMVB, FileSuffixType.QT, FileSuffixType.DAT, FileSuffixType.MPEG, FileSuffixType.MPG */
-//        };
-//
-//        FileSuffixType[] audios = { FileSuffixType.MP3, FileSuffixType.WAV };
-//
-//        FileSuffixType[] docs = { FileSuffixType.DOC, FileSuffixType.DOCX, FileSuffixType.TXT, FileSuffixType.XLS, FileSuffixType.XLSX, FileSuffixType.PPT, FileSuffixType.PPTX,
-//                FileSuffixType.PDF
-//                /*, FileSuffixType.VSDX*/
-//        };
-//
-//        for (FileSuffixType fileSuffixType : audios){
-//            if (fileSuffixType.getValue().equals(suffix)){
-//                type = "audio";
-//                return type;
-//            }
-//        }
-//
-//        for (FileSuffixType fileSuffixType : docs){
-//            if (fileSuffixType.getValue().equals(suffix)){
-//                type = "document";
-//                return type;
-//            }
-//        }
-//
-//        for (FileSuffixType fileSuffixType : videos){
-//            if (fileSuffixType.getValue().equals(suffix)){
-//                type = "video";
-//                return type;
-//            }
-//        }
-//
-//        for (FileSuffixType fileSuffixType : pics) {
-//            if (fileSuffixType.getValue().equals(suffix)) {
-//                type = "picture";
-//                return type;
-//            }
-//        }
-//
-//        return type;
     }
 
     public String getFileStorePath(String suffix){

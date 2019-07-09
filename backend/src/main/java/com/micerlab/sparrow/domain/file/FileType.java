@@ -21,22 +21,16 @@ public enum FileType
 
     private final static Map<String, FileType> ext2Type;
 
-    
-    private String type;
-    private final List<String> exts;
-    
-    private final static Map<String, FileType> ext2Type;
-
     static {
         Map<String, FileType> ext2TypeTemp = new HashMap<>();
         for(FileType fileType : values())
             if (!fileType.equals(FileType.ALL)
                     && !fileType.equals(FileType.OTHERS))
-            && !fileType.equals(FileType.OTHERS))
                 for (String ext : fileType.exts)
                     ext2TypeTemp.put(ext, fileType);
         ext2Type = Collections.unmodifiableMap(ext2TypeTemp);
     }
+
     FileType()
     {
         this.type = name().toLowerCase();
