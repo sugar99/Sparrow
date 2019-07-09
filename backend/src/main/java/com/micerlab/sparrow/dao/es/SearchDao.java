@@ -35,16 +35,7 @@ public class SearchDao
     private SearchUserGroupDao searchUserGroupDao;
     
     private SpaFilterDao spaFilterDao;
-    
-    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao, SearchUserGroupDao searchUserGroupDao, SpaFilterDao spaFilterDao)
-    {
-        this.searchSuggestionDao = searchSuggestionDao;
-        this.searchAssociationDao = searchAssociationDao;
-        this.searchResultDao = searchResultDao;
-        this.searchUserGroupDao = searchUserGroupDao;
-        this.spaFilterDao = spaFilterDao;
-    }
-    
+
     public List<String> suggestions(String type, String keyword, int size)
     {
         try
