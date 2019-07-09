@@ -35,7 +35,7 @@ public class VideoUtil {
         }
 
         String imagePath = tempFilePath + File.separatorChar + UUID.randomUUID() + ".png";
-        File frameImage = doExecuteFrame(frame,imagePath);
+        File frameImage = doExecuteFrame(frame, imagePath);
 
         ff.stop();
 
@@ -48,7 +48,7 @@ public class VideoUtil {
         BufferedImage bufferedImage = converter.getBufferedImage(frame);
 
         File fileParent = frameImage.getParentFile();
-        if (! fileParent.exists()){
+        if (!fileParent.exists()) {
             fileParent.mkdir();
         }
         frameImage.createNewFile();
@@ -61,11 +61,45 @@ public class VideoUtil {
 //            thumbnailImage.getGraphics().drawImage(srcImage.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
 
         try {
-            ImageIO.write(bufferedImage,"png",frameImage);
+            ImageIO.write(bufferedImage, "png", frameImage);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         return frameImage;
+    }
+
+    public File[] getVideoFramesByInterval(File videoFile) throws IOException {
+        FFmpegFrameGrabber ff = new FFmpegFrameGrabber(videoFile);
+
+        String dirPath = tempFilePath + File.separatorChar + UUID.randomUUID() + File.separatorChar;
+
+        ff.start();
+        int ftp = ff.getLengthInFrames();
+        int interval1 = ftp / 4;
+        System.out.println(ftp);
+        Frame frame = null;
+        int flag = 0;
+        int count = 0;
+        while(flag < ftp){
+            frame = ff.grabFrame();
+            if(flag == count * interval1) {
+                System.out.println(flag);
+                while(frame.image == null && flag < ftp){
+                    flag++;
+                    frame = ff.grabFrame();
+                }
+                if(frame.image != null) {
+                    String imagePath = dirPath + "keyFrame_" + count + ".png";
+                    doExecuteFrame(frame, imagePath);
+                    System.out.println(count);
+                    count++;
+                }
+            }
+            flag++;
+        }
+        ff.stop();
+
+        return new File(dirPath).listFiles();
     }
 }

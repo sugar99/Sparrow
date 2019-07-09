@@ -32,9 +32,6 @@ public class FileController {
     private FileService fileService;
 
     @Autowired
-    private MsgProducer msgProducer;
-
-    @Autowired
     @Qualifier("minioService")
     private FileStoreService fileStoreService;
 
@@ -96,8 +93,6 @@ public class FileController {
     {
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
-        System.out.println(file_id);
-        msgProducer.sendMsg(file_id);
         return fileService.createFileMeta(file_id, params);
     }
     
