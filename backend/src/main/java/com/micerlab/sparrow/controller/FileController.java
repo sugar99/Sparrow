@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.controller;
 
+import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
@@ -16,9 +17,14 @@ import com.micerlab.sparrow.utils.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +36,7 @@ public class FileController {
     private FileService fileService;
 
     @Autowired
+    @Qualifier("minioService")
     private FileStoreService fileStoreService;
 
     @Autowired
@@ -37,13 +44,13 @@ public class FileController {
 
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
-    public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request){
+    public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String cur_id = params.get("cur_id").toString();
         if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
-        return fileStoreService.getPolicy(params);
+        return fileStoreService.getPolicy(params, httpServletRequest, httpServletResponse);
     }
 
     @ApiOperation("F2.获取签名URL（Minio）")
@@ -54,7 +61,7 @@ public class FileController {
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
-        return fileStoreService.getPresignedUrl(params);
+        return fileStoreService.getPresignedUrl(params, request);
     }
 
     @ApiOperation("F6.删除文件")
@@ -63,15 +70,23 @@ public class FileController {
         // TODO: 通过file_id获取doc_id (ES)
         // TODO: ACL 判断用户对当前文档是否具有可写权限
         // TODO: delete es meta 文件
-        return fileStoreService.deleteFile(params);
+        List<String> keys = new LinkedList<>();
+        for (String file_id: (List<String>) params.get("file_id")) {
+            keys.add("image/" + file_id);
+        }
+        return fileStoreService.deleteFile(keys);
     }
 
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
-    public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
+    public void downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         // TODO: 通过file_id获取doc_id (ES)
         // TODO: ACL 判断用户对当前文档是否具有可读权限
-        return fileStoreService.downloadFile(file_id);
+        // TODO: ACL(httpServletRequest)
+        // TODO: 从es里查找该文件的title、key
+        String title = "a.jpg";
+        String key = "image/" + file_id;
+        fileStoreService.downloadFile(title, key, httpServletResponse);
     }
 
     @ApiOperation("F8.获取文件历史版本列表")
@@ -95,6 +110,8 @@ public class FileController {
             @RequestBody CreateSpaFileParams params
             )
     {
+        // TODO: params中含有 creator, doc_id 字段
+        // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
         //回调接口不需要认证？
         return fileService.createFileMeta(file_id, params);
     }
