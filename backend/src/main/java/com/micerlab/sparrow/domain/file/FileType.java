@@ -16,6 +16,12 @@ public enum FileType
     OTHERS()
     ;
 
+    private static final List<String> imageExts = Arrays.asList("bmp","cur","dds","exr","gif","ico","jpg","jpeg","pcx","pbm","pfm","pgm","ppm","png","psd","svg","tga","tif","tiff","webp");
+    private static final List<String> docExts = Arrays.asList("c","cfg","cpp","cs","css","csv","dat","doc","docx","h","hpp","ini","js","log","m","pdf","ppt","pptx","ps","py","rtf","sh","tex","torrent","txt","xls","xlsx","t");
+    private static final List<String> videoExts = Arrays.asList("3gp","3g2","asf","avi","f4f","f4i","f4m","f4v","flv","h264","m4v","mkv","mov","mp4","mpg","ogg","ogv","qt","rm","rmvb","ts","vob","webm","wmv");
+    private static final List<String> audioExts = Arrays.asList("aac","aif","ape","flac","oga","opus","m3u","m4a","mid","midi","mp3","ra","wav","wma","weba");
+    
+    
     private String type;
     private final List<String> exts;
 

@@ -51,6 +51,11 @@ public class FileUtil {
 //    private static final String exts_dir = "classpath:static/type_exts/";
     private static final String exts_dir = "/static/type_exts/";
     
+    private static final List<String> imageExts = Arrays.asList("bmp","cur","dds","exr","gif","ico","jpg","jpeg","pcx","pbm","pfm","pgm","ppm","png","psd","svg","tga","tif","tiff","webp");
+    private static final List<String> docExts = Arrays.asList("c","cfg","cpp","cs","css","csv","dat","doc","docx","h","hpp","ini","js","log","m","pdf","ppt","pptx","ps","py","rtf","sh","tex","torrent","txt","xls","xlsx","t");
+    private static final List<String> videoExts = Arrays.asList("3gp","3g2","asf","avi","f4f","f4i","f4m","f4v","flv","h264","m4v","mkv","mov","mp4","mpg","ogg","ogv","qt","rm","rmvb","ts","vob","webm","wmv");
+    private static final List<String> audioExts = Arrays.asList("aac","aif","ape","flac","oga","opus","m3u","m4a","mid","midi","mp3","ra","wav","wma","weba");
+    
     /**
      * 加载拓展名配置文件，获取特定类型下的拓展名
      * @param type 文档类型
@@ -58,26 +63,35 @@ public class FileUtil {
      */
     public static List<String> loadTypeExtsConfig(String type)
     {
-        String filePath = null;
-        try
+        switch (type)
         {
-            filePath = exts_dir + type + "_exts.txt";
-            ClassPathResource classPathResource = new ClassPathResource(filePath);
-            File type_exts_file = classPathResource.getFile();
-//            File type_exts_file = ResourceUtils.getFile(filePath);
-            Scanner scanner = new Scanner(type_exts_file);
-            List<String> exts = new ArrayList<>();
-            while (scanner.hasNext())
-                exts.add(scanner.next());
-            return exts;
-        } catch (FileNotFoundException e)
-        {
-            String errorMsg = "无法加载拓展名配置文件:" + filePath;
-            logger.error(errorMsg);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+            case "image": return imageExts;
+            case "doc": return docExts;
+            case "video": return videoExts;
+            case "audio": return audioExts;
         }
+//        String filePath = null;
+//        try
+//        {
+//            filePath = exts_dir + type + "_exts.txt";
+////            ClassPathResource classPathResource = new ClassPathResource(filePath);
+////            File type_exts_file = classPathResource.getFile();
+////            File type_exts_file = ResourceUtils.getFile(filePath);
+//            File type_exts_file = new File(FileUtil.class.getClassLoader().getResource(filePath).getFile());
+////            File type_exts_file = new File(FileUtil.class.getResource(filePath).getFile());
+//            Scanner scanner = new Scanner(type_exts_file);
+//            List<String> exts = new ArrayList<>();
+//            while (scanner.hasNext())
+//                exts.add(scanner.next());
+//            return exts;
+//        } catch (FileNotFoundException e)
+//        {
+//            String errorMsg = "无法加载拓展名配置文件:" + filePath;
+//            logger.error(errorMsg);
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
         return Collections.emptyList();
     }
 
