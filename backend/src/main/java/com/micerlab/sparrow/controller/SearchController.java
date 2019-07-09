@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.search.SearchRequestParams;
+import com.micerlab.sparrow.domain.params.SearchRequestParams;
 import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;

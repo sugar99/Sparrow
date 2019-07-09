@@ -3,10 +3,15 @@ package com.micerlab.sparrow.dao.es;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.elasticsearch.action.DocWriteResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.replication.ReplicationResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -116,17 +121,57 @@ public class ElasticsearchBaseDao
         }
     }
     
-    public void updateESDoc(String index, String doc_id, Map<String, Object> docMap)
+    public void indexESDoc(String index, String id, Map<String, Object> docMap)
     {
         try
         {
-            UpdateRequest updateRequest = new UpdateRequest(index, doc_id);
+            IndexRequest indexRequest = new IndexRequest(index);
+            indexRequest.id(id);
+            indexRequest.source(docMap);
+            IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
+                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+                        "ES文档创建失败:/" + index + "/" + id
+                                + ";" + indexResponse.toString());
+        } catch (IOException ex)
+        {
+            logger.error(ex.getMessage());
+            ex.printStackTrace();
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+        }
+    }
+    
+    public void updateESDoc(String index, String id, Map<String, Object> docMap)
+    {
+        try
+        {
+            UpdateRequest updateRequest = new UpdateRequest(index, id);
             logger.debug("update doc : " + docMap.toString());
             updateRequest.doc(docMap);
             UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
             if(!updateResponse.getResult().equals(DocWriteResponse.Result.UPDATED))
-                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, "文档更新失败:" + doc_id
-                        + ";" + updateResponse.toString());
+                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+                        "ES文档更新失败:/" + index + "/" + id
+                                + ";" + updateResponse.toString());
+        } catch (IOException ex)
+        {
+            logger.error(ex.getMessage());
+            ex.printStackTrace();
+            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+        }
+    }
+    
+    public boolean deleteESDoc(String index, String id)
+    {
+        try
+        {
+            DeleteRequest deleteRequest = new DeleteRequest(index, id);
+            DeleteResponse deleteResponse = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
+            ReplicationResponse.ShardInfo shardInfo = deleteResponse.getShardInfo();
+            logger.info("delete ES doc: /" + index + "/" + id);
+            logger.info(deleteResponse.toString());
+            return deleteResponse.getResult() != DocWriteResponse.Result.NOT_FOUND &&
+                    shardInfo.getTotal() == shardInfo.getSuccessful();
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

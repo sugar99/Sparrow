@@ -1,5 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.alibaba.fastjson.JSONObject;
+import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -19,13 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class SearchSpaFilterDao
+public class SpaFilterDao
 {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
     
+    @Autowired
+    private ElasticsearchBaseDao elasticsearchBaseDao;
     
-    public List<Map<String, Object>> searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size) throws IOException
+    public List<Map<String, Object>> search(SpaFilterType spaFilterType, String keyword, int size) throws IOException
     {
         SearchRequest request = new SearchRequest(spaFilterType.sparrowIndex().getIndex());
     
@@ -50,5 +54,25 @@ public class SearchSpaFilterDao
             spaFilters.add(searchHit.getSourceAsMap());
         
         return spaFilters;
+    }
+    
+    public SpaFilter getSpaFilter(SpaFilterType spaFilterType, String filter_id)
+    {
+        Map<String, Object> ESDoc = elasticsearchBaseDao.getESDoc(spaFilterType.sparrowIndex().getIndex(),filter_id);
+        if(ESDoc == null)
+            return null;
+        SpaFilter spaFilter = (new JSONObject(ESDoc)).toJavaObject(SpaFilter.class);
+        return spaFilter;
+    }
+    
+    public void updateSpaFilter(SpaFilterType spaFilterType, String filter_id, SpaFilter spaFilter)
+    {
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(spaFilter);
+        elasticsearchBaseDao.updateESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id, jsonObject);
+    }
+    
+    public void deleteSpaFilter(SpaFilterType spaFilterType, String filter_id)
+    {
+        elasticsearchBaseDao.deleteESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id);
     }
 }

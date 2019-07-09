@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain.doc;
+package com.micerlab.sparrow.domain.params;
 
 import lombok.Getter;
 import lombok.Setter;

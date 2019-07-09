@@ -2,7 +2,7 @@ package com.micerlab.sparrow.service.resource;
 
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
+import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +67,7 @@ public class ResourceServiceImpl implements ResourceService{
     {
         Map<String, Object> jsonMap = params.toMap();
         // TODO: current time
-        String modified_time = "";
+        String modified_time = "2019-07-09 18:03:00.888";
         jsonMap.put("modified_time", modified_time);
         jsonMap.put("meta_state", 1);
         spaDocDao.updateDocMeta(doc_id, jsonMap);

@@ -1,6 +1,9 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
+import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
+import com.micerlab.sparrow.domain.params.UpdateFileSpaFiltersParams;
 import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.file.FileService;
@@ -71,8 +74,8 @@ public class FileController {
     public Result createFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id,
-            @RequestBody Map<String, Object> params
-    )
+            @RequestBody CreateSpaFileParams params
+            )
     {
         // TODO: params中含有 creator, doc_id 字段
         // TODO: ACL 判定该creator是否拥有当前doc_id的写权限
@@ -98,8 +101,8 @@ public class FileController {
     public Result updateFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id,
-            @RequestBody Map<String, Object> params
-    )
+            @RequestBody UpdateFileMetaParams params
+            )
     {
         // TODO: ACL 验证是否拥有该文件的修改权限
         return fileService.updateFileMeta(file_id, params);
@@ -171,14 +174,24 @@ public class FileController {
     public Result updateFileSpaFilters(
             HttpServletRequest request,
             @PathVariable String file_id,
-            @PathVariable String filter_types
-    )
+            @PathVariable String filter_types,
+            @RequestBody UpdateFileSpaFiltersParams params
+            )
     {
         // TODO: ACL 验证是否拥有该文件的修改权限
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
-        return fileService.updateFileSpaFilters(file_id, spaFilterType);
+        List<Long> spaFilterIds;
+        if(SpaFilterType.TAG == spaFilterType)
+            spaFilterIds = params.getTags();
+        else spaFilterIds = params.getCategories();
+        return fileService.updateFileSpaFilters(file_id, spaFilterType, spaFilterIds);
     }
     
+    /**
+     * added by chenlvjia
+     * 请勿删除
+     * @param type 文件类型
+     */
     @ApiOperation("测试接口：获取文件类型的拓展名")
     @GetMapping("/v1/files/exts")
     public Result testLoadExts(@RequestParam String type)

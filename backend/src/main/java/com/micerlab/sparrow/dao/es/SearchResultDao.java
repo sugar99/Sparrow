@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.search.KeyCount;
-import com.micerlab.sparrow.domain.search.SearchRequestParams;
+import com.micerlab.sparrow.domain.params.SearchRequestParams;
 import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.TimeRangeKeyCount;
 import com.micerlab.sparrow.utils.Page;

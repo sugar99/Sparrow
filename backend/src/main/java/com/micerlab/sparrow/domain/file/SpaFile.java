@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.domain.file;
 
+import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,21 +31,21 @@ public class SpaFile
     private String thumbnail;
     private List<String> derived_files = Collections.emptyList();
     
-    private Date created_time;
-    private Date modified_time;
+    private String created_time;
+    private String modified_time;
     
     private byte version = 0;
     private String original_id;
     private String parent_id = null;
     
     private List<String> keywords = Collections.emptyList();
-    private String content;
+    private String content = "";
     
     public SpaFile()
     {
     }
     
-    public SpaFile(String id, SpaFileCreateParams params)
+    public SpaFile(String id, CreateSpaFileParams params)
     {
         this.id = id;
         

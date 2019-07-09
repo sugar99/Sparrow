@@ -29,7 +29,8 @@ public enum ErrorCode
     NOT_FOUND_USERNAME_OR_PASSWORD_INVALID(404_001, "用户不存在或密码错误"),
     NOT_FOUND_FILE_ID(404_002, "文件id不存在"),
     NOT_FOUND_DOC_ID(404_002, "文档id不存在"),
-    
+    NOT_FOUND_TAG_ID(404_002, "标签id不存在"),
+    NOT_FOUND_CATEGORY_ID(404_002, "类目id不存在"),
     
     
     // 500 Internal Server Error 服务器错误

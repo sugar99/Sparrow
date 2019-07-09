@@ -11,6 +11,10 @@ public class SpaFilter
     private String title;
     private String desc;
     
+    public SpaFilter()
+    {
+    }
+    
     public SpaFilter(int id, String title)
     {
         this.id = id;

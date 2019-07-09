@@ -1,13 +1,12 @@
-package com.micerlab.sparrow.domain.file;
+package com.micerlab.sparrow.domain.params;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 
 @Getter
 @Setter
-public class SpaFileCreateParams
+public class CreateSpaFileParams
 {
     private String title;
     private String creator;

@@ -1,8 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.ErrorCode;
-import com.micerlab.sparrow.domain.search.SearchRequestParams;
-import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.params.SearchRequestParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.slf4j.Logger;
@@ -24,14 +23,14 @@ public class SearchDao
     
     private SearchResultDao searchResultDao;
     
-    private SearchSpaFilterDao searchSpaFilterDao;
+    private SpaFilterDao spaFilterDao;
     
-    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao, SearchSpaFilterDao searchSpaFilterDao)
+    public SearchDao(SearchSuggestionDao searchSuggestionDao, SearchAssociationDao searchAssociationDao, SearchResultDao searchResultDao, SpaFilterDao spaFilterDao)
     {
         this.searchSuggestionDao = searchSuggestionDao;
         this.searchAssociationDao = searchAssociationDao;
         this.searchResultDao = searchResultDao;
-        this.searchSpaFilterDao = searchSpaFilterDao;
+        this.spaFilterDao = spaFilterDao;
     }
     
     public List<String> suggestions(String type, String keyword, int size)
@@ -77,7 +76,7 @@ public class SearchDao
     {
         try
         {
-            return searchSpaFilterDao.searchSpaFilters(spaFilterType, keyword, size);
+            return spaFilterDao.search(spaFilterType, keyword, size);
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
+import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import com.micerlab.sparrow.service.resource.ResourceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

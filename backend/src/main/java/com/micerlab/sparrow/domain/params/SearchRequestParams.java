@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain.search;
+package com.micerlab.sparrow.domain.params;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.micerlab.sparrow.domain.file.FileType;

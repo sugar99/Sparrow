@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.service.resource;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
+import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 
 import java.util.Map;
 

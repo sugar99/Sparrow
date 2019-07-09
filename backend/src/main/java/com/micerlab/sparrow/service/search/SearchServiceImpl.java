@@ -2,8 +2,7 @@ package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.dao.es.SearchDao;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.search.SearchRequestParams;
-import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.params.SearchRequestParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
