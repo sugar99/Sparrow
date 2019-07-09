@@ -1,6 +1,5 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class SearchSpaFilterDao
 {
     @Autowired
-    private RestHighLevelClient elasticsearchClient;
+    private RestHighLevelClient restHighLevelClient;
     
     
     public List<Map<String, Object>> searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size) throws IOException
@@ -45,7 +44,7 @@ public class SearchSpaFilterDao
         }
         request.source(searchSourceBuilder);
     
-        SearchResponse response = elasticsearchClient.search(request, RequestOptions.DEFAULT);
+        SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         List<Map<String, Object>> spaFilters = new LinkedList<>();
         for(SearchHit searchHit: response.getHits().getHits())
             spaFilters.add(searchHit.getSourceAsMap());

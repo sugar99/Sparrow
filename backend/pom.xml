@@ -29,11 +29,11 @@
             <scope>test</scope>
         </dependency>
         <!-- 支持 @ConfigurationProperties 注解 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -55,6 +55,12 @@
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
 <!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-elasticsearch</artifactId>-->
+<!--            <version>LATEST</version>-->
+<!--        </dependency>-->
+
 
         <!-- swagger ui -->
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
@@ -104,11 +110,11 @@
             <version>3.1.1</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba</groupId>-->
-<!--            <artifactId>fastjson</artifactId>-->
-<!--            <version>1.2.58</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.58</version>
+        </dependency>
     </dependencies>
 
     <build>

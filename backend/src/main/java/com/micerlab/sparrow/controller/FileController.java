@@ -5,12 +5,14 @@ import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.file.FileService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
+import com.micerlab.sparrow.utils.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @Api
@@ -177,4 +179,11 @@ public class FileController {
         return fileService.updateFileSpaFilters(file_id, spaFilterType);
     }
     
+    @ApiOperation("测试接口：获取文件类型的拓展名")
+    @GetMapping("/v1/files/exts")
+    public Result testLoadExts(@RequestParam String type)
+    {
+        List<String> exts = FileUtil.loadTypeExtsConfig(type);
+        return Result.OK().data(exts).build();
+    }
 }

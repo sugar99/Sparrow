@@ -32,11 +32,11 @@ public class SearchAssociationDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchAssociationDao.class);
     
-    private RestHighLevelClient elasticsearchClient;
+    private RestHighLevelClient restHighLevelClient;
     
-    public SearchAssociationDao(RestHighLevelClient elasticsearchClient)
+    public SearchAssociationDao(RestHighLevelClient restHighLevelClient)
     {
-        this.elasticsearchClient = elasticsearchClient;
+        this.restHighLevelClient = restHighLevelClient;
     }
     
     /*
@@ -76,7 +76,7 @@ public class SearchAssociationDao
         logger.debug("top associations query dsl: {}", searchSourceBuilder.toString());
         
         topAssociationsRequest.source(searchSourceBuilder);
-        SearchResponse topAssociationsResponse = elasticsearchClient.search(topAssociationsRequest, RequestOptions.DEFAULT);
+        SearchResponse topAssociationsResponse = restHighLevelClient.search(topAssociationsRequest, RequestOptions.DEFAULT);
         Aggregations aggregations = topAssociationsResponse.getAggregations();
         
         List<String> categoryIds = new LinkedList<>();
@@ -92,7 +92,7 @@ public class SearchAssociationDao
         MultiSearchRequest mSearchRequest = new MultiSearchRequest();
         mSearchRequest.add(idsQuery(SparrowIndex.SPA_CATEGORIES.getIndex(), categoryIds.toArray(new String[categoryIds.size()])));
         mSearchRequest.add(idsQuery(SparrowIndex.SPA_TAGS.getIndex(), tagIds.toArray(new String[tagIds.size()])));
-        MultiSearchResponse mSearchResponse = elasticsearchClient.msearch(mSearchRequest, RequestOptions.DEFAULT);
+        MultiSearchResponse mSearchResponse = restHighLevelClient.msearch(mSearchRequest, RequestOptions.DEFAULT);
         
         MultiSearchResponse.Item categoriesResponse = mSearchResponse.getResponses()[0];
         List<Category> categories = new LinkedList<>();

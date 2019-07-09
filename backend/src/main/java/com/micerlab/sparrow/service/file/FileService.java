@@ -16,6 +16,8 @@ public interface FileService {
     
     Result updateFileMeta(String file_id, Map<String, Object> params);
     
+    Result deleteFileMeta(String file_id);
+    
     Result createSpaFilter(SpaFilterType spaFilterType, SpaFilter spaFilter);
     
     Result retrieveSpaFilter(SpaFilterType spaFilterType, String filter_id);

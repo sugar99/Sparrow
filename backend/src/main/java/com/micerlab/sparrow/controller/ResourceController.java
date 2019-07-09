@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
 import com.micerlab.sparrow.service.resource.ResourceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,12 +84,12 @@ public class ResourceController {
     public Result updateDocMeta(
             HttpServletRequest request,
             @PathVariable String doc_id,
-            @RequestBody Map<String, Object> parms
-    )
+            @RequestBody SpaDocUpdateParams params
+            )
     {
         // TODO: ACL 鉴定是否拥有该 doc_id 的修改权限
 
-        return resourceService.updateDocMeta(doc_id, parms);
+        return resourceService.updateDocMeta(doc_id, params);
     }
 
     @ApiOperation("A1.授予群组对指定目录或文档的操作权限")

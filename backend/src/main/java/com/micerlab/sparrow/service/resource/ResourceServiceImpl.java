@@ -1,8 +1,12 @@
 package com.micerlab.sparrow.service.resource;
 
+import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service("resourceService")
@@ -48,15 +52,32 @@ public class ResourceServiceImpl implements ResourceService{
         return null;
     }
 
+    @Autowired
+    private SpaDocDao spaDocDao;
+    
     @Override
     public Result retrieveDocMeta(String doc_id)
     {
-        return null;
+        Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
+        return Result.OK().data(docMeta).build();
     }
 
     @Override
-    public Result updateDocMeta(String doc_id, Map<String, Object> parms)
+    public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
-        return null;
+        Map<String, Object> jsonMap = params.toMap();
+        // TODO: current time
+        String modified_time = "";
+        jsonMap.put("modified_time", modified_time);
+        jsonMap.put("meta_state", 1);
+        spaDocDao.updateDocMeta(doc_id, jsonMap);
+        return Result.OK().build();
+    }
+    
+    @Override
+    public Result getFiles(String doc_id)
+    {
+        List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);
+        return Result.OK().data(files).build();
     }
 }

@@ -40,14 +40,14 @@ public class SearchResultDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchResultDao.class);
     
-    private RestHighLevelClient elasticsearchClient;
+    private RestHighLevelClient restHighLevelClient;
     
     private final Map<String, Integer> createdtimeRangeKey2No = new HashMap<>();
     private final Map<String, Integer> modifiedtimeRangeKey2No = new HashMap<>();
     
-    public SearchResultDao(RestHighLevelClient elasticsearchClient)
+    public SearchResultDao(RestHighLevelClient restHighLevelClient)
     {
-        this.elasticsearchClient = elasticsearchClient;
+        this.restHighLevelClient = restHighLevelClient;
     }
     
     /*
@@ -263,7 +263,7 @@ public class SearchResultDao
         logger.debug("search result query dsl: " + searchSourceBuilder.toString());
         
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         
         Map<String, Object> data = new LinkedHashMap<>();
         

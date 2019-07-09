@@ -33,7 +33,7 @@ public class SparrowApplication
     private int elasticsearchPort;
 
     @Bean
-    public RestHighLevelClient elasticsearchClient()
+    public RestHighLevelClient restHighLevelClient()
     {
         logger.debug("elasticsearch host: " + elasticsearchHost + ";port: " + elasticsearchPort);
         return new RestHighLevelClient(

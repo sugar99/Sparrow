@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.service.resource;
 
 import com.micerlab.sparrow.domain.Result;
-import javafx.beans.binding.ObjectExpression;
+import com.micerlab.sparrow.domain.doc.SpaDocUpdateParams;
 
 import java.util.Map;
 
@@ -25,6 +25,10 @@ public interface ResourceService {
 
     Result retrieveDocMeta(String doc_id);
 
-    Result updateDocMeta(String doc_id, Map<String, Object> parms);
-
+    Result updateDocMeta(String doc_id, SpaDocUpdateParams params);
+    
+    /**
+     * 获取文档包含的所有文件的Meta
+     */
+    Result getFiles(String doc_id);
 }

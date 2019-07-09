@@ -27,11 +27,11 @@ public class SearchSuggestionDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchSuggestionDao.class);
     
-    private RestHighLevelClient elasticsearchClient;
+    private RestHighLevelClient restHighLevelClient;
     
-    public SearchSuggestionDao(RestHighLevelClient elasticsearchClient)
+    public SearchSuggestionDao(RestHighLevelClient restHighLevelClient)
     {
-        this.elasticsearchClient = elasticsearchClient;
+        this.restHighLevelClient = restHighLevelClient;
     }
     
     /*
@@ -101,7 +101,7 @@ public class SearchSuggestionDao
         logger.debug(searchSourceBuilder.toString());
         
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         Terms group_by_title = searchResponse.getAggregations().get("group_by_title");
         
         List<String> suggestions = new LinkedList<>();
