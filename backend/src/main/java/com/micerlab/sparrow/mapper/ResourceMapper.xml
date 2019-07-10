@@ -22,17 +22,17 @@
         insert into master_slaves(master_id, slave_id) values (#{master_id}, #{slave_id})
     </insert>
     <delete id="deleteMasterSlaveRelation">
-        delete from master_slaves where and slave_id = #{slave_id}
+        delete from master_slaves where slave_id = #{slave_id}
     </delete>
     <select id="getSlaveResources" resultType="java.util.Map">
         select d.resource_id as id, d.resource_name as title, d.thumbnail, d.resource_type, d.creator_id as creator,
          d.created_at as created_time from master_slaves r inner join spa_resource d on r.slave_id = d.resource_id
          and r.master_id = #{master_id}
     </select>
-    <select id="getTotalSlavesResourceId" resultType="String">
+    <select id="getTotalSlaveResourcesId" resultType="String">
         with RECURSIVE r as
         (
-          select * from master_salves where master_id = #{master_id}
+          select * from master_slaves where master_id = #{master_id}
           union all
           select master_slaves.* from master_slaves, r where master_slaves.master_id = r.slave_id
         ) select r.slave_id from r;

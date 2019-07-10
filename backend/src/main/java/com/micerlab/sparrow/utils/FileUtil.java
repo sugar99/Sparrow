@@ -37,8 +37,8 @@ import java.util.*;
 @Component
 public class FileUtil {
 
-//    @Value("${file.temp.path}")
-    @Value("/root/sparrow/temp")
+    @Value("${file.temp.path}")
+//    @Value("/root/sparrow/temp")
     private String tempFilePath;
 
     @Autowired

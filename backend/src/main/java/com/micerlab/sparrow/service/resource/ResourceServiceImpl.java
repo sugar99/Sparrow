@@ -188,8 +188,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result getSlavesResource(String user_id, String resource_id, String type) {
         if (type.equals("doc")) {
-            //TODO 获取文档下的所有文件 (ES)
-            return Result.OK().build();
+            return getFiles(resource_id);
         } else {
             //获取指定目录的子资源（一级）
             List<Map<String, Object>> resourceList = resourceDao.getSlaveResources(resource_id);
