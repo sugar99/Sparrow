@@ -54,7 +54,10 @@ public class AuthenticateFilter extends OncePerRequestFilter {
             return;
         }
     
-        if(request.getRequestURI().equals("/v1/login"))
+        if(
+                request.getRequestURI().equals("/v1/login")
+//                || request.getRequestURI().startsWith("/swagger-ui.html")
+        )
         {
             filterChain.doFilter(request, response);
             return;

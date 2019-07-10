@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Sparrow Doc
@@ -16,7 +17,7 @@ public class SpaDoc
     private String title;
     private String desc;
     private String creator;
-    private String[] files;
+    private List<String> files;
     private String created_time;
     private String modified_time;
     private byte meta_state;
@@ -25,7 +26,7 @@ public class SpaDoc
     {
     }
     
-    public SpaDoc(String id, String title, String desc, String creator, String[] files, String created_time, String modified_time, byte meta_state)
+    public SpaDoc(String id, String title, String desc, String creator, List<String> files, String created_time, String modified_time, byte meta_state)
     {
         this.id = id;
         this.title = title;

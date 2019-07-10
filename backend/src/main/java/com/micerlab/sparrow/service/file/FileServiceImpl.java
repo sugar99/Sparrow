@@ -1,16 +1,19 @@
 package com.micerlab.sparrow.service.file;
 
 import com.alibaba.fastjson.JSONObject;
+import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.es.SpaFilterDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.doc.SpaDoc;
 import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
 import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
+import com.micerlab.sparrow.utils.MapUtils;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class FileServiceImpl implements FileService
     private SpaFileDao spaFileDao;
     
     @Autowired
+    private SpaDocDao spaDocDao;
+    
+    @Autowired
     private SpaFilterDao spaFilterDao;
     
     public Result getFileVersions(String file_id)
@@ -39,15 +45,46 @@ public class FileServiceImpl implements FileService
     {
         // TODO: 文件历史版本关联
         
-        SpaFile spaFile = new SpaFile(file_id, params);
+        SpaFile file = new SpaFile(file_id, params);
+        String parent_id = file.getParent_id();
+        String doc_id = file.getDoc_id();
         
-        spaFile.setOriginal_id(file_id);
-        String created_time = TimeUtil.currentTimeStr();
-        String modified_time = created_time;
-        spaFile.setCreated_time(created_time);
-        spaFile.setModified_time(modified_time);
-        JSONObject jsonMap = (JSONObject) JSONObject.toJSON(spaFile);
-        spaFileDao.createFileMeta(file_id, jsonMap);
+        Map<String, Object> map = spaFileDao.getDocAndParentFile(doc_id, parent_id);
+        SpaDoc doc = MapUtils.jsonMap2Obj((Map<String, Object>) map.get("doc"), SpaDoc.class);
+        String modified_time = TimeUtil.currentTimeStr();
+        file.setModified_time(modified_time);
+        
+        if (parent_id == null)
+        {
+            file.setOriginal_id(file_id);
+            file.setCreated_time(modified_time);
+            doc.getFiles().add(file_id);
+        } else
+        {
+            if(!doc.getFiles().contains(parent_id))
+                throw new BusinessException(ErrorCode.NOT_FOUND_FILE_IN_DOC,
+                        "doc_id: " + doc_id + ";parent_id: " + parent_id);
+            
+            SpaFile parent = MapUtils.jsonMap2Obj((Map<String, Object>) map.get("parent"), SpaFile.class);
+            
+            // 继承父版本文件的属性
+            file.setVersion((byte)(parent.getVersion() + 1));
+            file.setDesc(parent.getDesc());
+            file.setCategories(parent.getCategories());
+            file.setTags(parent.getTags());
+            file.setCreated_time(parent.getCreated_time());
+            file.setOriginal_id(parent.getOriginal_id());
+            
+            // TODO: 是否限制父版本文件与当前文件的格式一致？
+            // if(!file.getExt().equals(parent.getExt()))
+            //
+            
+            doc.getFiles().remove(parent_id);
+            doc.getFiles().add(file_id);
+        }
+        
+        spaFileDao.createFileMeta(file_id, MapUtils.obj2JsonMap(file));
+        spaDocDao.updateDocMeta(doc.getId(), MapUtils.obj2JsonMap(doc));
         return Result.OK().build();
     }
     

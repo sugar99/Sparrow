@@ -80,7 +80,7 @@ public class FileController {
     @DeleteMapping("/v1/files")
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         List<String> file_ids = (List<String>) params.get("file_id");
-        if(file_ids.isEmpty() || file_ids == null){
+        if(file_ids == null || file_ids.isEmpty()){
             return null;
         }
         String doc_id = spaFileDao.getDocId(file_ids.get(0));

@@ -91,7 +91,7 @@ public class ElasticSearchSubscriber {
                 insertDocEvent.getTitle(),
                 insertDocEvent.getDesc(),
                 insertDocEvent.getCreator(),
-                insertDocEvent.getFiles(),
+                null,
                 insertDocEvent.getCreated_time().toString(),
                 insertDocEvent.getModified_time().toString(),
                 insertDocEvent.getMeta_state()

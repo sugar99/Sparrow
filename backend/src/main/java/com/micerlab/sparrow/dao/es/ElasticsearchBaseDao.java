@@ -39,6 +39,15 @@ public class ElasticsearchBaseDao
 {
     private Logger logger = LoggerFactory.getLogger(ElasticsearchBaseDao.class);
     
+    // TODO: 用动态代理统一处理ES异常
+    public void handleESException(IOException ex)
+            throws BusinessException
+    {
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
+        throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+    }
+    
     @Autowired
     private RestHighLevelClient restHighLevelClient;
     
@@ -112,7 +121,8 @@ public class ElasticsearchBaseDao
         {
             GetRequest getRequest = new GetRequest(index, id);
             GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
-            return (getResponse.isExists()) ? getResponse.getSourceAsMap() : null;
+//            return (getResponse.isExists()) ? getResponse.getSourceAsMap() : null;
+            return getResponse.getSourceAsMap();
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
