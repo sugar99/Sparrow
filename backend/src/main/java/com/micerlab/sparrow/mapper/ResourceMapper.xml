@@ -22,7 +22,7 @@
         insert into master_slaves(master_id, slave_id) values (#{master_id}, #{slave_id})
     </insert>
     <delete id="deleteMasterSlaveRelation">
-        delete from master_slaves where master_id = #{master_id} and slave_id = #{slave_id}
+        delete from master_slaves where and slave_id = #{slave_id}
     </delete>
     <select id="getSlaveResources" resultType="java.util.Map">
         select d.resource_id as id, d.resource_name as title, d.thumbnail, d.resource_type, d.creator_id as creator,

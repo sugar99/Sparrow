@@ -27,7 +27,7 @@ public class FileStoreMinioServiceImpl implements FileStoreService {
     @Autowired
     private FileUtil fileUtil;
 
-    @Value("${file.temp.path}")
+    @Value("/root/sparrow/temp")
     private String tempFilePath;
 
     @Override
