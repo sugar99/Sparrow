@@ -44,7 +44,8 @@ public enum ErrorCode
     SERVER_ERR_DB(500_001, "数据库异常"),
     SERVER_ERR_ELASTICSEARCH(500_002, "Elasticsearch异常"),
     SERVER_ERR_OSS(500_003, "OSS错误调用"),
-    SERVER_ERR_Minio(500_004, "Minio异常")
+    SERVER_ERR_Minio(500_004, "Minio异常"),
+    SERVER_ERR_RABBITMQ(500_005, "rabbitmq异常")
 
 
     ;

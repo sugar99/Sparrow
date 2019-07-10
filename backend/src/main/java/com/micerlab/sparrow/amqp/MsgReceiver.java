@@ -2,9 +2,11 @@ package com.micerlab.sparrow.amqp;
 
 import com.micerlab.sparrow.config.RabbitConfig;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
+import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.eventBus.event.file.UpdateFileThumbnailEvent;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
+import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.FileUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.slf4j.Logger;
@@ -47,7 +49,8 @@ public class MsgReceiver {
             logger.error("生成缩略图失败: " + e.getMessage());
         } catch (IllegalArgumentException e){
             logger.error("生成缩略图失败: " + e.getMessage());
+        } catch (Exception e){
+            logger.error(e.getMessage());
         }
-
     }
 }
