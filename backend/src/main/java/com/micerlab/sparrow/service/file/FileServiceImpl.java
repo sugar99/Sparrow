@@ -84,7 +84,7 @@ public class FileServiceImpl implements FileService
         }
         
         spaFileDao.createFileMeta(file_id, MapUtils.obj2JsonMap(file));
-        spaDocDao.updateDocMeta(doc.getId(), MapUtils.obj2JsonMap(doc));
+        spaDocDao.updateDocMeta(doc_id, MapUtils.obj2JsonMap(doc));
         return Result.OK().build();
     }
     

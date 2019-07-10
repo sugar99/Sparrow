@@ -135,9 +135,9 @@ public class FileController {
     {
         String creator = params.getCreator();
         String doc_id = params.getDoc_id();
-//        if(!aclService.hasPermission(creator, doc_id, userService.getUserGroupsIdList(creator), ActionType.WRITE)){
-//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
-//        }
+        if(!aclService.hasPermission(creator, doc_id, userService.getUserGroupsIdList(creator), ActionType.WRITE)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
         msgProducer.sendMsg(file_id);
         return fileService.createFileMeta(file_id, params);
     }

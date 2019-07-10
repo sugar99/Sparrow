@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public class ElasticSearchSubscriber {
                 insertDocEvent.getTitle(),
                 insertDocEvent.getDesc(),
                 insertDocEvent.getCreator(),
-                null,
+                Collections.emptyList(),
                 insertDocEvent.getCreated_time().toString(),
                 insertDocEvent.getModified_time().toString(),
                 insertDocEvent.getMeta_state()

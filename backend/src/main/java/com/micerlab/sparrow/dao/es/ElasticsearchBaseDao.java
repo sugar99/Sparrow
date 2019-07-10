@@ -139,10 +139,10 @@ public class ElasticsearchBaseDao
             indexRequest.id(id);
             indexRequest.source(docMap);
             IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
-                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
-                        "ES文档创建失败:/" + index + "/" + id
-                                + ";" + indexResponse.toString());
+//            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
+//                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+//                        "ES文档创建失败:/" + index + "/" + id
+//                                + ";" + indexResponse.toString());
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
@@ -159,10 +159,10 @@ public class ElasticsearchBaseDao
             logger.debug("update doc : " + docMap.toString());
             updateRequest.doc(docMap);
             UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
-            if(!updateResponse.getResult().equals(DocWriteResponse.Result.UPDATED))
-                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
-                        "ES文档更新失败:/" + index + "/" + id
-                                + ";" + updateResponse.toString());
+//            if(!updateResponse.getResult().equals(DocWriteResponse.Result.UPDATED))
+//                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+//                        "ES文档更新失败:/" + index + "/" + id
+//                                + ";" + updateResponse.toString());
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

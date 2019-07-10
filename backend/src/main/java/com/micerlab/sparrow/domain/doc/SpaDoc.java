@@ -3,6 +3,7 @@ package com.micerlab.sparrow.domain.doc;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SpaDoc
     private String title;
     private String desc;
     private String creator;
-    private List<String> files;
+    private List<String> files = Collections.emptyList();
     private String created_time;
     private String modified_time;
     private byte meta_state;
