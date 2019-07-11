@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,8 +94,8 @@ public class ElasticSearchSubscriber {
                 insertDocEvent.getDesc(),
                 insertDocEvent.getCreator(),
                 Collections.emptyList(),
-                insertDocEvent.getCreated_time().toString(),
-                insertDocEvent.getModified_time().toString(),
+                TimeUtil.formatTimeStr(insertDocEvent.getCreated_time()),
+                TimeUtil.formatTimeStr(insertDocEvent.getModified_time()),
                 insertDocEvent.getMeta_state()
         );
         spaDocDao.createDocMeta(spaDoc);
@@ -106,7 +107,7 @@ public class ElasticSearchSubscriber {
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("title", updateDocEvent.getTitle());
         jsonMap.put("desc", updateDocEvent.getDesc());
-        jsonMap.put("modified_time", updateDocEvent.getModified_time().toString());
+        jsonMap.put("modified_time", TimeUtil.formatTimeStr(updateDocEvent.getModified_time()));
         jsonMap.put("meta_state", 1);
         spaDocDao.updateDocMeta(updateDocEvent.getId(), jsonMap);
     }

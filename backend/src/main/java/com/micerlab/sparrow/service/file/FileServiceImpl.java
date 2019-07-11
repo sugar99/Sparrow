@@ -60,6 +60,7 @@ public class FileServiceImpl implements FileService
             file.setOriginal_id(file_id);
             file.setCreated_time(modified_time);
             doc.getFiles().add(file_id);
+            doc.setModified_time(TimeUtil.formatTimeStr(TimeUtil.currentTime()));
         } else
         {
             if(!doc.getFiles().contains(parent_id))

@@ -60,9 +60,9 @@ public class MinioUtil {
             minioClient = new MinioClient("http://" + endpoint, accessKey, secretKey);
             bufferedInputStream = new BufferedInputStream(minioClient.getObject(bucketName, objectName));
 
-            httpServletResponse.setCharacterEncoding("UTF-8");
+//            httpServletResponse.setCharacterEncoding("UTF-8");
             httpServletResponse.setContentType("application/octet-stream");
-            String contentDisposition = "attachment; filename=" + fileName;
+            String contentDisposition = "attachment; filename=" + new String(fileName.getBytes("utf-8"),"ISO8859-1");
             httpServletResponse.setHeader("Content-Disposition", contentDisposition);
             responseOutput = httpServletResponse.getOutputStream();
             byte[] buff = new byte[1024];

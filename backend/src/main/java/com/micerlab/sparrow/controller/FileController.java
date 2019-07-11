@@ -20,6 +20,7 @@ import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.MapUtils;
+import com.micerlab.sparrow.utils.TimeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -107,6 +110,7 @@ public class FileController {
             spaFileDao.deleteFileMeta(file_id);
             
             doc.getFiles().remove(file_id);
+            doc.setModified_time(TimeUtil.formatTimeStr(TimeUtil.currentTime()));
             spaDocDao.updateDocMeta(doc.getId(), MapUtils.obj2JsonMap(doc));
         }
         fileStoreService.deleteFile(keys);
@@ -118,11 +122,11 @@ public class FileController {
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
     public void downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        String doc_id = spaFileDao.getDocId(file_id);
+        SpaFile fileMeta = spaFileDao.getFileMeta(file_id);
+        String doc_id = fileMeta.getDoc_id();
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
-        SpaFile fileMeta = spaFileDao.getFileMeta(file_id);
         String title = fileMeta.getTitle();
         String key = fileMeta.getStore_key();
         String ext = fileMeta.getExt();

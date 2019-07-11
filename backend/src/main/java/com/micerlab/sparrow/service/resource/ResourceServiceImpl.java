@@ -95,6 +95,7 @@ public class ResourceServiceImpl implements ResourceService{
         resource.setResource_id(resource_id);
         resource.setResource_name(username);
         resource.setResource_type("dir");
+        resource.setThumbnail("./assets/images/docCnt.png");
         resource.setCreated_at(TimeUtil.currentTime());
         resource.setCreator_id(userDao.getAdminId());
         resourceDao.createResource(resource);
@@ -191,8 +192,11 @@ public class ResourceServiceImpl implements ResourceService{
             return getFiles(resource_id);
         } else {
             //获取指定目录的子资源（一级）
-            List<Map<String, Object>> resourceList = resourceDao.getSlaveResources(resource_id);
-            return Result.OK().data(resourceList).build();
+            List<Map<String, Object>> data = resourceDao.getSlaveResources(resource_id);
+            if (data == null) {
+                return Result.OK().data(new ArrayList<>()).build();
+            }
+            return Result.OK().data(data).build();
         }
     }
 

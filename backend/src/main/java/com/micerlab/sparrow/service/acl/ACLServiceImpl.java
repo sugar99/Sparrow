@@ -130,8 +130,9 @@ public class ACLServiceImpl implements ACLService{
     public Result getAuthGroups(String user_id, String resource_id, String type) {
         List<Group> authGroupsList = type.equals("dir")? directoryDao.getAuthGroups(resource_id)
                     : documentDao.getAuthGroups(resource_id);
-        String creator_id = type.equals("dir")? directoryDao.getDir(resource_id).getCreator_id()
-                    : documentDao.getDoc(resource_id).getCreator_id();
+//        String creator_id = type.equals("dir")? directoryDao.getDir(resource_id).getCreator_id()
+//                    : documentDao.getDoc(resource_id).getCreator_id();
+        String creator_id = resourceDao.getResourceMeta(resource_id).getCreator_id();
         Map<String, Object> data = new HashMap<>();
         //接口调用者是否为资源的创建者，前端根据此标志进行渲染
         data.put("isOwner", user_id.equals(creator_id)? 1 : 0);
