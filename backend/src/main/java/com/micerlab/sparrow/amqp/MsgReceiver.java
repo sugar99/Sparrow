@@ -50,7 +50,7 @@ public class MsgReceiver {
         } catch (IllegalArgumentException e){
             logger.error("生成缩略图失败: " + e.getMessage());
         } catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error("生成缩略图失败: " + e.getMessage());
         }
     }
 }

@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +55,7 @@ public class MinioUtil {
         }
     }
 
-    public void downloadFile(String fileName, String objectName, HttpServletResponse httpServletResponse){
+    public void downloadFile(String fileName, String objectName, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         BufferedInputStream bufferedInputStream = null;
         OutputStream responseOutput = null;
         try {
@@ -62,8 +64,11 @@ public class MinioUtil {
 
             httpServletResponse.setCharacterEncoding("UTF-8");
             httpServletResponse.setContentType("application/octet-stream");
+            fileName = processFileName( httpServletRequest,  fileName);
             String contentDisposition = "attachment; filename=" + fileName;
             httpServletResponse.setHeader("Content-Disposition", contentDisposition);
+
+//            httpServletResponse.addHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", URLEncoder.encode(fileName, "utf-8")));
             responseOutput = httpServletResponse.getOutputStream();
             byte[] buff = new byte[1024];
             int length;
@@ -138,5 +143,38 @@ public class MinioUtil {
             e.printStackTrace();
         }
         return new File(path);
+    }
+
+    public static String processFileName(HttpServletRequest request, String fileNames) {
+        String codedfilename = null;
+        try {
+            String agent = request.getHeader("USER-AGENT");
+            if (null != agent && -1 != agent.indexOf("MSIE") || null != agent
+                    && -1 != agent.indexOf("Trident")) {// ie
+                String name = java.net.URLEncoder.encode(fileNames, "UTF8");
+                codedfilename = name;
+            } else if (null != agent && -1 != agent.indexOf("Mozilla")) {// 火狐,chrome等
+                codedfilename = new String(fileNames.getBytes("UTF-8"), "iso-8859-1");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return codedfilename;
+    }
+
+    /**
+     * 获取下载文件的url
+     * @param objectName
+     * @return
+     */
+    public String getObjectUrl(String objectName) {
+        String url = null;
+        try {
+            minioClient = new MinioClient("http://" + endpoint, accessKey, secretKey);
+            url = minioClient.presignedGetObject(bucketName, objectName, 60*60*24);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 }

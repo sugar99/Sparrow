@@ -61,8 +61,16 @@ public class FileStoreMinioServiceImpl implements FileStoreService {
     }
 
     @Override
-    public void downloadFile(String title, String key, HttpServletResponse httpServletResponse){
-        minioUtil.downloadFile(title, key, httpServletResponse);
+    public void downloadFile(String title, String key, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        minioUtil.downloadFile(title, key, httpServletRequest, httpServletResponse);
+    }
+
+    public Result getFileUrl(String key, String title){
+        String url = minioUtil.getObjectUrl(key);
+        Map<String, String> resMap = new HashMap<>();
+        resMap.put("url", url);
+        resMap.put("title", title);
+        return Result.OK().data(resMap).build();
     }
 
     @Override

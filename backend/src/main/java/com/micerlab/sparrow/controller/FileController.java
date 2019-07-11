@@ -13,6 +13,7 @@ import com.micerlab.sparrow.domain.*;
 import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.file.FileService;
+import com.micerlab.sparrow.service.fileStore.FileStoreMinioServiceImpl;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
@@ -47,6 +48,9 @@ public class FileController {
 
     @Autowired
     private MsgProducer msgProducer;
+
+    @Autowired
+    private FileStoreMinioServiceImpl fileStoreMinioService;
 
     @Autowired
     private SpaFileDao spaFileDao;
@@ -98,7 +102,7 @@ public class FileController {
 
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
-    public void downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+    public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         String doc_id = spaFileDao.getDocId(file_id);
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
@@ -107,7 +111,8 @@ public class FileController {
         String title = fileMeta.getTitle();
         String key = fileMeta.getStore_key();
         String ext = fileMeta.getExt();
-        fileStoreService.downloadFile(title + "." + ext, key, httpServletResponse);
+//        fileStoreService.downloadFile(title + "." + ext, key,httpServletRequest, httpServletResponse);
+        return fileStoreMinioService.getFileUrl(key, title + "." + ext);
     }
 
     @ApiOperation("F8.获取文件历史版本列表(待完成)")

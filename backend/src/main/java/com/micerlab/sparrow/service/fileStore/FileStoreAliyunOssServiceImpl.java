@@ -90,7 +90,7 @@ public class FileStoreAliyunOssServiceImpl implements FileStoreService {
     }
 
     @Override
-    public void downloadFile(String title, String key, HttpServletResponse httpServletResponse){
+    public void downloadFile(String title, String key,HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         aliyunOssUtil.downloadFile(title, key, httpServletResponse);
     }
 

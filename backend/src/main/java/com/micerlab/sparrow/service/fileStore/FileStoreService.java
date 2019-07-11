@@ -17,7 +17,7 @@ public interface FileStoreService {
 
     Result deleteFile(List<String> objectNames);
 
-    void downloadFile(String title, String key, HttpServletResponse httpServletResponse);
+    void downloadFile(String title, String key, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
 
     Map<String, Object> uploadThumbnail(File file);
 
