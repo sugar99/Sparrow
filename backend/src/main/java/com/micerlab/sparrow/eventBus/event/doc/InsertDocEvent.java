@@ -1,6 +1,8 @@
 package com.micerlab.sparrow.eventBus.event.doc;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 public class InsertDocEvent {
     private final String resource_id;
@@ -17,7 +19,7 @@ public class InsertDocEvent {
 
     private final String desc;
 
-    private final String[] files;
+    private final List<String> files;
 
     private final byte meta_state;
 
@@ -30,7 +32,7 @@ public class InsertDocEvent {
         this.modified_time = modified_time;
         this.title = "未命名";
         this.desc = "";
-        this.files = null;
+        this.files = Collections.emptyList();
         this.meta_state = 0;
     }
 
@@ -61,11 +63,12 @@ public class InsertDocEvent {
     public String getDesc() {
         return desc;
     }
-
-    public String[] getFiles() {
+    
+    public List<String> getFiles()
+    {
         return files;
     }
-
+    
     public byte getMeta_state() {
         return meta_state;
     }

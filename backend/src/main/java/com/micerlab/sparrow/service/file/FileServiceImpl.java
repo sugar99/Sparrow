@@ -17,6 +17,7 @@ import com.micerlab.sparrow.utils.MapUtils;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class FileServiceImpl implements FileService
         String modified_time = TimeUtil.currentTimeStr();
         file.setModified_time(modified_time);
         
-        if (parent_id == null)
+        if (StringUtils.isEmpty(parent_id))
         {
             file.setOriginal_id(file_id);
             file.setCreated_time(modified_time);
