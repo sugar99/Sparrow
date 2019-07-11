@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class SpaFileDao
     public Map<String, Object> getDocAndParentFile(String doc_id, String parent_id)
     {
         Map<String, Object> result = new HashMap<>();
-        if(parent_id == null)
+        if(StringUtils.isEmpty(parent_id))
         {
             result.put("parent", null);
             result.put("doc", elasticsearchBaseDao.getESDoc(SparrowIndex.SPA_DOCS.getIndex(), doc_id));

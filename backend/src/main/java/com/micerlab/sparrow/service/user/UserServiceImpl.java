@@ -4,6 +4,7 @@ import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.User;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
 import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
@@ -81,6 +82,9 @@ public class UserServiceImpl implements UserService{
                 Cookie cookie = new Cookie("auth_token", token);
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                String cookieStr =  "auth_toke=" + token + ";Path=/";
+                response.setHeader("Set-Cookie", cookieStr);
+                
                 // 将用户信息存入Redis中
                 UserPrincipal userPrincipal = new UserPrincipal(user_id, user.getUsername(), user.getEmail(), work_no);
                 List<String> userGroupsIdList = userDao.getUserGroupIds(user_id);
@@ -88,7 +92,9 @@ public class UserServiceImpl implements UserService{
                 RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
                 redisTemplate.opsForValue().set(user_id, userPrincipal);
                 redisTemplate.expire(user_id, EXIPIRE_TIME, TimeUnit.MILLISECONDS);
-                return Result.OK().data(defaultUserState(user_id)).build();
+                Map data = defaultUserState(user_id);
+                data.put("auth_token", token);
+                return Result.OK().data(data).build();
             }
         }
     }
@@ -123,7 +129,11 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public Result getUserGroups(String user_id) {
-        return Result.OK().data(userDao.getUserGroups(user_id)).build();
+        List<Group> data = userDao.getUserGroups(user_id);
+        if (data == null) {
+            return Result.OK().data(new ArrayList<>()).build();
+        }
+        return Result.OK().data(data).build();
     }
 
     /**

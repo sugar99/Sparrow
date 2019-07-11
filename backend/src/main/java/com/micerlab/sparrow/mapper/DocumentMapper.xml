@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.micerlab.sparrow.dao.postgre">
+<mapper namespace="com.micerlab.sparrow.dao.postgre.DocumentDao">
     <insert id="createDoc" parameterType="document">
         insert into spa_doc(id, title, thumbnail, creator_id, created_at) values(#{document.id}, #{document.title},
         #{document.thumbnail}, #{document.creator_id}, #{document.created_at});
@@ -19,6 +19,9 @@
     <insert id="setMasterDir" parameterType="String">
         insert into master_slaves(master_id, slave_id) values(#{master_id}, #{slave_id});
     </insert>
+    <select id="getMasterDir" resultType="directory">
+        select d.* from master_slaves r inner join spa_dir d on r.master_id = d.id and r.slave_id = #{slave_id};
+    </select>
     <delete id="dropSlaveDoc">
         delete from master_slaves where slave_id = #{slave_id};
     </delete>
@@ -30,5 +33,9 @@
           select master_slaves.* from master_slaves, r where master_slaves.slave_id = r.master_id
         )
         select d.id, d.title from spa_dir d inner join r on r.master_id = d.id;
+    </select>
+    <select id="getAuthGroups" resultType="group">
+        select g.* from group_resource r inner join spa_group g on r.group_id = g.group_id
+         and r.resource_id = #{resource_id};
     </select>
 </mapper>

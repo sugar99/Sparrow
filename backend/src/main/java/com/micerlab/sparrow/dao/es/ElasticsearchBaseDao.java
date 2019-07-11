@@ -11,6 +11,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.support.replication.ReplicationResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
@@ -138,6 +139,7 @@ public class ElasticsearchBaseDao
             IndexRequest indexRequest = new IndexRequest(index);
             indexRequest.id(id);
             indexRequest.source(docMap);
+            indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
             IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
 //            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
 //                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,

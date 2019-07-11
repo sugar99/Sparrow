@@ -7,6 +7,7 @@ import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,8 @@ public class SearchController
     @ApiOperation("S4.搜索类目或标签")
     @GetMapping("/v1/search/{filter_types:(?:tags|categories)}")
     public Result searchSpaFilters(
-            @PathVariable String filter_types,
+            @ApiParam(allowableValues = "tags,categories", required = true)
+            @PathVariable  String filter_types,
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "10") int size
     )

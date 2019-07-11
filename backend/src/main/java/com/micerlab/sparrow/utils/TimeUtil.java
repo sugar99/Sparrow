@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.utils;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -22,5 +23,11 @@ public class TimeUtil {
         String timeStr = currentTime().toString();
         timeStr = timeStr.substring(0, timeStr.lastIndexOf("."));
         return timeStr;
+    }
+    
+    public static String formatTimeStr(Timestamp timestamp)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        return dateFormat.format(timestamp);
     }
 }

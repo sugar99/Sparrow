@@ -168,6 +168,7 @@ public class ResourceController {
     @GetMapping("/v1/resources/{resource_id}/authgroups")
     @ResponseBody
     public Result getAuthGroups(HttpServletRequest request, @PathVariable("resource_id") String resource_id) {
-        return resourceService.getAuthGroups(BaseService.getUser_Id(request), resource_id);
+        return aclService.getAuthGroups(BaseService.getUser_Id(request), resource_id,
+                resourceDao.getResourceMeta(resource_id).getResource_type());
     }
 }

@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.dao.postgre;
 
 import com.micerlab.sparrow.domain.pojo.Directory;
+import com.micerlab.sparrow.domain.pojo.Group;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -33,4 +34,6 @@ public interface DirectoryDao {
     Directory getHomeDir();
 
     Directory getRootDir();
+
+    List<Group> getAuthGroups(@Param("resource_id") String resource_id);
 }
