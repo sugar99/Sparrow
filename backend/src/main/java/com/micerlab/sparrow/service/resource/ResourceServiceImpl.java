@@ -61,7 +61,7 @@ public class ResourceServiceImpl implements ResourceService{
             resource.setCreator_id(user_id);
             resource.setCreated_at(timestamp);
             resource.setThumbnail("./assets/images/doc.png");
-            //TODO 新建文档事件订阅者 (ES)
+            // 新建文档事件订阅者 (ES)
             //产生InsertDocEvent,在ES和PostgreSQL中同步文档的元数据
             EventBus.getDefault().post(new InsertDocEvent(resource_id, "doc", user_id, timestamp, timestamp));
         } else {
@@ -240,7 +240,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
-        // TODO 更新文档元数据的事件订阅者
+        // 更新文档元数据的事件订阅者
         String title = params.getTitle();
         String desc = params.getDesc();
         Timestamp modified_time = TimeUtil.currentTime();

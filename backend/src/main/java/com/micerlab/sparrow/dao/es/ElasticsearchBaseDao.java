@@ -39,6 +39,15 @@ public class ElasticsearchBaseDao
 {
     private Logger logger = LoggerFactory.getLogger(ElasticsearchBaseDao.class);
     
+    // TODO: 用动态代理统一处理ES异常
+    public void handleESException(IOException ex)
+            throws BusinessException
+    {
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
+        throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+    }
+    
     @Autowired
     private RestHighLevelClient restHighLevelClient;
     
@@ -112,7 +121,8 @@ public class ElasticsearchBaseDao
         {
             GetRequest getRequest = new GetRequest(index, id);
             GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
-            return (getResponse.isExists()) ? getResponse.getSourceAsMap() : null;
+//            return (getResponse.isExists()) ? getResponse.getSourceAsMap() : null;
+            return getResponse.getSourceAsMap();
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
@@ -129,10 +139,10 @@ public class ElasticsearchBaseDao
             indexRequest.id(id);
             indexRequest.source(docMap);
             IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
-            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
-                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
-                        "ES文档创建失败:/" + index + "/" + id
-                                + ";" + indexResponse.toString());
+//            if(indexResponse.getResult() != DocWriteResponse.Result.CREATED)
+//                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+//                        "ES文档创建失败:/" + index + "/" + id
+//                                + ";" + indexResponse.toString());
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
@@ -149,10 +159,10 @@ public class ElasticsearchBaseDao
             logger.debug("update doc : " + docMap.toString());
             updateRequest.doc(docMap);
             UpdateResponse updateResponse = restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
-            if(!updateResponse.getResult().equals(DocWriteResponse.Result.UPDATED))
-                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
-                        "ES文档更新失败:/" + index + "/" + id
-                                + ";" + updateResponse.toString());
+//            if(!updateResponse.getResult().equals(DocWriteResponse.Result.UPDATED))
+//                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
+//                        "ES文档更新失败:/" + index + "/" + id
+//                                + ";" + updateResponse.toString());
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

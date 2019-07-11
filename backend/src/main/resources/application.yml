@@ -1,7 +1,4 @@
-# elasticSearch连接配置
-elasticsearch-config:
-  host: 192.168.43.211
-  port: 9200
+
 
 # 日志配置
 logging.level.*: DEBUG
@@ -11,12 +8,13 @@ logging:
 
 # postgreSQL, redis连接配置
 spring:
+  profiles:
+    active: dev
   datasource:
     username: postgres
     url: jdbc:postgresql://localhost:5432/sparrow
     password: ifihadyou
     driver-class-name: org.postgresql.Driver
-
     tomcat:
       max-active: 50
       max-idle: 10
@@ -32,11 +30,7 @@ spring:
         max-active: 10
         max-idle: 10
         max-wait: 2000ms
-  rabbitmq:
-    host: 192.168.43.98
-    port: 5672
-    username: guest
-    password: guest
+
 
 # mybatis配置
 mybatis:
@@ -49,16 +43,56 @@ minio:
   secretKey: 1sPE5q7oNEHpWPBZWdOgttFZyOg+YroItnq9P7wn
   bucketName: douban-test
 
-file:
-  temp:
-    path: D:\\test\\temp
-
 oss:
   endpoint: http://oss-cn-beijing.aliyuncs.com
   accessKeyId: LTAInhMpeCqDsM4c
   accessKeySecret: RXxpqMZIlo7bwTIbX3MiAGgxdKX4v7
   bucketName: douban-test
-  callbackHost: localhost:8080
+  callbackHost: ${server.port}
+
+
+---
+
+spring:
+  profiles: dev
+  rabbitmq:
+    host: 192.168.43.98
+    port: 5672
+    username: guest
+    password: guest
+
+# elasticSearch连接配置
+elasticsearch-config:
+  host: 192.168.43.211
+  port: 9200
+
+file:
+  temp:
+    path: D:\\test\\temp\\
 
 server:
   port: 8080
+
+---
+
+spring:
+  profiles: prod
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# elasticSearch连接配置
+elasticsearch-config:
+  host: localhost
+  port: 9200
+
+file:
+  temp:
+    path: /etc/sparrow/temp/
+
+server:
+  port: 8089
+
+---

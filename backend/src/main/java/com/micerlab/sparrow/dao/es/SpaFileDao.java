@@ -6,8 +6,7 @@ import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.domain.search.SpaFilter;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.get.*;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
@@ -84,4 +83,42 @@ public class SpaFileDao
         docMap.put(spaFilterType.getTypes(), spaFilterIds);
         elasticsearchBaseDao.updateESDoc(index, file_id, docMap);
     }
+    
+    public void updateFileThumbnail(String file_id, String thumbnail)
+    {
+        Map<String, Object> docMap = new HashMap<>();
+        docMap.put("thumbnail", thumbnail);
+        elasticsearchBaseDao.updateESDoc(index, file_id, docMap);
+    }
+    
+    public Map<String, Object> getDocAndParentFile(String doc_id, String parent_id)
+    {
+        Map<String, Object> result = new HashMap<>();
+        if(parent_id == null)
+        {
+            result.put("parent", null);
+            result.put("doc", elasticsearchBaseDao.getESDoc(SparrowIndex.SPA_DOCS.getIndex(), doc_id));
+        }
+        else {
+            MultiGetRequest multiGetRequest = new MultiGetRequest();
+            multiGetRequest.add(SparrowIndex.SPA_DOCS.getIndex(), doc_id);
+            multiGetRequest.add(SparrowIndex.SPA_FILES.getIndex(), parent_id);
+    
+            try
+            {
+                MultiGetResponse multiGetResponse = restHighLevelClient.mget(multiGetRequest, RequestOptions.DEFAULT);
+                MultiGetItemResponse[] itemResponses = multiGetResponse.getResponses();
+                result.put("doc", itemResponses[0].getResponse().getSourceAsMap());
+                result.put("parent", itemResponses[1].getResponse().getSource());
+            } catch (IOException ex)
+            {
+                logger.error(ex.getMessage());
+                ex.printStackTrace();
+                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
+            }
+        }
+        return result;
+    }
+    
+    
 }

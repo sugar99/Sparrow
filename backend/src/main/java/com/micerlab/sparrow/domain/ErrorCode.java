@@ -19,6 +19,7 @@ public enum ErrorCode
     PARAM_ERR_FILTER_TYPES(400_003, "filter_types ∈ {tags, categories}"),
     PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),
     PARAM_ERR_REQUEST_DATA_REQUIRED_FIELD_IS_NULL(400_002, "请求数据必须字段不可为空"),
+    PARAM_ERR_PARENT_ID_NOT_IN_DOC(400_002, "父版本文件不在指定文档下"),
     
     
     // 403 Forbidden 权限：未授权 / 非法访问
@@ -37,6 +38,7 @@ public enum ErrorCode
     NOT_FOUND_DOC_ID(404_002, "文档id不存在"),
     NOT_FOUND_TAG_ID(404_002, "标签id不存在"),
     NOT_FOUND_CATEGORY_ID(404_002, "类目id不存在"),
+    NOT_FOUND_FILE_IN_DOC(400_002, "文件不在指定文档内"),
     
     
     // 500 Internal Server Error 服务器错误
@@ -44,7 +46,8 @@ public enum ErrorCode
     SERVER_ERR_DB(500_001, "数据库异常"),
     SERVER_ERR_ELASTICSEARCH(500_002, "Elasticsearch异常"),
     SERVER_ERR_OSS(500_003, "OSS错误调用"),
-    SERVER_ERR_Minio(500_004, "Minio异常")
+    SERVER_ERR_Minio(500_004, "Minio异常"),
+    SERVER_ERR_RABBITMQ(500_005, "rabbitmq异常")
 
 
     ;

@@ -30,10 +30,12 @@ public class SparrowApplication
 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    @Value("${elasticsearch-config.host}")
+//    @Value("${elasticsearch-config.host}")
+    @Value("localhost")
     private String elasticsearchHost;
     
-    @Value("${elasticsearch-config.port}")
+//    @Value("${elasticsearch-config.port}")
+    @Value("9200")
     private int elasticsearchPort;
 
     @Bean
@@ -60,11 +62,13 @@ public class SparrowApplication
     public FilterRegistrationBean authenticateFilter() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new AuthenticateFilter());
+//        registrationBean.addUrlPatterns("/*");
         registrationBean.addUrlPatterns("/v1/groups/*");
         registrationBean.addUrlPatterns("/v1/users/*");
         registrationBean.addUrlPatterns("/v1/resources/*");
         registrationBean.addUrlPatterns("/v1/dirs/*");
         registrationBean.addUrlPatterns("/v1/docs/*");
+        registrationBean.addUrlPatterns("/v1/files/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }

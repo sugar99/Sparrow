@@ -123,4 +123,20 @@ public class MinioUtil {
         }
         return url;
     }
+
+    /**
+     * 下载文件到本地path,用作生成缩略图时的缓存
+     * @param objectName
+     * @param path
+     * @return
+     */
+    public File getFileFromMinio(String objectName, String path) {
+        try {
+            minioClient = new MinioClient("http://" + endpoint, accessKey, secretKey);
+            minioClient.getObject(bucketName, objectName, path);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new File(path);
+    }
 }
