@@ -23,8 +23,6 @@ public interface ResourceService {
 
     Result getSlavesResource(String user_id, String resource_id, String type);
 
-    Result getAuthGroups(String user_id, String resource_id);
-
     Result addPermission(String resource_id, Map<String, Object> paramMap);
 
     Result removePermission(String resource_id, Map<String, Object> paramMap);

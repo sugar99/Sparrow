@@ -197,32 +197,6 @@ public class ResourceServiceImpl implements ResourceService{
     }
 
     /**
-     * 获取对指定资源有操作权限的所有群组及其权限
-     * @param user_id 用户id
-     * @param resource_id 资源id
-     * @return Result (data: groupList)
-     */
-    @Override
-    public Result getAuthGroups(String user_id, String resource_id) {
-        List<Group> authGroupsList = resourceDao.getResourceGroups(resource_id);
-        Map<String, Object> resultMap = new HashMap<>();
-        //接口调用者是否为资源的创建者，前端根据此标志进行渲染
-        resultMap.put("isOwner", user_id.equals(resourceDao.getResourceMeta(resource_id).getCreator_id())? 1 : 0);
-        List<Map<String, Object>> groupList = new ArrayList<>();
-        if (authGroupsList!= null) {
-            for (Group group : authGroupsList) {
-                //获取群组信息及操作权限
-                Map<String, Object> perGroup = new HashMap<>();
-                perGroup.put("groupInfo", group);
-                perGroup.put("permission", aclDao.getGroupPermission(group.getGroup_id(), resource_id));
-                groupList.add(perGroup);
-            }
-        }
-        resultMap.put("groupList", groupList);
-        return Result.OK().data(resultMap).build();
-    }
-
-    /**
      * 添加群组对指定目录或文档的操作权限
      * @param resource_id 资源id
      * @param paramMap 参数
@@ -249,9 +223,9 @@ public class ResourceServiceImpl implements ResourceService{
     public Result removePermission(String resource_id, Map<String, Object> paramMap) {
         String group_id = paramMap.get("group_id").toString();
         //更新权限
-        aclService.deleteGroupPermission(group_id, resource_id);
-        return Result.OK().build();
+        return aclService.deleteGroupPermission(group_id, resource_id);
     }
+
 
     @Autowired
     private SpaDocDao spaDocDao;

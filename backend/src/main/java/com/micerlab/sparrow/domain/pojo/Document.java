@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 @Alias("document")
 public class Document {
     private String id;
-    private String title;
+    private String title = "未命名";
     private String thumbnail = "./assets/images/doc.png";
     private String creator_id;
     private Timestamp created_at;
