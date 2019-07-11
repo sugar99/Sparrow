@@ -19,5 +19,5 @@ public interface DirectoryService {
 
     Result deleteDir(String dir_id);
 
-    Result getSlaveResources(String user_id, String dir_id);
+    Result getSlaveResources(String dir_id);
 }

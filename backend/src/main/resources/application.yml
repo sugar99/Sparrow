@@ -13,8 +13,8 @@ logging:
 spring:
   datasource:
     username: postgres
-    url: jdbc:postgresql://39.108.210.48:5432/sparrow
-    password: sparrowbackend
+    url: jdbc:postgresql://localhost:5432/sparrow
+    password: ifihadyou
     driver-class-name: org.postgresql.Driver
 
     tomcat:

@@ -1,6 +1,8 @@
 package com.micerlab.sparrow.dao.postgre;
 
+import com.micerlab.sparrow.domain.pojo.Directory;
 import com.micerlab.sparrow.domain.pojo.Document;
+import com.micerlab.sparrow.domain.pojo.Group;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,8 +22,12 @@ public interface DocumentDao {
 
     void setMasterDir(@Param("master_id") String master_id, @Param("slave_id") String slave_id);
 
+    Directory getMasterDir(@Param("slave_id") String slave_id);
+
     void dropSlaveDoc(@Param("slave_id") String slave_id);
 
     List<Map<String, Object>> getRootPathDirs(@Param("slave_id") String slave_id);
+
+    List<Group> getAuthGroups(@Param("resource_id") String resource_id);
 }
 
