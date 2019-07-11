@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.service.file;
 
 import com.alibaba.fastjson.JSONObject;
+import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.es.SpaFilterDao;
@@ -35,6 +36,9 @@ public class FileServiceImpl implements FileService
     
     @Autowired
     private SpaFilterDao spaFilterDao;
+    
+    @Autowired
+    private MsgProducer msgProducer;
     
     public Result getFileVersions(String file_id)
     {
@@ -87,6 +91,7 @@ public class FileServiceImpl implements FileService
         
         spaFileDao.createFileMeta(file_id, MapUtils.obj2JsonMap(file));
         spaDocDao.updateDocMeta(doc_id, MapUtils.obj2JsonMap(doc));
+        msgProducer.sendMsg(file_id);
         return Result.OK().build();
     }
     
