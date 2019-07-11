@@ -1,8 +1,10 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.amqp.MsgProducer;
+import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.doc.SpaDoc;
 import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
@@ -17,6 +19,7 @@ import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.BusinessException;
+import com.micerlab.sparrow.utils.MapUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,9 @@ public class FileController {
     private SpaFileDao spaFileDao;
     
     @Autowired
+    private SpaDocDao spaDocDao;
+    
+    @Autowired
     private UserService userService;
 
     @ApiOperation("F1.获取policy（阿里云OSS）")
@@ -81,19 +87,32 @@ public class FileController {
     public Result deleteFile(@RequestBody Map<String, Object> params, HttpServletRequest httpServletRequest){
         List<String> file_ids = (List<String>) params.get("file_id");
         if(file_ids == null || file_ids.isEmpty()){
-            return null;
+//            throw new BusinessException(ErrorCode.BAD_REQUEST_COMMON, "file_id不能为空");
+            return Result.OK().build();
         }
-        String doc_id = spaFileDao.getDocId(file_ids.get(0));
-        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
-        }
-
+        
         List<String> keys = new LinkedList<>();
+        List<String> forbiddenFileIds = new LinkedList<>();
+        
         for (String file_id: file_ids) {
-            keys.add(spaFileDao.getFileMeta(file_id).getStore_key());
+            SpaFile file = spaFileDao.getFileMeta(file_id);
+            SpaDoc doc = MapUtils.jsonMap2Obj(spaDocDao.retrieveDocMeta(file.getDoc_id()), SpaDoc.class);
+    
+            if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
+                forbiddenFileIds.add(file_id);
+                continue;
+            }
+            
+            keys.add(file.getStore_key());
             spaFileDao.deleteFileMeta(file_id);
+            
+            doc.getFiles().remove(file_id);
+            spaDocDao.updateDocMeta(doc.getId(), MapUtils.obj2JsonMap(doc));
         }
-        return fileStoreService.deleteFile(keys);
+        fileStoreService.deleteFile(keys);
+        if(!forbiddenFileIds.isEmpty())
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "无法删除文件（没有权限）：" + forbiddenFileIds.toString());
+        return Result.OK().build();
     }
 
     @ApiOperation("F7.下载文件")

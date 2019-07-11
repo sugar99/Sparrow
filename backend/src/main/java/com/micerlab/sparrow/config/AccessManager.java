@@ -10,12 +10,19 @@ public class AccessManager {
     private static PathMatcher matcher = new AntPathMatcher();
 
     private static List<String> authenticateUriList = Arrays.asList(
-            "/v1/users/*",
-            "/v1/groups/*",
-            "/v1/resources/*",
-            "/v1/files/*",
-            "/v1/dirs/*",
-            "/v1/docs/*"
+            "/v1/users/**",
+            "/v1/groups/**",
+            "/v1/resources/**",
+            "/v1/files/**",
+            "/v1/dirs/**",
+            "/v1/docs/**",
+            "/v1/users",
+            "/v1/groups",
+            "/v1/resources",
+            "/v1/files",
+            "/v1/dirs",
+            "/v1/docs"
+            
     );
 
     public static boolean mathUriList(String uri, List<String> uriList) {

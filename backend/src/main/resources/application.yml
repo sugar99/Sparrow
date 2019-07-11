@@ -56,14 +56,14 @@ oss:
 spring:
   profiles: dev
   rabbitmq:
-    host: 192.168.43.98
+    host: 192.168.199.182
     port: 5672
     username: guest
     password: guest
 
 # elasticSearch连接配置
 elasticsearch-config:
-  host: 192.168.43.211
+  host: localhost
   port: 9200
 
 file:
