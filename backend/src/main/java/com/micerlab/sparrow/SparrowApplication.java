@@ -62,13 +62,7 @@ public class SparrowApplication
     public FilterRegistrationBean authenticateFilter() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new AuthenticateFilter());
-//        registrationBean.addUrlPatterns("/*");
-        registrationBean.addUrlPatterns("/v1/groups/*");
-        registrationBean.addUrlPatterns("/v1/users/*");
-        registrationBean.addUrlPatterns("/v1/resources/*");
-        registrationBean.addUrlPatterns("/v1/dirs/*");
-        registrationBean.addUrlPatterns("/v1/docs/*");
-        registrationBean.addUrlPatterns("/v1/files/*");
+        registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }
