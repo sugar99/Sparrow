@@ -2,6 +2,7 @@ package com.micerlab.sparrow.service.user;
 
 import com.micerlab.sparrow.domain.Result;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -15,4 +16,8 @@ public interface UserService {
     Result userLogout(String user_id);
 
     Result getUserGroups(String user_id);
+
+    Map<String, Object> defaultUserState(String user_id);
+
+    public List<String> getUserGroupsIdList(String user_id);
 }

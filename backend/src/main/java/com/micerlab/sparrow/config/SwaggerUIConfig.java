@@ -18,8 +18,8 @@ public class SwaggerUIConfig
     @Bean
     public Docket createRestApi()
     {
-        ApiInfo apiInfo = new ApiInfoBuilder().title("Sparrow Search APIs")
-                .description("3 core APIs implementing search")
+        ApiInfo apiInfo = new ApiInfoBuilder().title("Sparrow APIs")
+                .description("APIs of different modules")
                 .version("1.0")
                 .build();
         

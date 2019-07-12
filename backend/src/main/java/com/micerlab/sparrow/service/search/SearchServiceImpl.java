@@ -1,9 +1,10 @@
 package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.dao.es.SearchDao;
+import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.SpaFilterType;
-import com.micerlab.sparrow.service.search.SearchService;
+import com.micerlab.sparrow.domain.params.SearchRequestParams;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,24 +36,27 @@ public class SearchServiceImpl implements SearchService
         return Result.OK().data(topAssociations).build();
     }
     
-    public Result getSearchResults(Map<String, Object> searchResultParams)
+    public Result getSearchResults(SearchRequestParams params)
     {
-        Map<String, Object> data = searchDao.searchResults(searchResultParams);
+        Map<String, Object> data = searchDao.searchResults(params);
         return Result.OK().data(data).build();
     }
     
-    public Result searchSpaFilterTypes(SpaFilterType spaFilterType, String keyword, int size)
+    public Result searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size)
     {
-        return null;
+        List<Map<String, Object>> spaFilters = searchDao.searchSpaFilters(spaFilterType, keyword, size);
+        return Result.OK().data(spaFilters).build();
     }
 
     @Override
-    public Result searchUser(String keyword) {
-        return null;
+    public Result searchUser(String keyword, int size) {
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_USER.getIndex(), size);
+        return Result.OK().data(data).build();
     }
 
     @Override
-    public Result searchGroup(String keyword) {
-        return null;
+    public Result searchGroup(String keyword, int size) {
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_GROUP.getIndex(), size);
+        return Result.OK().data(data).build();
     }
 }

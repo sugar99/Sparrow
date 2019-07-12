@@ -1,0 +1,1 @@
+bmp cur dds exr gif ico jpg jpeg pcx pbm pfm pgm ppm png psd svg tga tif tiff webp

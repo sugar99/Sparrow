@@ -2,18 +2,21 @@ package com.micerlab.sparrow.dao.es;
 
 public enum SparrowIndex
 {
-    SPA_DOCS("spa_docs"),
-    SPA_FILES("spa_files"),
-    SPA_CATEGORIES("spa_categories"),
-    SPA_TAGS("spa_tags"),
-    
+    SPA_DOCS,
+    SPA_FILES,
+    SPA_CATEGORIES,
+    SPA_TAGS,
+    SPA_USER,
+    SPA_GROUP
     ;
     
     private String index;
     
-    SparrowIndex(String index)
+//    SparrowIndex(String index) { this.index = index;  }
+    
+    SparrowIndex()
     {
-        this.index = index;
+        this.index = this.name().toLowerCase();
     }
     
     public String getIndex()

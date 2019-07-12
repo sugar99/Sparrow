@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micerlab.sparrow.dao.postgre.ACLDao">
+    <select id="getGroupPermission" resultType="String">
+        select permission from group_resource where resource_id = #{resource_id} and group_id = #{group_id};
+    </select>
+    <insert id="addGroupPermission">
+        insert into group_resource(group_id, resource_id, permission) values (#{group_id}, #{resource_id}, #{permission})
+    </insert>
+    <update id="updateGroupPermission">
+        update group_resource set permission = #{permission} where resource_id = #{resource_id} and group_id = #{group_id}
+    </update>
+    <delete id="deleteGroupPermission">
+        delete from group_resource where group_id = #{group_id} and resource_id = #{resource_id}
+    </delete>
+    <delete id="deleteResourceAllPermission">
+        delete from group_resource where resource_id = #{resource_id}
+    </delete>
+</mapper>

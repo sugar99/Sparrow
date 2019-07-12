@@ -1,23 +1,27 @@
 package com.micerlab.sparrow.service.resource;
 
 import com.micerlab.sparrow.domain.Result;
-import javafx.beans.binding.ObjectExpression;
+import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 
 import java.util.Map;
 
 public interface ResourceService {
 
-    Result createResource(String type, String cur_id);
+    Result createResource(String user_id, String cur_id, String type);
 
-    Result getResourceMeta(String resource_id);
+    String createPersonalDir(String user_id, String username);
 
-    Result updateResourceMeta(String resource_id, Map<String, Object> paramMap);
+    Result getDirMeta(String dir_id);
 
-    Result deleteResource(String resource_id);
+    String getCreatorId(String resource_id);
 
-    Result getSlavesResource(String resource_id);
+    String getMasterDirId(String resource_id);
 
-    Result getAuthGroups(String resource_id);
+    Result updateDirMeta(String dir_id, Map<String, Object> paramMap);
+
+    Result deleteResource(String resource_id, String type);
+
+    Result getSlavesResource(String user_id, String resource_id, String type);
 
     Result addPermission(String resource_id, Map<String, Object> paramMap);
 
@@ -25,6 +29,10 @@ public interface ResourceService {
 
     Result retrieveDocMeta(String doc_id);
 
-    Result updateDocMeta(String doc_id, Map<String, Object> parms);
-
+    Result updateDocMeta(String doc_id, SpaDocUpdateParams params);
+    
+    /**
+     * 获取文档包含的所有文件的Meta
+     */
+    Result getFiles(String doc_id);
 }

@@ -1,0 +1,1 @@
+7z bin cbr cue deb dmg gz iso mdf pkg rar rpm sitx tar.gz vcd zip

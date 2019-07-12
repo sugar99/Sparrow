@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.micerlab.sparrow.dao.postgre.DirectoryDao">
+    <insert id="createDir" parameterType="directory">
+        insert into spa_dir(id, title, thumbnail, root, home, personal, modifiable, creator_id, created_at) values (
+        #{dir.id}, #{dir.title}, #{dir.thumbnail}, #{dir.root}, #{dir.home}, #{dir.personal}, #{dir.modifiable}, #{dir.creator_id},
+        #{dir.created_at});
+    </insert>
+    <select id="getDir" resultType="directory">
+        select * from spa_dir where id = #{id};
+    </select>
+    <update id="updateDir">
+        update spa_dir set title = #{title} where id = #{id};
+    </update>
+    <delete id="deleteDir">
+        delete from spa_dir where id = #{id};
+    </delete>
+    <insert id="setMasterDir" parameterType="String">
+        insert into master_slaves(master_id, slave_id) values(#{master_id}, #{slave_id});
+    </insert>
+    <select id="getMasterDir" resultType="directory">
+        select d.* from master_slaves r inner join spa_dir d on r.master_id = d.id and r.slave_id = #{slave_id};
+    </select>
+    <delete id="dropSlaveDir">
+        delete from master_slaves where slave_id = #{slave_id};
+    </delete>
+    <select id="getOneLevelSlaves" resultType="java.util.Map">
+        with r as
+        (
+          select id, title, thumbnail, creator_id as creator, created_at as created_time from spa_dir
+          union all
+          select id, title, thumbnail, creator_id as creator, created_at as created_time from spa_doc
+        )
+        select r.* from r inner join master_slaves on master_slaves.slave_id = r.id and master_slaves.master_id = #{master_id};
+    </select>
+    <select id="getTotalSlavesId" resultType="String">
+        with RECURSIVE r as
+        (
+          select * from master_salves where master_id = #{master_id}
+          union all
+          select master_slaves.* from master_slaves, r where master_slaves.master_id = r.slave_id
+        ) select r.slave_id from r;
+    </select>
+    <select id="getRootPathDirs" resultType="java.util.Map">
+        with RECURSIVE r as
+        (
+          select * from master_slaves where slave_id = #{slave_id}
+          union all
+          select master_slaves.* from master_slaves, r where master_slaves.slave_id = r.master_id
+        )
+        select d.id, d.title from spa_dir d inner join r on r.master_id = d.id;
+    </select>
+    <select id="getHomeDir" resultType="directory">
+        select * from directory where home = 1;
+    </select>
+    <select id="getRootDir" resultType="directory">
+        select * from directory where root = 1;
+    </select>
+    <select id="getAuthGroups" resultType="group">
+        select g.* from group_resource r inner join spa_group g on g.group_id = r.group_id and r.resource_id =
+         #{resource_id};
+    </select>
+</mapper>

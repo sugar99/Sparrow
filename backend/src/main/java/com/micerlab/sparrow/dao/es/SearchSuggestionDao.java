@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.SearchType;
+import com.micerlab.sparrow.domain.file.FileType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -27,11 +27,11 @@ public class SearchSuggestionDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchSuggestionDao.class);
     
-    private RestHighLevelClient elasticsearchClient;
+    private RestHighLevelClient restHighLevelClient;
     
-    public SearchSuggestionDao(RestHighLevelClient elasticsearchClient)
+    public SearchSuggestionDao(RestHighLevelClient restHighLevelClient)
     {
-        this.elasticsearchClient = elasticsearchClient;
+        this.restHighLevelClient = restHighLevelClient;
     }
     
     /*
@@ -101,7 +101,7 @@ public class SearchSuggestionDao
         logger.debug(searchSourceBuilder.toString());
         
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = elasticsearchClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         Terms group_by_title = searchResponse.getAggregations().get("group_by_title");
         
         List<String> suggestions = new LinkedList<>();
@@ -113,7 +113,7 @@ public class SearchSuggestionDao
     private static void query(SearchSourceBuilder searchSourceBuilder, String keyword, String type)
     {
         boolean empty_keyword = StringUtils.isEmpty(keyword);
-        boolean all_type = SearchType.ALL.getType().equals(type);
+        boolean all_type = FileType.ALL.getType().equals(type);
         if (empty_keyword && all_type)
         {
             searchSourceBuilder.query(QueryBuilders.matchAllQuery());
