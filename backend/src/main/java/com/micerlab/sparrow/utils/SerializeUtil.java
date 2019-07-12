@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.SerializationException;
 
 public class SerializeUtil implements RedisSerializer<Object> {
 
+    //阿萨大大
     private Converter<Object, byte[]> serializer = new SerializingConverter();
     private Converter<byte[], Object> deserializer = new DeserializingConverter();
 
