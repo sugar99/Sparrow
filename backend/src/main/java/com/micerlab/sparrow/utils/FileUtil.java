@@ -129,7 +129,7 @@ public class FileUtil {
             thumbnailInfo = fileStoreService.uploadThumbnail(thumbnail);
         }else{
             thumbnailInfo.put("thumbnail_path","default_thumbnail.jpg");
-            thumbnailInfo.put("thumbnail_url","");
+            thumbnailInfo.put("thumbnail_url",null);
         }
 
         return thumbnailInfo;
