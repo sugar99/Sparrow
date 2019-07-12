@@ -166,7 +166,11 @@ public class FileUtil {
 
     public File transferDocToPdf(File inputFile) throws IOException {
         String pdfFilePath = tempFilePath + File.separatorChar + UUID.randomUUID() + ".pdf";
-        String docFilePath = tempFilePath + File.separatorChar + UUID.randomUUID() + "." + getFileExtension(inputFile.getName());
+        String ext = getFileExtension(inputFile.getName());
+        if(ext.equals("docx")){
+            ext = "doc";
+        }
+        String docFilePath = tempFilePath + File.separatorChar + UUID.randomUUID() + "." + ext;
 
         InputStream inputStream = new FileInputStream(inputFile);
 
