@@ -116,22 +116,29 @@ public class FileUtil {
         Map<String, Object> thumbnailInfo = new HashMap<>(2);
         String fileType = FileType.fromExt(getFileExtension(inputFile.getName())).toString();
 
+        File pngFile = null;
         if(getFileExtension(inputFile.getName()).equals("pdf")){
-            thumbnailInfo = fileStoreService.uploadThumbnail(generateThumbnail(inputFile));
+            pngFile = generateThumbnail(inputFile);
+            thumbnailInfo = fileStoreService.uploadThumbnail(pngFile);
         }else if(fileType.equals("doc")){
             File pdfFile = transferDocToPdf(inputFile);
+            pngFile = generateThumbnail(pdfFile);
             thumbnailInfo = fileStoreService.uploadThumbnail(generateThumbnail(pdfFile));
+            pdfFile.delete();
         }else if(fileType.equals("image")){
             thumbnailInfo = fileStoreService.uploadThumbnail(inputFile);
         }else if(fileType.equals("video")){
             /**获取视频第一帧作为缩略图*/
             File thumbnail = videoUtil.getVideoFrame(inputFile);
             thumbnailInfo = fileStoreService.uploadThumbnail(thumbnail);
+            thumbnail.delete();
         }else{
             thumbnailInfo.put("thumbnail_path","default_thumbnail.jpg");
             thumbnailInfo.put("thumbnail_url",null);
         }
-
+        if(pngFile != null) {
+            pngFile.delete();
+        }
         return thumbnailInfo;
     }
 
@@ -153,12 +160,14 @@ public class FileUtil {
         File outputFile = new File(thumbnailName);
 
         ImageWriter writer = (ImageWriter) it.next();
-        ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(new FileOutputStream(outputFile));
+        FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+        ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(fileOutputStream);
         writer.setOutput(imageOutputStream);
         writer.write(new IIOImage(tempImage,null,null));
         tempImage.flush();
         imageOutputStream.flush();
         imageOutputStream.close();
+        fileOutputStream.close();
         pdDocument.close();
 
         return outputFile;
@@ -167,8 +176,12 @@ public class FileUtil {
     public File transferDocToPdf(File inputFile) throws IOException {
         String pdfFilePath = tempFilePath + File.separatorChar + UUID.randomUUID() + ".pdf";
         String ext = getFileExtension(inputFile.getName());
+        // openoffice不支持将docx、pptx转成pdf，解决方法是将缓存文件改成doc、ppt格式。
         if(ext.equals("docx")){
             ext = "doc";
+        }
+        if(ext.equals("pptx")){
+            ext = "ppt";
         }
         String docFilePath = tempFilePath + File.separatorChar + UUID.randomUUID() + "." + ext;
 

@@ -51,6 +51,8 @@ public class MsgReceiver {
             logger.error("生成缩略图失败: " + e.getMessage());
         } catch (Exception e){
             logger.error("生成缩略图失败: " + e.getMessage());
+        }finally {
+            file.delete();
         }
     }
 }
