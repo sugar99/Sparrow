@@ -1,5 +1,6 @@
 package com.micerlab.sparrow;
 
+import com.micerlab.sparrow.config.ElasticsearchConfig;
 import com.micerlab.sparrow.filter.AuthenticateFilter;
 import com.micerlab.sparrow.utils.SerializeUtil;
 import org.apache.http.HttpHost;
@@ -9,6 +10,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,22 +32,18 @@ public class SparrowApplication
 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-//    @Value("${elasticsearch-config.host}")
-//    @Value("localhost")
-    @Value("39.108.210.48")
-    private String elasticsearchHost;
-    
-//    @Value("${elasticsearch-config.port}")
-    @Value("9200")
-    private int elasticsearchPort;
+    @Autowired
+    private ElasticsearchConfig elasticsearchConfig;
 
     @Bean
     public RestHighLevelClient restHighLevelClient()
     {
-        logger.debug("elasticsearch host: " + elasticsearchHost + ";port: " + elasticsearchPort);
+        int port = elasticsearchConfig.getPort();
+        String host = elasticsearchConfig.getHost();
+        logger.debug("elasticsearch host: " + host + ";port: " + port);
         return new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost(elasticsearchHost, elasticsearchPort, "http")));
+                        new HttpHost(host, port, "http")));
     }
 
     @Bean("redisTemplate")
