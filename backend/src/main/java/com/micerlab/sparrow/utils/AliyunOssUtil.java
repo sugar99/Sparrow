@@ -172,6 +172,7 @@ public class AliyunOssUtil {
 
             thumbnailInfo.put("thumbnail_path", objectName);
             thumbnailInfo.put("thumbnail_url", url);
+            inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

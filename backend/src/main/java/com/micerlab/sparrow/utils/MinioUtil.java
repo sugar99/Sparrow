@@ -111,7 +111,7 @@ public class MinioUtil {
 
             thumbnailInfo.put("thumbnail_path", objectName);
             thumbnailInfo.put("thumbnail_url", url);
-
+            inputStream.close();
         }catch(Exception e){
             logger.error("上传缩略图失败: " + e.getMessage());
         }

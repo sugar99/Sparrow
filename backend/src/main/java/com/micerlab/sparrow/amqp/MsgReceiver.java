@@ -72,6 +72,8 @@ public class MsgReceiver {
             EventBus.getDefault().post(new UpdateFileThumbnailEvent(content, (String)thumbnailInfo.get("thumbnail_url")));
         } catch (Exception e) {
             logger.error("消息消费失败（生成缩略图 / 提取文本信息）: " + e.getMessage());
+        } finally {
+            file.delete();
         }
     }
 }
