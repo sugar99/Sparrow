@@ -200,7 +200,7 @@ public class ESBaseDao
      * @param jsonMap 用json表示的ES文档
      * @return 更新后的ES文档
      */
-    public JSONObject updateESDoc(String index, String id, JSONObject jsonMap)
+    public UpdateResponse updateESDoc(String index, String id, JSONObject jsonMap)
     {
         try
         {
@@ -213,7 +213,8 @@ public class ESBaseDao
 //                throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH,
 //                        "ES文档更新失败:/" + index + "/" + id
 //                                + ";" + updateResponse.toString());
-            return new JSONObject(updateResponse.getGetResult().sourceAsMap());
+//            return new JSONObject(updateResponse.getGetResult().sourceAsMap());
+            return updateResponse;
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());

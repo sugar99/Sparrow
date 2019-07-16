@@ -10,7 +10,6 @@ import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
-import com.micerlab.sparrow.eventBus.event.file.UpdateFileThumbnailEvent;
 import com.micerlab.sparrow.eventBus.event.group.InsertGroupEvent;
 import com.micerlab.sparrow.eventBus.event.group.UpdateGroupEvent;
 import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
@@ -116,13 +115,5 @@ public class ElasticSearchSubscriber {
     public void deleteDocMeta(DeleteDocEvent deleteDocEvent)
     {
         spaDocDao.delete(deleteDocEvent.getResource_id());
-    }
-    
-    @Subscribe
-    public void updateFileThumbnail(UpdateFileThumbnailEvent event)
-    {
-        JSONObject jsonMap = new JSONObject();
-        jsonMap.put("thumbnail", event.getThumbnail());
-        spaFileDao.updateJsonDoc(event.getFile_id(), jsonMap);
     }
 }

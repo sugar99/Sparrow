@@ -5,6 +5,7 @@ import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.utils.MapUtils;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 
 
@@ -65,7 +66,7 @@ public abstract class ESCRUDRepository<E>
      * @param jsonMap 包含更新字段的JsonMap
      * @return 更新后的ES文档
      */
-    public JSONObject updateJsonDoc(String id, JSONObject jsonMap)
+    public UpdateResponse updateJsonDoc(String id, JSONObject jsonMap)
     {
         if(jsonMap == null) throw new IllegalArgumentException("Null doc isn't allowed");
         return ESBaseDao.updateESDoc(index(), id, jsonMap);
@@ -75,10 +76,10 @@ public abstract class ESCRUDRepository<E>
      * 全量更新
      * @return 更新后的ES文档
      */
-    public E update(String id, E element)
+    public UpdateResponse update(String id, E element)
     {
         JSONObject jsonMap = MapUtils.obj2JsonMap(element);
-        return MapUtils.jsonMap2Obj(updateJsonDoc(id, jsonMap), clazz);
+        return updateJsonDoc(id, jsonMap);
     }
     
     public DeleteResponse delete(String id)
