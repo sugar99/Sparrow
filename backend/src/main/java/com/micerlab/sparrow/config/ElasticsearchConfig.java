@@ -115,27 +115,27 @@ public class ElasticsearchConfig
     
     private Logger logger = LoggerFactory.getLogger(ElasticsearchConfig.class);
     
-    @Bean
-    public RestHighLevelClient restHighLevelClient()
-    {
-        logger.debug("elasticsearch host: " + host + ";port: " + port);
-        return new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost(host, port, "http")));
-    }
+//    @Bean
+//    public RestHighLevelClient restHighLevelClient()
+//    {
+//        logger.debug("elasticsearch host: " + host + ";port: " + port);
+//        return new RestHighLevelClient(
+//                RestClient.builder(
+//                        new HttpHost(host, port, "http")));
+//    }
     
-    @Autowired
-    private ESBaseDao esBaseDao;
-    
-    @Bean
-    public SpaDocDao spaDocDao()
-    {
-        return new SpaDocDao(esBaseDao, indices);
-    }
-    
-    @Bean
-    public SpaFileDao spaFileDao()
-    {
-        return new SpaFileDao(esBaseDao, indices);
-    }
+//    @Autowired
+//    private ESBaseDao esBaseDao;
+//
+//    @Bean
+//    public SpaDocDao spaDocDao()
+//    {
+//        return new SpaDocDao(esBaseDao, indices);
+//    }
+//
+//    @Bean
+//    public SpaFileDao spaFileDao()
+//    {
+//        return new SpaFileDao(esBaseDao, indices);
+//    }
 }

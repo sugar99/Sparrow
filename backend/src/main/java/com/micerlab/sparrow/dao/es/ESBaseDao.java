@@ -126,6 +126,8 @@ public class ESBaseDao
         {
             GetRequest getRequest = new GetRequest(index, id);
             GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+            if(getResponse.getSource() == null)
+                return null;
             return new JSONObject(getResponse.getSourceAsMap());
         } catch (IOException ex)
         {

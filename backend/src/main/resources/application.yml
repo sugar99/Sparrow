@@ -19,7 +19,8 @@ spring:
       initial-size: 5
   redis:
     port: 6379
-    host: ${sparrow.host}
+#    host: ${sparrow.host}
+    host: localhost
     timeout: 1000ms
     jedis:
       pool:
@@ -78,7 +79,7 @@ elasticsearch-config:
     file: spa_files
     tag: spa_tags
     category: spa_categories
-    usergroup: spa_groups
+    user_group: spa_group
 
 file:
   temp:
@@ -104,7 +105,7 @@ elasticsearch-config:
     file: files
     tag: tags
     category: categories
-    usergroup: groups
+    user_group: groups
 
 file:
   temp:
