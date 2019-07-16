@@ -110,31 +110,7 @@ public class ResourceController {
         String type = resourceDao.getResourceMeta(resource_id).getResource_type();
         return resourceService.getSlavesResource(user_id, resource_id, type);
     }
-    
-    @ApiOperation("D7.获取文档Meta")
-    @GetMapping("/v1/docs/{doc_id}")
-    public Result retrieveDocMeta(
-            HttpServletRequest request,
-            @PathVariable String doc_id
-    )
-    {
-        // TODO: ACL 鉴定是否拥有该 doc_id 的读取权限
-        
-        return resourceService.retrieveDocMeta(doc_id);
-    }
 
-    @ApiOperation("D8.更新文档Meta")
-    @PatchMapping("/v1/docs/{doc_id}")
-    public Result updateDocMeta(
-            HttpServletRequest request,
-            @PathVariable String doc_id,
-            @RequestBody SpaDocUpdateParams params
-            )
-    {
-        // TODO: ACL 鉴定是否拥有该 doc_id 的修改权限
-
-        return resourceService.updateDocMeta(doc_id, params);
-    }
     
     @ApiOperation("F1.授予群组对指定目录或文档的操作权限")
     @PostMapping("/v1/resources/{resource_id}/permissions")

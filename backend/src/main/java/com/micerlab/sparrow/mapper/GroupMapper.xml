@@ -34,7 +34,7 @@
     <delete id="removeAllResource">
         delete from group_resource where group_id = #{group_id}
     </delete>
-    <select id="getGroupResources" resultType="resource">
-        select d.* from group_resource r inner join spa_resource d on r.resource_id = d.resource_id and r.group_id = #{group_id}
+    <select id="getGroupResources" resultType="java.util.Map">
+
     </select>
 </mapper>

@@ -141,7 +141,7 @@ public class GroupServiceImpl implements GroupService{
      */
     @Override
     public Result addGroupMember(String group_id, Map<String, Object> paramMap) {
-        List<String> usersIdList = (List<String>) paramMap.get("usersIdList");
+        List<String> usersIdList = (List<String>) paramMap.get("users");
         Timestamp timestamp = TimeUtil.currentTime();
         for (String member_id: usersIdList) {
             //更新数据库

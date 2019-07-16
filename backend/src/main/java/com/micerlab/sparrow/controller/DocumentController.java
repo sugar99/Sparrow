@@ -36,27 +36,27 @@ public class DocumentController {
     public Result createDocument(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
         String cur_id = paramMap.get("cur_id").toString();
         String user_id = BaseService.getUser_Id(request);
-        //判断用户对当前目录是否具有可写权限
+        //判断用户对当前文档是否具有可写权限
         if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
         return documentService.createDoc(user_id, cur_id);
     }
 
-//    @ApiOperation("获取文档元数据")
-//    @GetMapping("/v1/docs/{doc_id}")
-//    @ResponseBody
-//    public Result retrieveDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
-//        String cur_id = resourceService.getMasterDirId(doc_id);
-//        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
-//                ActionType.READ)){
-//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
-//        }
-//        return resourceService.retrieveDocMeta(doc_id);
-//    }
+    @ApiOperation("获取文档元数据")
+    @GetMapping("/v1/docs/{doc_id}")
+    @ResponseBody
+    public Result getDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
+        String cur_id = resourceService.getMasterDirId(doc_id);
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+                ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
+        }
+        return documentService.getDoc(doc_id);
+    }
 
     @ApiOperation("更新文档元数据")
-    @PutMapping("/v1/docs/{doc_id}")
+    @PatchMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result updateDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id,
                                 @RequestBody SpaDocUpdateParams paramMap) {
@@ -68,7 +68,7 @@ public class DocumentController {
         return documentService.updateDoc(doc_id, paramMap);
     }
 
-    @ApiOperation("删除目录")
+    @ApiOperation("删除文档")
     @DeleteMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result deleteDocument(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
@@ -115,7 +115,7 @@ public class DocumentController {
         return aclService.deleteGroupPermission(group_id, doc_id);
     }
 
-    @ApiOperation("获取对该目录有操作权限的群组")
+    @ApiOperation("获取对该文档有操作权限的群组")
     @GetMapping("/v1/docs/{doc_id}/authgroups")
     @ResponseBody
     public Result getAuthGroups(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {

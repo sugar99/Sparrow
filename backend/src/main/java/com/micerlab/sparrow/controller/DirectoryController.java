@@ -51,8 +51,8 @@ public class DirectoryController {
         return directoryService.getDir(dir_id);
     }
 
-    @ApiOperation("更新目录元数据")
-    @PutMapping("/v1/dirs/{dir_id}")
+    @ApiOperation("更新目录名称")
+    @PatchMapping("/v1/dirs/{dir_id}")
     @ResponseBody
     public Result updateDirectoryMeta(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
                                       @RequestBody Map<String, Object> paramMap) {

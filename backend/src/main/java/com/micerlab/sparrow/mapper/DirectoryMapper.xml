@@ -5,8 +5,8 @@
 <mapper namespace="com.micerlab.sparrow.dao.postgre.DirectoryDao">
     <insert id="createDir" parameterType="directory">
         insert into spa_dir(id, title, thumbnail, root, home, personal, modifiable, creator_id, created_at) values (
-        #{dir.id}, #{dir.title}, #{dir.thumbnail}, #{dir.root}, #{dir.home}, #{dir.personal}, #{dir.modifiable}, #{dir.creator_id},
-        #{dir.created_at});
+        #{directory.id}, #{directory.title}, #{directory.thumbnail}, #{directory.root}, #{directory.home}, #{directory.personal}, #{directory.modifiable}, #{directory.creator_id},
+        #{directory.created_at});
     </insert>
     <select id="getDir" resultType="directory">
         select * from spa_dir where id = #{id};
@@ -29,16 +29,16 @@
     <select id="getOneLevelSlaves" resultType="java.util.Map">
         with r as
         (
-          select id, title, thumbnail, creator_id as creator, created_at as created_time from spa_dir
+          select 'dir' as type, spa_dir.id as id, spa_dir.title as title, spa_dir.thumbnail as thumbnail, spa_dir.creator_id as creator, spa_dir.created_at as created_time from spa_dir
           union all
-          select id, title, thumbnail, creator_id as creator, created_at as created_time from spa_doc
+          select 'doc' as type, spa_doc.id as id, spa_doc.title as title, spa_doc.thumbnail as thumbnail, spa_doc.creator_id as creator, spa_doc.created_at as created_time from spa_doc
         )
         select r.* from r inner join master_slaves on master_slaves.slave_id = r.id and master_slaves.master_id = #{master_id};
     </select>
     <select id="getTotalSlavesId" resultType="String">
         with RECURSIVE r as
         (
-          select * from master_salves where master_id = #{master_id}
+          select * from master_slaves where master_id = #{master_id}
           union all
           select master_slaves.* from master_slaves, r where master_slaves.master_id = r.slave_id
         ) select r.slave_id from r;
@@ -53,10 +53,10 @@
         select d.id, d.title from spa_dir d inner join r on r.master_id = d.id;
     </select>
     <select id="getHomeDir" resultType="directory">
-        select * from directory where home = 1;
+        select * from spa_dir where home = 1;
     </select>
     <select id="getRootDir" resultType="directory">
-        select * from directory where root = 1;
+        select * from spa_dir where root = 1;
     </select>
     <select id="getAuthGroups" resultType="group">
         select g.* from group_resource r inner join spa_group g on g.group_id = r.group_id and r.resource_id =

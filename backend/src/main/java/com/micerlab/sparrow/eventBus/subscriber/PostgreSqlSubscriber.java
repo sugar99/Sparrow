@@ -1,8 +1,10 @@
 package com.micerlab.sparrow.eventBus.subscriber;
 
+import com.micerlab.sparrow.dao.postgre.DocumentDao;
 import com.micerlab.sparrow.dao.postgre.GroupDao;
 import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.pojo.Document;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
 import com.micerlab.sparrow.domain.pojo.User;
@@ -14,6 +16,7 @@ import com.micerlab.sparrow.eventBus.event.group.InsertGroupEvent;
 import com.micerlab.sparrow.eventBus.event.group.UpdateGroupEvent;
 import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
 import com.micerlab.sparrow.service.acl.ACLService;
+import com.micerlab.sparrow.service.doc.DocumentService;
 import com.micerlab.sparrow.service.group.GroupService;
 import com.micerlab.sparrow.service.resource.ResourceService;
 import org.greenrobot.eventbus.EventBus;
@@ -38,10 +41,10 @@ public class PostgreSqlSubscriber {
     private GroupDao groupDao;
 
     @Autowired
-    private ResourceDao resourceDao;
+    private ResourceService resourceService;
 
     @Autowired
-    private ResourceService resourceService;
+    private DocumentDao documentDao;
 
     @Autowired
     private GroupService groupService;
@@ -113,23 +116,20 @@ public class PostgreSqlSubscriber {
 
     /**
      * 新建文档
-     * @param insertDocEvent 新建文档事件
+     * @param event 新建文档事件
      */
     @Subscribe
-    public void insertDoc(InsertDocEvent insertDocEvent) {
-        Resource resource = new Resource();
-        resource.setResource_id(insertDocEvent.getResource_id());
-        resource.setResource_name(insertDocEvent.getTitle());
-        resource.setResource_type(insertDocEvent.getResource_type());
-        resource.setCreator_id(insertDocEvent.getCreator());
-        resource.setCreated_at(insertDocEvent.getCreated_time());
-        resource.setThumbnail("./assets/images/doc.png");
-        resourceDao.createResource(resource);
+    public void insertDoc(InsertDocEvent event) {
+        Document document = new Document();
+        document.setId(event.getResource_id());
+        document.setCreator_id(event.getCreator());
+        document.setCreated_at(event.getCreated_time());
+        documentDao.createDoc(document);
     }
 
     @Subscribe
-    public void updateDoc(UpdateDocEvent updateDocEvent) {
-        resourceDao.updateResourceMeta(updateDocEvent.getId(), updateDocEvent.getTitle());
+    public void updateDoc(UpdateDocEvent event) {
+        documentDao.updateDoc(event.getId(), event.getTitle());
     }
 
     /**
@@ -140,10 +140,10 @@ public class PostgreSqlSubscriber {
     public void deleteDoc(DeleteDocEvent deleteDocEvent) {
         String resource_id = deleteDocEvent.getResource_id();
         //删除与父目录的关系
-        resourceDao.deleteMasterSlaveRelation(resource_id);
+        documentDao.dropSlaveDoc(resource_id);
         //删除文档与群组的所有权限关系
         aclService.deleteResourcePermission(resource_id);
         //删除文档
-        resourceDao.deleteResource(resource_id);
+        documentDao.deleteDoc(resource_id);
     }
 }

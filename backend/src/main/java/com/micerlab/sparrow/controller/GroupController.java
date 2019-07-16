@@ -91,4 +91,11 @@ public class GroupController {
         }
         return groupService.deleteGroupMember(group_id, member_id);
     }
+
+    @ApiOperation("G8. 获取群组拥有操作权限的资源列表")
+    @GetMapping("/v1/groups/{group_id}/authgroups")
+    @ResponseBody
+    public Result getAuthResources(HttpServletRequest request, @PathVariable("group_id") String group_id) {
+        return null;
+    }
 }

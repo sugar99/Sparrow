@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService{
                 Cookie cookie = new Cookie("auth_token", token);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                String cookieStr =  "auth_toke=" + token + ";Path=/";
-                response.setHeader("Set-Cookie", cookieStr);
+//                String cookieStr =  "auth_toke=" + token + ";Path=/";
+//                response.setHeader("Set-Cookie", cookieStr);
                 
                 // 将用户信息存入Redis中
                 UserPrincipal userPrincipal = new UserPrincipal(user_id, user.getUsername(), user.getEmail(), work_no);
@@ -92,9 +92,7 @@ public class UserServiceImpl implements UserService{
                 RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
                 redisTemplate.opsForValue().set(user_id, userPrincipal);
                 redisTemplate.expire(user_id, EXIPIRE_TIME, TimeUnit.MILLISECONDS);
-                Map data = defaultUserState(user_id);
-                data.put("auth_token", token);
-                return Result.OK().data(data).build();
+                return Result.OK().data(defaultUserState(user_id)).build();
             }
         }
     }

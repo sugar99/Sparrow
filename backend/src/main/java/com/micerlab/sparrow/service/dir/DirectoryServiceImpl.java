@@ -72,6 +72,9 @@ public class DirectoryServiceImpl implements DirectoryService{
 
     @Override
     public String getMasterDirId(String dir_id) {
+        if (dir_id.equals(directoryDao.getRootDir().getId())) {
+            return dir_id;
+        }
         return directoryDao.getMasterDir(dir_id).getId();
     }
 

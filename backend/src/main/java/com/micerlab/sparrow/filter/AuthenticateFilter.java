@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class AuthenticateFilter extends OncePerRequestFilter {
 
     private String user_id;
-    
+
     private String test_id = "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368";
 
     @Override
@@ -40,9 +40,7 @@ public class AuthenticateFilter extends OncePerRequestFilter {
         } else {
             //将用户信息存放到 request.attribute中，整个请求的上下文都可以使用用户信息
             RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
-//            UserPrincipal userPrincipal = (UserPrincipal) redisTemplate.opsForValue().get(user_id);
-            // TODO:
-            UserPrincipal userPrincipal = (UserPrincipal) redisTemplate.opsForValue().get(test_id);
+            UserPrincipal userPrincipal = (UserPrincipal) redisTemplate.opsForValue().get(user_id);
             request.setAttribute("principal", userPrincipal);
             filterChain.doFilter(request, response);
             return;
@@ -55,15 +53,14 @@ public class AuthenticateFilter extends OncePerRequestFilter {
      * @return boolean
      */
     private boolean isAuthenticatedUser(HttpServletRequest request) {
-//        String user_id = JwtUtil.getUser_id(request);
-        //请求不带Token或Token不合法，返回false
-//        if (user_id == null) {
-//            return false;
-//        }
-//        this.user_id = user_id;
-        //用户已注销，返回false
-        String zhangSanId = "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368";
+        String user_id = JwtUtil.getUser_id(request);
+//        请求不带Token或Token不合法，返回false
+        if (user_id == null) {
+            return false;
+        }
+        this.user_id = user_id;
+//        用户已注销，返回false
         RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
-        return redisTemplate.opsForValue().get(zhangSanId) != null;
+        return redisTemplate.opsForValue().get(user_id) != null;
     }
 }
