@@ -116,6 +116,7 @@ public class FileExtractUtil {
         stripper.setStartPage(1);
         stripper.setEndPage(pages);
         content = stripper.getText(document);
+        document.close();
         return content;
     }
 

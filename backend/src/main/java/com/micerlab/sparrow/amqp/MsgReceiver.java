@@ -49,27 +49,28 @@ public class MsgReceiver {
 
     /**
      * 生成缩略图 / 记录文本信息，并更新到es
-     * @param content
+     * @param message
      */
     @RabbitHandler
-    public void process(String content) {
-        logger.info("接收处理队列当中的消息： " + content);
-        SpaFile fileMeta = spaFileDao.get(content);
+    public void process(String message) {
+        logger.info("接收处理队列当中的消息： " + message);
+        SpaFile fileMeta = spaFileDao.get(message);
         File file = fileStoreService.getFile(fileMeta);
         try {
             // 生成缩略图
             Map<String, Object> thumbnailInfo = fileUtil.getThumbnailInfo(file);
             // 提取全文信息
-            String text = FileExtractUtil.extractString(file.getAbsolutePath());
-            if (text != null) {
-                logger.debug("extract text: " + text);
-                List<String> keyword = fileExtractService.findKeyword(text, K_word);
+            // TODO content 和 keyword 需要记录插入到 es
+            String content = FileExtractUtil.extractString(file.getAbsolutePath());
+            if (content != null) {
+                logger.debug("extract text: " + content);
+                List<String> keyword = fileExtractService.findKeyword(content, K_word);
                 logger.debug("findKeyword: " + keyword);
 
             }
 
             // 使用 EventBus 更新 es
-            EventBus.getDefault().post(new UpdateFileThumbnailEvent(content, (String)thumbnailInfo.get("thumbnail_url")));
+            EventBus.getDefault().post(new UpdateFileThumbnailEvent(message, (String)thumbnailInfo.get("thumbnail_url")));
         } catch (Exception e) {
             logger.error("消息消费失败（生成缩略图 / 提取文本信息）: " + e.getMessage());
         } finally {
