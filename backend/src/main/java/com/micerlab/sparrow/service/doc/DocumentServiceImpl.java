@@ -1,8 +1,10 @@
 package com.micerlab.sparrow.service.doc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.postgre.DocumentDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import com.micerlab.sparrow.domain.pojo.Directory;
@@ -11,6 +13,7 @@ import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
 import com.micerlab.sparrow.service.acl.ACLService;
+import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +58,10 @@ public class DocumentServiceImpl implements DocumentService{
 
     @Override
     public Result getDoc(String doc_id) {
-        Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
-        return Result.OK().data(docMeta).build();
+        JSONObject docJson = spaDocDao.getJsonDoc(doc_id);
+        if(docJson == null)
+            throw new BusinessException(ErrorCode.NOT_FOUND_DOC_ID, doc_id);
+        return Result.OK().data(docJson).build();
     }
 
     @Override

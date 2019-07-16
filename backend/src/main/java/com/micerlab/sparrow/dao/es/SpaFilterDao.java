@@ -27,7 +27,7 @@ public class SpaFilterDao
     private RestHighLevelClient restHighLevelClient;
     
     @Autowired
-    private ElasticsearchBaseDao elasticsearchBaseDao;
+    private ESBaseDao ESBaseDao;
     
     public List<Map<String, Object>> search(SpaFilterType spaFilterType, String keyword, int size) throws IOException
     {
@@ -58,7 +58,7 @@ public class SpaFilterDao
     
     public SpaFilter getSpaFilter(SpaFilterType spaFilterType, String filter_id)
     {
-        Map<String, Object> ESDoc = elasticsearchBaseDao.getESDoc(spaFilterType.sparrowIndex().getIndex(),filter_id);
+        Map<String, Object> ESDoc = ESBaseDao.getESDoc(spaFilterType.sparrowIndex().getIndex(),filter_id);
         if(ESDoc == null)
             return null;
         SpaFilter spaFilter = (new JSONObject(ESDoc)).toJavaObject(SpaFilter.class);
@@ -68,11 +68,11 @@ public class SpaFilterDao
     public void updateSpaFilter(SpaFilterType spaFilterType, String filter_id, SpaFilter spaFilter)
     {
         JSONObject jsonObject = (JSONObject) JSONObject.toJSON(spaFilter);
-        elasticsearchBaseDao.updateESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id, jsonObject);
+        ESBaseDao.updateESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id, jsonObject);
     }
     
     public void deleteSpaFilter(SpaFilterType spaFilterType, String filter_id)
     {
-        elasticsearchBaseDao.deleteESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id);
+        ESBaseDao.deleteESDoc(spaFilterType.sparrowIndex().getIndex(), filter_id);
     }
 }

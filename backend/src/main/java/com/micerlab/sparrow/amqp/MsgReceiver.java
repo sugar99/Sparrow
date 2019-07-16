@@ -54,7 +54,7 @@ public class MsgReceiver {
     @RabbitHandler
     public void process(String content) {
         logger.info("接收处理队列当中的消息： " + content);
-        SpaFile fileMeta = spaFileDao.getFileMeta(content);
+        SpaFile fileMeta = spaFileDao.get(content);
         File file = fileStoreService.getFile(fileMeta);
         try {
             // 生成缩略图

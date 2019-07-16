@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,22 +88,22 @@ public class FileServiceImpl implements FileService
             doc.getFiles().add(file_id);
         }
         
-        spaFileDao.createFileMeta(file_id, MapUtils.obj2JsonMap(file));
-        spaDocDao.updateDocMeta(doc_id, MapUtils.obj2JsonMap(doc));
+        spaFileDao.index(file_id, file, true);
+        spaDocDao.update(doc_id, doc);
         msgProducer.sendMsg(file_id);
         return Result.OK().build();
     }
     
     public Result retrieveFileMeta(String file_id)
     {
-        SpaFile file = spaFileDao.getFileMeta(file_id);
+        SpaFile file = spaFileDao.get(file_id);
         return Result.OK().data(file).build();
     }
     
     @Override
     public Result deleteFileMeta(String file_id)
     {
-        spaFileDao.deleteFileMeta(file_id);
+        spaFileDao.delete(file_id);
         return Result.OK().build();
     }
     
@@ -114,7 +113,7 @@ public class FileServiceImpl implements FileService
         // TODO: current time
         String modified_time = "2019-07-09 18:03:00";
         jsonMap.put("modified_time", modified_time);
-        spaFileDao.updateFileMeta(file_id, jsonMap);
+        spaFileDao.updateJsonDoc(file_id, jsonMap);
         return Result.OK().build();
     }
     
@@ -150,14 +149,14 @@ public class FileServiceImpl implements FileService
     @Override
     public Result retrieveFileSpaFilters(String file_id, SpaFilterType spaFilterType)
     {
-        List<SpaFilter> spaFilters = spaFileDao.retrieveFileSpaFilters(file_id, spaFilterType);
+        List<SpaFilter> spaFilters = spaFileDao.getSpaFilters(file_id, spaFilterType);
         return Result.OK().data(spaFilters).build();
     }
     
     @Override
     public Result updateFileSpaFilters(String file_id, SpaFilterType spaFilterType, List<Long> spaFilterIds)
     {
-        spaFileDao.updateFileSpaFilters(file_id, spaFilterType, spaFilterIds);
+        spaFileDao.updateSpaFilters(file_id, spaFilterType, spaFilterIds);
         return Result.OK().build();
     }
 }

@@ -1,11 +1,14 @@
 package com.micerlab.sparrow.service.resource;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.postgre.ACLDao;
 import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
+import com.micerlab.sparrow.utils.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
@@ -237,8 +240,10 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result retrieveDocMeta(String doc_id)
     {
-        Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
-        return Result.OK().data(docMeta).build();
+        JSONObject docJson = spaDocDao.getJsonDoc(doc_id);
+        if(docJson == null)
+            throw new BusinessException(ErrorCode.NOT_FOUND_DOC_ID, doc_id);
+        return Result.OK().data(docJson).build();
     }
 
     @Override

@@ -32,19 +32,19 @@ public class SparrowApplication
 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    @Autowired
-    private ElasticsearchConfig elasticsearchConfig;
-
-    @Bean
-    public RestHighLevelClient restHighLevelClient()
-    {
-        int port = elasticsearchConfig.getPort();
-        String host = elasticsearchConfig.getHost();
-        logger.debug("elasticsearch host: " + host + ";port: " + port);
-        return new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost(host, port, "http")));
-    }
+//    @Autowired
+//    private ElasticsearchConfig elasticsearchConfig;
+//
+//    @Bean
+//    public RestHighLevelClient restHighLevelClient()
+//    {
+//        int port = elasticsearchConfig.getPort();
+//        String host = elasticsearchConfig.getHost();
+//        logger.debug("elasticsearch host: " + host + ";port: " + port);
+//        return new RestHighLevelClient(
+//                RestClient.builder(
+//                        new HttpHost(host, port, "http")));
+//    }
 
     @Bean("redisTemplate")
     public RedisTemplate<Serializable, Object> redisTemplate(RedisConnectionFactory connectionFactory) {

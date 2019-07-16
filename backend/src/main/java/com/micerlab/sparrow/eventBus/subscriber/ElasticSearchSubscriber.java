@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.eventBus.subscriber;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.CUDUserGroupDao;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
@@ -19,7 +20,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,29 +98,31 @@ public class ElasticSearchSubscriber {
                 TimeUtil.formatTimeStr(insertDocEvent.getModified_time()),
                 insertDocEvent.getMeta_state()
         );
-        spaDocDao.createDocMeta(spaDoc);
+        spaDocDao.index(spaDoc.getId(), spaDoc, true);
     }
     
     @Subscribe
     public void updateDocMeta(UpdateDocEvent updateDocEvent)
     {
-        Map<String, Object> jsonMap = new HashMap<>();
+        JSONObject jsonMap = new JSONObject();
         jsonMap.put("title", updateDocEvent.getTitle());
         jsonMap.put("desc", updateDocEvent.getDesc());
         jsonMap.put("modified_time", TimeUtil.formatTimeStr(updateDocEvent.getModified_time()));
         jsonMap.put("meta_state", 1);
-        spaDocDao.updateDocMeta(updateDocEvent.getId(), jsonMap);
+        spaDocDao.updateJsonDoc(updateDocEvent.getId(), jsonMap);
     }
     
     @Subscribe
     public void deleteDocMeta(DeleteDocEvent deleteDocEvent)
     {
-        spaDocDao.deleteDocMeta(deleteDocEvent.getResource_id());
+        spaDocDao.delete(deleteDocEvent.getResource_id());
     }
     
     @Subscribe
     public void updateFileThumbnail(UpdateFileThumbnailEvent event)
     {
-        spaFileDao.updateFileThumbnail(event.getFile_id(),event.getThumbnail());
+        JSONObject jsonMap = new JSONObject();
+        jsonMap.put("thumbnail", event.getThumbnail());
+        spaFileDao.updateJsonDoc(event.getFile_id(), jsonMap);
     }
 }
