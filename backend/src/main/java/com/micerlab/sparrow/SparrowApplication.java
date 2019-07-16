@@ -2,14 +2,9 @@ package com.micerlab.sparrow;
 
 import com.micerlab.sparrow.filter.AuthenticateFilter;
 import com.micerlab.sparrow.utils.SerializeUtil;
-import org.apache.http.HttpHost;
-import org.apache.ibatis.annotations.Mapper;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -30,24 +25,6 @@ public class SparrowApplication
 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     
-//    @Value("${elasticsearch-config.host}")
-//    @Value("localhost")
-    @Value("39.108.210.48")
-    private String elasticsearchHost;
-    
-//    @Value("${elasticsearch-config.port}")
-    @Value("9200")
-    private int elasticsearchPort;
-
-    @Bean
-    public RestHighLevelClient restHighLevelClient()
-    {
-        logger.debug("elasticsearch host: " + elasticsearchHost + ";port: " + elasticsearchPort);
-        return new RestHighLevelClient(
-                RestClient.builder(
-                        new HttpHost(elasticsearchHost, elasticsearchPort, "http")));
-    }
-
     @Bean("redisTemplate")
     public RedisTemplate<Serializable, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<Serializable, Object> template = new RedisTemplate<>();

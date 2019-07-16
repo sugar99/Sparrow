@@ -38,15 +38,7 @@ public class SearchDao
 
     public List<String> suggestions(String type, String keyword, int size)
     {
-        try
-        {
-            return searchSuggestionDao.suggestions(type, keyword, size);
-        } catch (IOException ex)
-        {
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
-        }
+        return searchSuggestionDao.suggestions(type, keyword, size);
     }
     
     public Map<String, Object> topAssociations(String keyword, int category_count, int tag_count)
@@ -64,28 +56,12 @@ public class SearchDao
     
     public Map<String, Object> searchResults(SearchRequestParams params)
     {
-        try
-        {
-            return searchResultDao.searchResults(params);
-        } catch (IOException ex)
-        {
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
-        }
+        return searchResultDao.searchResults(params);
     }
     
     public List<Map<String, Object>> searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size)
     {
-        try
-        {
-            return spaFilterDao.search(spaFilterType, keyword, size);
-        } catch (IOException ex)
-        {
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
-        }
+        return spaFilterDao.search(spaFilterType, keyword, size);
     }
 
     public List<Map<String, Object>> searchUserOrGroup(String keyword, String index, int size) {

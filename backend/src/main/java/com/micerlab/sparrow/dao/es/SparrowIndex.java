@@ -2,10 +2,6 @@ package com.micerlab.sparrow.dao.es;
 
 public enum SparrowIndex
 {
-    SPA_DOCS,
-    SPA_FILES,
-    SPA_CATEGORIES,
-    SPA_TAGS,
     SPA_USER,
     SPA_GROUP
     ;

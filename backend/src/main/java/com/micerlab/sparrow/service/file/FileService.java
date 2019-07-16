@@ -14,7 +14,7 @@ public interface FileService {
     
     Result createFileMeta(String file_id, CreateSpaFileParams params);
     
-    Result retrieveFileMeta(String file_id);
+    Result getFileMeta(String file_id);
     
     Result updateFileMeta(String file_id, UpdateFileMetaParams params);
     

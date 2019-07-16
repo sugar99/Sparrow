@@ -1,6 +1,5 @@
 package com.micerlab.sparrow.controller;
 
-import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.Result;
@@ -20,7 +19,6 @@ import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.BusinessException;
-import com.micerlab.sparrow.utils.MapUtils;
 import com.micerlab.sparrow.utils.TimeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,8 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -101,8 +97,8 @@ public class FileController {
         List<String> forbiddenFileIds = new LinkedList<>();
 
         for (String file_id: file_ids) {
-            SpaFile file = spaFileDao.getFileMeta(file_id);
-            SpaDoc doc = MapUtils.jsonMap2Obj(spaDocDao.retrieveDocMeta(file.getDoc_id()), SpaDoc.class);
+            SpaFile file = spaFileDao.get(file_id);
+            SpaDoc doc = spaDocDao.get(file.getDoc_id());
 
             if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
                 forbiddenFileIds.add(file_id);
@@ -110,11 +106,11 @@ public class FileController {
             }
 
             keys.add(file.getStore_key());
-            spaFileDao.deleteFileMeta(file_id);
+            spaFileDao.delete(file_id);
 
             doc.getFiles().remove(file_id);
             doc.setModified_time(TimeUtil.formatTimeStr(TimeUtil.currentTime()));
-            spaDocDao.updateDocMeta(doc.getId(), MapUtils.obj2JsonMap(doc));
+            spaDocDao.update(doc.getId(), doc);
         }
         fileStoreService.deleteFile(keys);
         if(!forbiddenFileIds.isEmpty())
@@ -125,7 +121,7 @@ public class FileController {
     @ApiOperation("F7.下载文件")
     @GetMapping("v1/files/{file_id}/download")
     public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        SpaFile fileMeta = spaFileDao.getFileMeta(file_id);
+        SpaFile fileMeta = spaFileDao.get(file_id);
         String doc_id = fileMeta.getDoc_id();
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
@@ -140,7 +136,7 @@ public class FileController {
     @ApiOperation("F8.获取文件历史版本列表(待完成)")
     @GetMapping("/v1/files/{file_id}/versions")
     public Result getFileVersions(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
-        String doc_id = spaFileDao.getDocId(file_id);
+        String doc_id = spaFileDao.get(file_id).getDoc_id();
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
@@ -170,14 +166,14 @@ public class FileController {
     
     @ApiOperation("F9.获取文件Meta")
     @GetMapping("/v1/files/{file_id}")
-    public Result retrieveFileMeta(
+    public Result getFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id
     )
     {
         // TODO: 通过file_id获取doc_id (ES)
         // TODO: ACL 判断用户对当前文档是否具有可读权限
-        return fileService.retrieveFileMeta(file_id);
+        return fileService.getFileMeta(file_id);
     }
     
     @ApiOperation("F10.更新文件Meta")

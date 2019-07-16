@@ -584,6 +584,284 @@ Response Body
     ],
     "total": 33,
     "results": [
+      
+      {
+        "ext": "jpg",
+        "created_time": "2017-07-01 21:34:16",
+        "derived_files": null,
+        "creator": "green",
+        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+        "type": "image",
+        "title": "算法",
+        "version": 0,
+        "tags": [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        "modified_time": "2017-07-06 21:34:16",
+        "@timestamp": "2019-07-01T15:45:33.593Z",
+        "parent_id": null,
+        "@version": "1",
+        "id": "image_10432347",
+        "categories": [
+          0,
+          1,
+          6
+        ],
+        "original_id": 10432347,
+        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"
+      },
+      {
+        "ext": "gif",
+        "created_time": "2019-06-26 21:34:16",
+        "derived_files": null,
+        "creator": "green",
+        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/26337727.jpeg",
+        "type": "image",
+        "title": "算法设计与分析基础",
+        "version": 0,
+        "tags": [
+          133,
+          137,
+          2697,
+          2998,
+          22409,
+          24310,
+          27823
+        ],
+        "modified_time": "2019-07-01 21:34:16",
+        "@timestamp": "2019-07-01T15:45:40.696Z",
+        "parent_id": null,
+        "@version": "1",
+        "id": "image_26337727",
+        "categories": [
+          0,
+          6
+        ],
+        "original_id": 26337727,
+        "desc": "作者基于丰富的教学经验，开发了一套全新的算法分类方法。该分类法站在通用问题求解策略的高度，对现有大多数算法准确分类，从而引领读者沿着一条清晰、一致、连贯的思路来探索算法设计与分析这一迷人领域。《算法设计与分析基础(第3版)》作为第3版，相对前版调整了多个章节的内容和顺序，同时增加了一些算法，并扩展了算法的应用，使得具体算法和通用算法设计技术的对应更加清晰有序；各章累计增加了70道习题，其中包括一些有趣的谜题和面试问题。《算法设计与分析基础(第3版)》十分适合用作算法设计和分析的基础教材，也适合任何有兴趣探究算法奥秘的读者使用，只要读者具备数据结构和离散数学的知识即可。",
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/26337727.jpeg"
+      }
+    ]
+  }
+}
+```
+
+**文档全文搜索**
+
+```json
+{
+    "type": "doc_content",
+    "keyword": "算法",
+    "tags": [
+       133,
+       137
+    ],
+    "categories": [
+        0,
+        6
+    ],
+    "exts": [
+       "pdf",
+       "docx"
+    ],
+    "created_time": {
+        "from": "2010-01-01",
+    },
+    "modified_time": {
+        "to": "now"
+    },
+    "time_zone": "+8",
+    "page": 1,
+    "per_page": 5,
+    "desc_highlight_count": 2,
+    "content_highlight_count": 5,
+    "highlight_tag": "em"
+}
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "group_by_created_time": [
+      {
+        "key": "全部",
+        "doc_count": 33,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-09T02:10:53.658Z",
+        "to_as_string": "2019-07-09"
+      },
+      {
+        "key": "三天内",
+        "doc_count": 0,
+        "from": "2019-07-05T16:00:00Z",
+        "from_as_string": "2019-07-06",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一周内",
+        "doc_count": 6,
+        "from": "2019-07-01T16:00:00Z",
+        "from_as_string": "2019-07-02",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一个月内",
+        "doc_count": 23,
+        "from": "2019-06-08T16:00:00Z",
+        "from_as_string": "2019-06-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "三个月内",
+        "doc_count": 25,
+        "from": "2019-04-08T16:00:00Z",
+        "from_as_string": "2019-04-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "半年内",
+        "doc_count": 27,
+        "from": "2019-01-08T16:00:00Z",
+        "from_as_string": "2019-01-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一年内",
+        "doc_count": 27,
+        "from": "2018-07-08T16:00:00Z",
+        "from_as_string": "2018-07-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一年前",
+        "doc_count": 6,
+        "from": null,
+        "from_as_string": null,
+        "to": "2018-07-08T16:00:00Z",
+        "to_as_string": "2018-07-09"
+      },
+      {
+        "key": "自定义",
+        "doc_count": 33,
+        "from": "2009-12-31T16:00:00Z",
+        "from_as_string": "2010-01-01",
+        "to": "2019-07-09T02:10:53.658Z",
+        "to_as_string": "2019-07-09"
+      }
+    ],
+    "group_by_modified_time": [
+      {
+        "key": "全部",
+        "doc_count": 33,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-09T02:10:53.658Z",
+        "to_as_string": "2019-07-09"
+      },
+      {
+        "key": "三天内",
+        "doc_count": 0,
+        "from": "2019-07-05T16:00:00Z",
+        "from_as_string": "2019-07-06",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一周内",
+        "doc_count": 15,
+        "from": "2019-07-01T16:00:00Z",
+        "from_as_string": "2019-07-02",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一个月内",
+        "doc_count": 23,
+        "from": "2019-06-08T16:00:00Z",
+        "from_as_string": "2019-06-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "三个月内",
+        "doc_count": 25,
+        "from": "2019-04-08T16:00:00Z",
+        "from_as_string": "2019-04-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "半年内",
+        "doc_count": 27,
+        "from": "2019-01-08T16:00:00Z",
+        "from_as_string": "2019-01-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一年内",
+        "doc_count": 27,
+        "from": "2018-07-08T16:00:00Z",
+        "from_as_string": "2018-07-09",
+        "to": null,
+        "to_as_string": null
+      },
+      {
+        "key": "一年前",
+        "doc_count": 6,
+        "from": null,
+        "from_as_string": null,
+        "to": "2018-07-08T16:00:00Z",
+        "to_as_string": "2018-07-09"
+      },
+      {
+        "key": "自定义",
+        "doc_count": 33,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-09T02:10:53.658Z",
+        "to_as_string": "2019-07-09"
+      }
+    ],
+    "group_by_ext": [
+      {
+        "key": "全部",
+        "doc_count": 61
+      },
+      {
+        "key": "png",
+        "doc_count": 28
+      },
+      {
+        "key": "gif",
+        "doc_count": 17
+      },
+      {
+        "key": "jpg",
+        "doc_count": 16
+      }
+    ],
+    "total": 33,
+    "results": [
       {
         "ext": "gif",
         "created_time": "2019-06-21 21:34:16",
@@ -713,7 +991,17 @@ Response Body
         ],
         "original_id": 10432347,
         "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
-        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+         "keywords": ["<em>算法</em>", "2", "3"],
+         "title_highlight": "<em>算法</em>",
+         "desc_highlights": [
+        	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》是近年来关于<em>算法</em>设计和分析的不可多得的优秀教材。",
+           	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》围绕<em>算法</em>设计技术组织素材，对每种<em>算法</em>技术选择了多个典型范例进行分析。"
+          ],
+         "content_highlights": [
+             "《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》是近年来关于<em>算法</em>设计和分析的不可多得的优秀教材。",
+           	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》围绕<em>算法</em>设计技术组织素材，对每种<em>算法</em>技术选择了多个典型范例进行分析。"
+         ]
       },
       {
         "ext": "gif",
@@ -797,6 +1085,7 @@ Response Body
 	]
 }
 ```
+
 
 ### 目录文档模块
 

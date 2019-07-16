@@ -18,12 +18,6 @@ public enum SpaFilterType
         this.types = types;
     }
     
-    public SparrowIndex sparrowIndex()
-    {
-        if(this == SpaFilterType.TAG) return SparrowIndex.SPA_TAGS;
-        else return SparrowIndex.SPA_CATEGORIES;
-    }
-    
     public String getType()
     {
         return type;

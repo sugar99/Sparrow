@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.search.KeyCount;
 import com.micerlab.sparrow.domain.params.SearchRequestParams;
 import com.micerlab.sparrow.domain.file.FileType;
@@ -27,6 +28,7 @@ import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -40,15 +42,14 @@ public class SearchResultDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchResultDao.class);
     
-    private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
+    
+    @Autowired
+    private ESBaseDao ESBaseDao;
     
     private final Map<String, Integer> createdtimeRangeKey2No = new HashMap<>();
     private final Map<String, Integer> modifiedtimeRangeKey2No = new HashMap<>();
-    
-    public SearchResultDao(RestHighLevelClient restHighLevelClient)
-    {
-        this.restHighLevelClient = restHighLevelClient;
-    }
     
     /*
     {
@@ -253,9 +254,9 @@ public class SearchResultDao
         }
     }
      */
-    public Map<String, Object> searchResults(SearchRequestParams params) throws IOException
+    public Map<String, Object> searchResults(SearchRequestParams params)
     {
-        SearchRequest searchRequest = new SearchRequest(SparrowIndex.SPA_FILES.getIndex());
+        SearchRequest searchRequest = new SearchRequest(sparrowIndices.getFile());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().size(0);
         
         query(searchSourceBuilder, params);
@@ -263,7 +264,7 @@ public class SearchResultDao
         logger.debug("search result query dsl: " + searchSourceBuilder.toString());
         
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = ESBaseDao.search(searchRequest);
         
         Map<String, Object> data = new LinkedHashMap<>();
         

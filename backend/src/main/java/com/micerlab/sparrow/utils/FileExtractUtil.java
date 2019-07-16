@@ -25,14 +25,26 @@ import java.nio.charset.Charset;
 import java.text.NumberFormat;
 
 /**
- * @Description TODO
+ * @Description 文件内容提取工具类（pdf / doc / ppt ...）
  * @Author Honda
  * @Date 2019/7/12 16:09
  **/
-public class FileExtractUtil {/**
- * 默认检测 txt 的字符集
- */
-private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
+public class FileExtractUtil {
+
+    public static String removeSpace(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) != ' ' && str.charAt(i) != '\n' && str.charAt(i) != '\t' && str.charAt(i) != '\r') {
+                sb.append(str.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 默认检测 txt 的字符集
+     */
+    private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
 
     /**
      * 根据文件后缀名提取文本内容， 目前内容只支持 pdf, doc, docx, ppt, pptx, xls, xlsx 的提取
@@ -69,7 +81,7 @@ private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
                 res = txt2String(new File(path));
                 break;
         }
-        return res;
+        return res == null ? res : removeSpace(res);
     }
 
     /**
@@ -104,6 +116,7 @@ private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
         stripper.setStartPage(1);
         stripper.setEndPage(pages);
         content = stripper.getText(document);
+        document.close();
         return content;
     }
 
