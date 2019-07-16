@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.config.ElasticsearchConfig;
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.doc.SpaDoc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class SpaDocDao extends ESCRUDRepository<SpaDoc>
 {
-    public SpaDocDao(ESBaseDao ESBaseDao, ElasticsearchConfig.Indices indices)
+    public SpaDocDao(ESBaseDao ESBaseDao, ESConfig.Indices indices)
     {
         super(SpaDoc.class, ESBaseDao, indices);
     }
@@ -18,7 +18,7 @@ public class SpaDocDao extends ESCRUDRepository<SpaDoc>
     @Override
     protected String index()
     {
-        return indices.getDoc();
+        return sparrowIndices.getDoc();
     }
     
     private Logger logger = LoggerFactory.getLogger(SpaDocDao.class);
@@ -26,7 +26,7 @@ public class SpaDocDao extends ESCRUDRepository<SpaDoc>
     public List<Map<String, Object>> getFiles(String doc_id)
     {
         List<Map<String, Object>> files = ESBaseDao.termsLookup(
-                indices.getFile(),
+                sparrowIndices.getFile(),
                 index(),
                 doc_id,
                 "files"

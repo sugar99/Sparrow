@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.alibaba.fastjson.JSONObject;
-import com.micerlab.sparrow.config.ElasticsearchConfig;
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.file.SpaFile;
 import com.micerlab.sparrow.domain.search.SpaFilter;
@@ -9,11 +9,8 @@ import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.elasticsearch.action.get.*;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -26,7 +23,7 @@ public class SpaFileDao extends ESCRUDRepository<SpaFile>
 {
     private Logger logger = LoggerFactory.getLogger(SpaFileDao.class);
     
-    public SpaFileDao(ESBaseDao ESBaseDao, ElasticsearchConfig.Indices indices)
+    public SpaFileDao(ESBaseDao ESBaseDao, ESConfig.Indices indices)
     {
         super(SpaFile.class, ESBaseDao, indices);
     }
@@ -34,13 +31,13 @@ public class SpaFileDao extends ESCRUDRepository<SpaFile>
     @Override
     protected String index()
     {
-        return indices.getFile();
+        return sparrowIndices.getFile();
     }
     
     public List<SpaFilter> getSpaFilters(String file_id, SpaFilterType spaFilterType)
     {
         List<Map<String, Object>> spaFilterMaps = ESBaseDao.termsLookup(
-                indices.spaFilterIndex(spaFilterType),
+                sparrowIndices.spaFilterIndex(spaFilterType),
                 index(), file_id, spaFilterType.getTypes());
         List<SpaFilter> spaFilters = new LinkedList<>();
         for (Map<String, Object> spaFilterMap : spaFilterMaps)
@@ -71,12 +68,12 @@ public class SpaFileDao extends ESCRUDRepository<SpaFile>
         if(StringUtils.isEmpty(parent_id))
         {
             result.put("parent", null);
-            result.put("doc", ESBaseDao.getESDoc(SparrowIndex.SPA_DOCS.getIndex(), doc_id));
+            result.put("doc", ESBaseDao.getESDoc(sparrowIndices.getDoc(), doc_id));
         }
         else {
             MultiGetRequest multiGetRequest = new MultiGetRequest();
-            multiGetRequest.add(SparrowIndex.SPA_DOCS.getIndex(), doc_id);
-            multiGetRequest.add(SparrowIndex.SPA_FILES.getIndex(), parent_id);
+            multiGetRequest.add(sparrowIndices.getDoc(), doc_id);
+            multiGetRequest.add(sparrowIndices.getFile(), parent_id);
     
             try
             {

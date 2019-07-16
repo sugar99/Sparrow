@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "elasticsearch-config")
-public class ElasticsearchConfig
+public class ESConfig
 {
     public static class Indices
     {

@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.alibaba.fastjson.JSONObject;
-import com.micerlab.sparrow.config.ElasticsearchConfig;
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.utils.MapUtils;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -12,7 +12,7 @@ public abstract class ESCRUDRepository<E>
 {
     protected abstract String index();
     
-    protected final ElasticsearchConfig.Indices indices;
+    protected final ESConfig.Indices sparrowIndices;
     
     protected final ESBaseDao ESBaseDao;
     
@@ -20,12 +20,12 @@ public abstract class ESCRUDRepository<E>
     
     protected final Class<E> clazz;
     
-    public ESCRUDRepository(Class<E> clazz, ESBaseDao ESBaseDao, ElasticsearchConfig.Indices indices)
+    public ESCRUDRepository(Class<E> clazz, ESBaseDao ESBaseDao, ESConfig.Indices sparrowIndices)
     {
         this.clazz = clazz;
         this.ESBaseDao = ESBaseDao;
         this.restHighLevelClient = ESBaseDao.getRestHighLevelClient();
-        this.indices = indices;
+        this.sparrowIndices = sparrowIndices;
     }
     
     public JSONObject getJsonDoc(String id)

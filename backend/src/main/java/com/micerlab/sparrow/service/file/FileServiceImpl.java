@@ -144,7 +144,7 @@ public class FileServiceImpl implements FileService
     
     public Result deleteSpaFilter(SpaFilterType spaFilterType, String filter_id)
     {
-        spaFilterDao.deleteSpaFilter(spaFilterType, filter_id);
+        spaFilterDao.delete(spaFilterType, filter_id);
         return Result.OK().build();
     }
     

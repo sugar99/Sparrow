@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.search.Category;
 import com.micerlab.sparrow.domain.search.Tag;
 import org.elasticsearch.action.search.MultiSearchRequest;
@@ -18,6 +19,7 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -32,12 +34,11 @@ public class SearchAssociationDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchAssociationDao.class);
     
-    private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
     
-    public SearchAssociationDao(RestHighLevelClient restHighLevelClient)
-    {
-        this.restHighLevelClient = restHighLevelClient;
-    }
+    @Autowired
+    private ESBaseDao ESBaseDao;
     
     /*
     {
@@ -68,7 +69,7 @@ public class SearchAssociationDao
      */
     public Map<String, Object> topAssociations(String keyword, int category_count, int tag_count) throws IOException
     {
-        SearchRequest topAssociationsRequest = new SearchRequest(SparrowIndex.SPA_FILES.getIndex());
+        SearchRequest topAssociationsRequest = new SearchRequest(sparrowIndices.getFile());
         
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().size(0);
         query(searchSourceBuilder, keyword);
@@ -76,7 +77,7 @@ public class SearchAssociationDao
         logger.debug("top associations query dsl: {}", searchSourceBuilder.toString());
         
         topAssociationsRequest.source(searchSourceBuilder);
-        SearchResponse topAssociationsResponse = restHighLevelClient.search(topAssociationsRequest, RequestOptions.DEFAULT);
+        SearchResponse topAssociationsResponse = ESBaseDao.search(topAssociationsRequest);
         Aggregations aggregations = topAssociationsResponse.getAggregations();
         
         List<String> categoryIds = new LinkedList<>();
@@ -90,9 +91,9 @@ public class SearchAssociationDao
             tagIds.add(bucket.getKeyAsString());
         
         MultiSearchRequest mSearchRequest = new MultiSearchRequest();
-        mSearchRequest.add(idsQuery(SparrowIndex.SPA_CATEGORIES.getIndex(), categoryIds.toArray(new String[categoryIds.size()])));
-        mSearchRequest.add(idsQuery(SparrowIndex.SPA_TAGS.getIndex(), tagIds.toArray(new String[tagIds.size()])));
-        MultiSearchResponse mSearchResponse = restHighLevelClient.msearch(mSearchRequest, RequestOptions.DEFAULT);
+        mSearchRequest.add(idsQuery(sparrowIndices.getCategory(), categoryIds.toArray(new String[categoryIds.size()])));
+        mSearchRequest.add(idsQuery(sparrowIndices.getTag(), tagIds.toArray(new String[tagIds.size()])));
+        MultiSearchResponse mSearchResponse = ESBaseDao.getRestHighLevelClient().msearch(mSearchRequest, RequestOptions.DEFAULT);
         
         MultiSearchResponse.Item categoriesResponse = mSearchResponse.getResponses()[0];
         List<Category> categories = new LinkedList<>();

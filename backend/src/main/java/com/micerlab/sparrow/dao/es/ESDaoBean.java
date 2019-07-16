@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.config.ElasticsearchConfig;
+import com.micerlab.sparrow.config.ESConfig;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -16,17 +16,23 @@ public class ESDaoBean
     private Logger logger = LoggerFactory.getLogger(ESBaseDao.class);
     
     @Autowired
-    private ElasticsearchConfig elasticsearchConfig;
+    private ESConfig ESConfig;
     
     @Bean
     public RestHighLevelClient restHighLevelClient()
     {
-        int port = elasticsearchConfig.getPort();
-        String host = elasticsearchConfig.getHost();
+        int port = ESConfig.getPort();
+        String host = ESConfig.getHost();
         logger.debug("elasticsearch host: " + host + ";port: " + port);
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost(host, port, "http")));
+    }
+    
+    @Bean
+    public ESConfig.Indices sparrowIndices()
+    {
+        return ESConfig.getIndices();
     }
     
     @Autowired
@@ -35,12 +41,12 @@ public class ESDaoBean
     @Bean
     public SpaDocDao spaDocDao()
     {
-        return new SpaDocDao(ESBaseDao, elasticsearchConfig.getIndices());
+        return new SpaDocDao(ESBaseDao, ESConfig.getIndices());
     }
     
     @Bean
     public SpaFileDao spaFileDao()
     {
-        return new SpaFileDao(ESBaseDao, elasticsearchConfig.getIndices());
+        return new SpaFileDao(ESBaseDao, ESConfig.getIndices());
     }
 }
