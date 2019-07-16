@@ -77,15 +77,7 @@ public class SearchDao
     
     public List<Map<String, Object>> searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size)
     {
-        try
-        {
-            return spaFilterDao.search(spaFilterType, keyword, size);
-        } catch (IOException ex)
-        {
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
-            throw new BusinessException(ErrorCode.SERVER_ERR_ELASTICSEARCH, ex.getMessage());
-        }
+        return spaFilterDao.search(spaFilterType, keyword, size);
     }
 
     public List<Map<String, Object>> searchUserOrGroup(String keyword, String index, int size) {

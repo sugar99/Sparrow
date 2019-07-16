@@ -94,9 +94,11 @@ public class FileServiceImpl implements FileService
         return Result.OK().build();
     }
     
-    public Result retrieveFileMeta(String file_id)
+    public Result getFileMeta(String file_id)
     {
         SpaFile file = spaFileDao.get(file_id);
+        if(file == null)
+            throw new BusinessException(ErrorCode.NOT_FOUND_FILE_ID, file_id);
         return Result.OK().data(file).build();
     }
     
@@ -125,7 +127,7 @@ public class FileServiceImpl implements FileService
     
     public Result retrieveSpaFilter(SpaFilterType spaFilterType, String filter_id)
     {
-        SpaFilter spaFilter = spaFilterDao.getSpaFilter(spaFilterType, filter_id);
+        SpaFilter spaFilter = spaFilterDao.get(spaFilterType, filter_id);
         if (spaFilter == null)
             if (spaFilterType == SpaFilterType.TAG)
                 throw new BusinessException(ErrorCode.NOT_FOUND_TAG_ID, filter_id);
@@ -136,7 +138,7 @@ public class FileServiceImpl implements FileService
     public Result updateSpaFilter(SpaFilterType spaFilterType, String filter_id, SpaFilter spaFilter)
     {
         spaFilter.setId(Integer.parseInt(filter_id));
-        spaFilterDao.updateSpaFilter(spaFilterType, filter_id, spaFilter);
+        spaFilterDao.update(spaFilterType, filter_id, spaFilter);
         return Result.OK().build();
     }
     

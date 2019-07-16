@@ -119,6 +119,7 @@ public class ESBaseDao
      * @param id ES文档id
      * @return  1.the json map of the doc
      *          2.null if the specific doc doesn't exist
+     *          Map<String, Object>
      */
     public JSONObject getESDoc(String index, String id)
     {

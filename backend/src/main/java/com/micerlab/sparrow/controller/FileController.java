@@ -1,6 +1,5 @@
 package com.micerlab.sparrow.controller;
 
-import com.micerlab.sparrow.amqp.MsgProducer;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.Result;
@@ -20,7 +19,6 @@ import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.service.user.UserService;
 import com.micerlab.sparrow.utils.FileUtil;
 import com.micerlab.sparrow.utils.BusinessException;
-import com.micerlab.sparrow.utils.MapUtils;
 import com.micerlab.sparrow.utils.TimeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,8 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -170,14 +166,14 @@ public class FileController {
     
     @ApiOperation("F9.获取文件Meta")
     @GetMapping("/v1/files/{file_id}")
-    public Result retrieveFileMeta(
+    public Result getFileMeta(
             HttpServletRequest request,
             @PathVariable("file_id") String file_id
     )
     {
         // TODO: 通过file_id获取doc_id (ES)
         // TODO: ACL 判断用户对当前文档是否具有可读权限
-        return fileService.retrieveFileMeta(file_id);
+        return fileService.getFileMeta(file_id);
     }
     
     @ApiOperation("F10.更新文件Meta")

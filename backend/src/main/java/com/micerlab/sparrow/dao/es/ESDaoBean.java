@@ -30,17 +30,17 @@ public class ESDaoBean
     }
     
     @Autowired
-    private ESBaseDao esBaseDao;
+    private ESBaseDao ESBaseDao;
     
     @Bean
     public SpaDocDao spaDocDao()
     {
-        return new SpaDocDao(esBaseDao, elasticsearchConfig.getIndices());
+        return new SpaDocDao(ESBaseDao, elasticsearchConfig.getIndices());
     }
     
     @Bean
     public SpaFileDao spaFileDao()
     {
-        return new SpaFileDao(esBaseDao, elasticsearchConfig.getIndices());
+        return new SpaFileDao(ESBaseDao, elasticsearchConfig.getIndices());
     }
 }

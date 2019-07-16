@@ -17,7 +17,7 @@ public class MapUtils
      * @param jsonMap 表示json的Map
      * @param objClass 特定java对象的Class
      * @param <E> java对象的类型
-     * @return java对象
+     * @return java对象 或 null
      */
     public static <E> E jsonMap2Obj(Map<String, Object> jsonMap, Class<E> objClass)
     {

@@ -40,7 +40,7 @@ public class SpaFileDao extends ESCRUDRepository<SpaFile>
     public List<SpaFilter> getSpaFilters(String file_id, SpaFilterType spaFilterType)
     {
         List<Map<String, Object>> spaFilterMaps = ESBaseDao.termsLookup(
-                spaFilterType.sparrowIndex().getIndex(),
+                indices.spaFilterIndex(spaFilterType),
                 index(), file_id, spaFilterType.getTypes());
         List<SpaFilter> spaFilters = new LinkedList<>();
         for (Map<String, Object> spaFilterMap : spaFilterMaps)

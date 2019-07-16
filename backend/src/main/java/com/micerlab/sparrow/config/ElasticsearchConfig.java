@@ -3,6 +3,9 @@ package com.micerlab.sparrow.config;
 import com.micerlab.sparrow.dao.es.ESBaseDao;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
+import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.utils.BusinessException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.http.HttpHost;
@@ -80,6 +83,15 @@ public class ElasticsearchConfig
         {
             this.user_group = user_group;
         }
+    
+        public String spaFilterIndex(SpaFilterType spaFilterType)
+        {
+            if(spaFilterType == SpaFilterType.TAG)
+                return getTag();
+            else if(spaFilterType == SpaFilterType.CATEGORY)
+                return getCategory();
+            throw new BusinessException(ErrorCode.PARAM_ERR_FILTER_TYPE);
+        }
     }
     
     private String host = "localhost";
@@ -113,29 +125,4 @@ public class ElasticsearchConfig
         return indices;
     }
     
-    private Logger logger = LoggerFactory.getLogger(ElasticsearchConfig.class);
-    
-//    @Bean
-//    public RestHighLevelClient restHighLevelClient()
-//    {
-//        logger.debug("elasticsearch host: " + host + ";port: " + port);
-//        return new RestHighLevelClient(
-//                RestClient.builder(
-//                        new HttpHost(host, port, "http")));
-//    }
-    
-//    @Autowired
-//    private ESBaseDao esBaseDao;
-//
-//    @Bean
-//    public SpaDocDao spaDocDao()
-//    {
-//        return new SpaDocDao(esBaseDao, indices);
-//    }
-//
-//    @Bean
-//    public SpaFileDao spaFileDao()
-//    {
-//        return new SpaFileDao(esBaseDao, indices);
-//    }
 }
