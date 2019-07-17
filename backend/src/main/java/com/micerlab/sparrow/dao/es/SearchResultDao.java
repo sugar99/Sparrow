@@ -1,15 +1,15 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.search.KeyCount;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
-import com.micerlab.sparrow.domain.file.FileType;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
+import com.micerlab.sparrow.domain.search.SearchType;
 import com.micerlab.sparrow.domain.search.TimeRangeKeyCount;
 import com.micerlab.sparrow.utils.Page;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHit;
@@ -26,13 +26,14 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.aggregations.metrics.TopHits;
 import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -254,7 +255,7 @@ public class SearchResultDao
         }
     }
      */
-    public Map<String, Object> searchResults(SearchRequestParams params)
+    public Map<String, Object> searchResults(SearchResultParams params)
     {
         SearchRequest searchRequest = new SearchRequest(sparrowIndices.getFile());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().size(0);
@@ -326,29 +327,84 @@ public class SearchResultDao
         SearchHit[] searchHits = result.getHits().getHits();
         for (SearchHit searchHit : searchHits)
         {
-            spaFiles.add(searchHit.getSourceAsMap());
+            JSONObject record = new JSONObject(searchHit.getSourceAsMap());
+            Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+            
+            HighlightField titleHlt = highlightFields.get("title");
+            if(titleHlt != null)
+            {
+                String title_highlight = "";
+                for (Text fragment : titleHlt.fragments())
+                    title_highlight += fragment.string();
+                record.put("title_highlight", title_highlight);
+            }
+    
+            HighlightField descHlt = highlightFields.get("desc");
+            if(descHlt != null)
+            {
+                List<String> desc_highlights = new ArrayList<>(descHlt.fragments().length);
+                for (Text fragment : descHlt.fragments())
+                    desc_highlights.add(fragment.string());
+                record.put("desc_highlights", desc_highlights);
+            }
+            
+            if(SearchType.DOC_CONTENT.equals(params.getSearchType()))
+            {
+                HighlightField keywordHlt = highlightFields.get("keywords");
+                if(keywordHlt != null)
+                {
+                    List<String> keyword_highlights = new ArrayList<>(keywordHlt.fragments().length);
+                    for (Text fragment : keywordHlt.fragments())
+                        keyword_highlights.add(fragment.string());
+                    record.put("keywords", keyword_highlights); // 覆盖原有 keywords 字段
+                }
+    
+                HighlightField contentHlt = highlightFields.get("content");
+                if(contentHlt != null)
+                {
+                    List<String> content_highlights = new ArrayList<>(contentHlt.fragments().length);
+                    for (Text fragment : contentHlt.fragments())
+                        content_highlights.add(fragment.string());
+                    record.put("content_highlights", content_highlights);
+                }
+            }
+            
+            spaFiles.add(record);
         }
         data.put("results", spaFiles);
         
         return data;
     }
     
-    private static void query(SearchSourceBuilder searchSourceBuilder, SearchRequestParams params)
+    private static void query(SearchSourceBuilder searchSourceBuilder, SearchResultParams params)
     {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         
         // [过滤/匹配]条件1 <type> 匹配文件类型
-        if (!FileType.ALL.equals(params.getFileType()))
-            boolQueryBuilder.filter().add(QueryBuilders.termQuery("type", params.getType()));
+        SearchType searchType = params.getSearchType();
+        if (!SearchType.ALL.equals(searchType))
+            boolQueryBuilder.filter().add(
+                    QueryBuilders.termQuery("type", searchType.getFileType().getType()));
         
         // [过滤/匹配]条件2 <keyword> 匹配文件标题、文件描述
         if (!StringUtils.isEmpty(params.getKeyword()))
         {
             Map<String, Float> fields = new HashMap<>();
+            // 权重参数可调优
             fields.put("title", 1f);
             fields.put("title.cn", 3f);
             fields.put("desc", 1f);
-            fields.put("desc.cn", 3f);
+            fields.put("desc.cn", 1.5f);
+            
+            // 文档全文检索
+            if(SearchType.DOC_CONTENT.equals(searchType))
+            {
+                fields.put("keywords", 1f);
+                fields.put("keywords.cn", 1.5f);
+                fields.put("content", 1f);
+                fields.put("content.cn", 1.2f);
+            }
+    
             boolQueryBuilder.must(
                     QueryBuilders.multiMatchQuery(params.getKeyword()).fields(fields)
                             .type(MultiMatchQueryBuilder.Type.MOST_FIELDS)
@@ -390,9 +446,10 @@ public class SearchResultDao
         searchSourceBuilder.query(boolQueryBuilder);
     }
     
-    private void aggs(SearchSourceBuilder searchSourceBuilder, SearchRequestParams params)
+    private void aggs(SearchSourceBuilder searchSourceBuilder, SearchResultParams params)
     {
-        String time_zone = params.getTime_zone();
+//        String time_zone = params.getTime_zone(); // 例如 "+8"，表示 UTC+8 的北京时间
+        String time_zone = "+0"; // UTC 时间
         
         // Agg1.1 created_time_ranges
         DateRangeAggregationBuilder created_time_ranges = buildTimeRangesAgg(
@@ -424,6 +481,36 @@ public class SearchResultDao
                 AggregationBuilders.topHits("results")
                         .from(page.getFrom())
                         .size(page.getSize());
+    
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        highlightBuilder.preTags(params.getHighlight_pre_tag());
+        highlightBuilder.postTags(params.getHighlight_post_tag());
+        
+        highlightBuilder.field(
+                new HighlightBuilder.Field("title")
+                        .numOfFragments(0).noMatchSize(50)
+        );
+        
+        highlightBuilder.field(
+                new HighlightBuilder.Field("desc")
+                .numOfFragments(params.getDesc_highlight_count())
+        );
+        
+        // 文档全文检索
+        if(SearchType.DOC_CONTENT.equals(params.getSearchType()))
+        {
+            highlightBuilder.field(
+                    new HighlightBuilder.Field("keywords")
+                            .numOfFragments(0).noMatchSize(50)
+            );
+    
+            highlightBuilder.field(
+                    new HighlightBuilder.Field("content")
+                            .numOfFragments(params.getContent_highlight_count())
+            );
+        }
+        
+        resultsAgg.highlighter(highlightBuilder);
         
         // Agg2.2 final_exts_limit
         FilterAggregationBuilder final_exts_limit = extsLimitAgg("final_exts_limit", params.getExts());
@@ -473,7 +560,7 @@ public class SearchResultDao
             String name,
             String field,
             String time_zone,
-            SearchRequestParams.TimeRangeFilter timeRangeFilter,
+            SearchResultParams.TimeRangeFilter timeRangeFilter,
             Map<String, Integer> timeRangeKey2No
     )
     {

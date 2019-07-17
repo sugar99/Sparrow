@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 
 public interface SearchService
@@ -10,7 +10,7 @@ public interface SearchService
     
     Result getTopAssociations(String keyword, int catgory_count, int tag_count);
     
-    Result getSearchResults(SearchRequestParams params);
+    Result getSearchResults(SearchResultParams params);
     
     Result searchSpaFilters(SpaFilterType spaFilterType, String keyword, int size);
 

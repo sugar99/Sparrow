@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.UserLoginParams;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.user.UserService;
 import io.swagger.annotations.Api;
@@ -31,8 +32,8 @@ public class UserController {
     @ApiOperation("U2.用户登录")
     @PostMapping("/v1/login")
     @ResponseBody
-    public Result userLogin(HttpServletResponse response, @RequestBody Map<String, Object> paramMap) {
-        return userService.userLogin(response, paramMap);
+    public Result userLogin(HttpServletResponse response, @RequestBody UserLoginParams params) {
+        return userService.userLogin(response, params);
     }
 
     @ApiOperation("U3.获取用户meta")
