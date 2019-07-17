@@ -35,6 +35,12 @@
         delete from group_resource where group_id = #{group_id}
     </delete>
     <select id="getGroupResources" resultType="java.util.Map">
-
+        with r as
+        (
+          select 'dir' as type, spa_dir.id as id, spa_dir.title as title, spa_dir.thumbnail as thumbnail, spa_dir.creator_id as creator, spa_dir.created_at as created_time from spa_dir
+          union all
+          select 'doc' as type, spa_doc.id as id, spa_doc.title as title, spa_doc.thumbnail as thumbnail, spa_doc.creator_id as creator, spa_doc.created_at as created_time from spa_doc
+        )
+        select r.*, group_resource.permission from r inner join group_resource on group_resource.resource_id = r.id and group_resource.group_id = #{group_id}
     </select>
 </mapper>

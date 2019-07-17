@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.service.user;
 
+import com.micerlab.sparrow.dao.postgre.DirectoryDao;
 import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private ResourceDao resourceDao;
+
+    @Autowired
+    private DirectoryDao directoryDao;
 
     private final long EXIPIRE_TIME = 60 * 1000 * 60 * 24;
 
@@ -142,9 +146,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public Map<String, Object> defaultUserState(String user_id) {
         //构造返回给前端的信息
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         Map<String, Object> userInfo = new HashMap<>();
-        List<Map<String, String>> master_dirs = new ArrayList<>();
         User user = userDao.getUserMetaById(user_id);
         //用户个人信息
         userInfo.put("work_no", user.getWork_no());
@@ -153,19 +156,13 @@ public class UserServiceImpl implements UserService{
         //用户工作区
         String resource_id = user.getPersonal_dir();
         String resource_name = user.getUsername();
-        List<String> resourceIdList = resourceDao.getRootPathResource(resource_id);
-        //工作区目录的上层目录，用于前端目录跳转
-        for (String master_id: resourceIdList) {
-            Map<String, String> masterInfo = new HashMap<>();
-            masterInfo.put("resource_id", master_id);
-            masterInfo.put("resource_name", resourceDao.getResourceMeta(master_id).getResource_name());
-            master_dirs.add(masterInfo);
-        }
-        resultMap.put("userInfo", userInfo);
-        resultMap.put("resource_id", resource_id);
-        resultMap.put("resource_name", resource_name);
-        resultMap.put("master_dirs", master_dirs);
-        return resultMap;
+        List<Map<String, Object>> master_dirs = directoryDao.getRootPathDirs(resource_id);
+
+        data.put("userInfo", userInfo);
+        data.put("resource_id", resource_id);
+        data.put("resource_name", resource_name);
+        data.put("master_dirs", master_dirs);
+        return data;
     }
 
     @Override

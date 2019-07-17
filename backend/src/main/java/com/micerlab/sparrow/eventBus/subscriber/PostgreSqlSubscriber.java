@@ -63,21 +63,18 @@ public class PostgreSqlSubscriber {
     @Subscribe
     public void insertUser(InsertUserEvent insertUserEvent) {
         String user_id = UUID.randomUUID().toString();
-        User user = new User();
-        user.setUser_id(user_id);
-        user.setUsername(insertUserEvent.getUsername());
-        user.setPassword(insertUserEvent.getPassword());
-        user.setEmail(insertUserEvent.getEmail());
-        user.setWork_no(insertUserEvent.getWork_no());
+        User user = new User(user_id, insertUserEvent.getUsername(), insertUserEvent.getPassword(),
+                insertUserEvent.getWork_no(), insertUserEvent.getEmail());
         //创建用户个人目录
         String personal_id = resourceService.createPersonalDir(user_id, insertUserEvent.getUsername());
         user.setPersonal_dir(personal_id);
         //创建个人群组
         String personal_group_id = groupService.createPersonalGroup(user_id, insertUserEvent.getUsername());
         user.setPersonal_group(personal_group_id);
+
+        userDao.createUser(user);
         //个人群组对个人目录用可读可写权限
         aclService.updateGroupPermission(personal_group_id, personal_id, "110");
-        userDao.createUser(user);
     }
 
     /**
@@ -120,10 +117,7 @@ public class PostgreSqlSubscriber {
      */
     @Subscribe
     public void insertDoc(InsertDocEvent event) {
-        Document document = new Document();
-        document.setId(event.getResource_id());
-        document.setCreator_id(event.getCreator());
-        document.setCreated_at(event.getCreated_time());
+        Document document = new Document(event.getResource_id(), event.getCreator(), event.getCreated_time());
         documentDao.createDoc(document);
     }
 

@@ -7,14 +7,31 @@ import java.sql.Timestamp;
 @Alias("directory")
 public class Directory {
     private String id;
-    private String title = "未命名";
-    private String thumbnail = "./assets/images/docCnt.png";
-    private int root = 0;
-    private int home = 0;
-    private int personal = 0;
-    private int modifiable = 1;
+    private String title;
+    private String thumbnail;
+    private int root;
+    private int home;
+    private int personal;
+    private int modifiable;
     private String creator_id;
     private Timestamp created_at;
+
+    public Directory(String id, String creator_id, Timestamp created_at) {
+        this.id = id;
+        this.title = "未命名";
+        this.thumbnail = "./assets/images/docCnt.png";
+        this.creator_id = creator_id;
+        this.created_at = created_at;
+        this.root = 0;
+        this.home = 0;
+        this.personal = 0;
+        this.modifiable = 1;
+    }
+
+    public Directory(String id, String creator_id, Timestamp created_at, String title) {
+        this(id, creator_id, created_at);
+        this.setTitle(title);
+    }
 
     public String getId() {
         return id;

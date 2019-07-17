@@ -199,15 +199,8 @@ public class GroupServiceImpl implements GroupService{
      */
     @Override
     public Result getAuthResource(String group_id) {
-        List<Resource> resourceList = groupDao.getGroupResources(group_id);
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        for (Resource resource: resourceList) {
-            Map<String, Object> resourceInfo = new HashMap<>();
-            resourceInfo.put("resource_info", resource);
-            resourceInfo.put("permission", aclDao.getGroupPermission(group_id, resource.getResource_id()));
-            resultList.add(resourceInfo);
-        }
-        return Result.OK().data(resultList).build();
+        List<Map<String, String>> data = groupDao.getGroupResources(group_id);
+        return Result.OK().data(data).build();
     }
 
     /**

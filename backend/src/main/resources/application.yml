@@ -65,7 +65,7 @@ server:
 spring:
   profiles: dev
   datasource:
-    url: jdbc:postgresql://10.0.0.1:5432/sparrow
+    url: jdbc:postgresql://${server.host}:5432/sparrow
 
 # 39.108.210.48服务器在OpenVpn虚拟局域网内的ip
 sparrow:

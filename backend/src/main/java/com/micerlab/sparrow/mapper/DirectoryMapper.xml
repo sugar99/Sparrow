@@ -58,6 +58,9 @@
     <select id="getRootDir" resultType="directory">
         select * from spa_dir where root = 1;
     </select>
+    <select id="isModifiable" resultType="int">
+        select modifiable from spa_dir where id = #{id};
+    </select>
     <select id="getAuthGroups" resultType="group">
         select g.* from group_resource r inner join spa_group g on g.group_id = r.group_id and r.resource_id =
          #{resource_id};

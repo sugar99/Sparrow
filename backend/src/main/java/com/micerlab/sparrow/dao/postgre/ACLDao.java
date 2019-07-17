@@ -40,7 +40,7 @@ public interface ACLDao {
     void deleteGroupPermission(@Param("group_id") String group_id, @Param("resource_id") String resource_id);
 
     /**
-     * 删除资源与所有群组的权限关系
+     * 删除资源与所有有关群组的权限关系
      * @param resource_id 资源id
      */
     void deleteResourceAllPermission(@Param("resource_id") String resource_id);

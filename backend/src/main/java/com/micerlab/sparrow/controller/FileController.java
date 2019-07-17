@@ -65,8 +65,8 @@ public class FileController {
     @ApiOperation("F1.获取policy（阿里云OSS）")
     @PostMapping("/v1/files/policy")
     public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        String cur_id = params.get("cur_id").toString();
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对当前文档是否有可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
@@ -76,8 +76,8 @@ public class FileController {
     @ApiOperation("F2.获取签名URL（Minio）")
     @PostMapping("/v1/files/url")
     public Result getPresignedUrl(@RequestBody Map<String, Object> params, HttpServletRequest request){
-        String cur_id = params.get("cur_id").toString();
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对当前文档是否有可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
@@ -100,6 +100,7 @@ public class FileController {
             SpaFile file = spaFileDao.get(file_id);
             SpaDoc doc = spaDocDao.get(file.getDoc_id());
 
+            //TODO 这里应该判断一次就够了，还是说可以同时下载不同文档的文件？
             if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
                 forbiddenFileIds.add(file_id);
                 continue;
@@ -123,6 +124,7 @@ public class FileController {
     public Result downloadFile(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         SpaFile fileMeta = spaFileDao.get(file_id);
         String doc_id = fileMeta.getDoc_id();
+        //判断用户对当前文档是否有可读权限
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
@@ -137,6 +139,7 @@ public class FileController {
     @GetMapping("/v1/files/{file_id}/versions")
     public Result getFileVersions(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
         String doc_id = spaFileDao.get(file_id).getDoc_id();
+        //判断用户对当前文档是否有可读权限
         if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
@@ -158,6 +161,7 @@ public class FileController {
     {
         String creator = params.getCreator();
         String doc_id = params.getDoc_id();
+        //TODO creator不是请求发出者吗？
         if(!aclService.hasPermission(creator, doc_id, userService.getUserGroupsIdList(creator), ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }

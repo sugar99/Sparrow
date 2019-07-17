@@ -39,9 +39,8 @@ public class GroupController {
     @ResponseBody
     public Result updateGroupMeta(HttpServletRequest request, @PathVariable("group_id") String group_id,
                                   @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.updateGroupMeta(group_id, paramMap);
@@ -51,9 +50,8 @@ public class GroupController {
     @DeleteMapping("/v1/groups/{group_id}")
     @ResponseBody
     public Result deleteGroup(HttpServletRequest request, @PathVariable("group_id") String group_id) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.deleteGroup(group_id);
@@ -64,9 +62,8 @@ public class GroupController {
     @ResponseBody
     public Result addGroupMember(HttpServletRequest request, @PathVariable("group_id") String group_id,
                                  @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.addGroupMember(group_id, paramMap);
@@ -84,9 +81,8 @@ public class GroupController {
     @ResponseBody
     public Result deleteGroupMember(HttpServletRequest request, @PathVariable("group_id") String group_id,
                                     @PathVariable("member_id") String member_id) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.deleteGroupMember(group_id, member_id);
@@ -96,6 +92,10 @@ public class GroupController {
     @GetMapping("/v1/groups/{group_id}/authgroups")
     @ResponseBody
     public Result getAuthResources(HttpServletRequest request, @PathVariable("group_id") String group_id) {
-        return null;
+        //判断用户是否为群组的成员
+        if (!BaseService.getGroupIdList(request).contains(group_id)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_MEMBER, "");
+        }
+        return groupService.getAuthResource(group_id);
     }
 }
