@@ -3,7 +3,7 @@ package com.micerlab.sparrow.service.search;
 import com.micerlab.sparrow.dao.es.SearchDao;
 import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class SearchServiceImpl implements SearchService
         return Result.OK().data(topAssociations).build();
     }
     
-    public Result getSearchResults(SearchRequestParams params)
+    public Result getSearchResults(SearchResultParams params)
     {
         Map<String, Object> data = searchDao.searchResults(params);
         return Result.OK().data(data).build();

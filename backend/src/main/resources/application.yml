@@ -82,7 +82,7 @@ elasticsearch-config:
 
 file:
   temp:
-    path: D:\\test\\temp\\
+    path: D:\\sparrow\\temp\\
 
 
 

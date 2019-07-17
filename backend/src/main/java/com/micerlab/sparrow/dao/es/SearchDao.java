@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.ErrorCode;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class SearchDao
         }
     }
     
-    public Map<String, Object> searchResults(SearchRequestParams params)
+    public Map<String, Object> searchResults(SearchResultParams params)
     {
         return searchResultDao.searchResults(params);
     }

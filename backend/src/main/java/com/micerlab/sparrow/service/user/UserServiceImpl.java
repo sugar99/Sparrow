@@ -4,6 +4,7 @@ import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.UserLoginParams;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.User;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
@@ -58,14 +59,14 @@ public class UserServiceImpl implements UserService{
     /**
      * 用户登录
      * @param response 请求响应
-     * @param paramMap 参数
+     * @param params 用户登录参数
      * @return Result (data: userInfo, personal_dir, home, root)
      */
     @Override
-    public Result userLogin(HttpServletResponse response, Map<String, Object> paramMap) {
+    public Result userLogin(HttpServletResponse response, UserLoginParams params) {
         //表单
-        String work_no = paramMap.get("work_no").toString();
-        String password = paramMap.get("password").toString();
+        String work_no = params.getWork_no();
+        String password = params.getPassword();
 
         User user = userDao.getUserMetaByWorkNo(work_no);
         if (user == null) {
