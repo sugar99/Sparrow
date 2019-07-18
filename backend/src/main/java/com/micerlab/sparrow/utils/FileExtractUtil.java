@@ -34,11 +34,25 @@ public class FileExtractUtil {
     public static String removeSpace(String str) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) != ' ' && str.charAt(i) != '\n' && str.charAt(i) != '\t' && str.charAt(i) != '\r') {
+            if (isSpace(str.charAt(i))) {
+                sb.append(' ');
+                // 跳过其余可能的空格
+                for (i++; i < str.length() && isSpace(str.charAt(i)); i++);
+            }
+            if (i < str.length()) {
                 sb.append(str.charAt(i));
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 判断字符 c 是否为“空格”（制表符，换行符等均属于空格）
+     * @param c 待判断字符
+     * @return
+     */
+    private static boolean isSpace(char c) {
+        return c == ' ' || c == '\n' || c == '\t' || c == '\r';
     }
 
     /**
@@ -206,21 +220,15 @@ public class FileExtractUtil {
     public static String txt2String(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
         // 检查字符集
-        Charset charset = CharsetDetector.detectCharset(file, charsetsToBeTested);
-        if (charset != null) {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), charset);
-            BufferedReader reader = new BufferedReader(isr);
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-                sb.append('\n');
-            }
-            reader.close();
-        } else {
-            throw new RuntimeException("Unrecognized charset.");
+       // Charset charset = CharsetDetector.detectCharset(file, charsetsToBeTested);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
+        BufferedReader reader = new BufferedReader(isr);
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+            sb.append('\n');
         }
-
-
+        reader.close();
         return sb.toString();
     }
 
