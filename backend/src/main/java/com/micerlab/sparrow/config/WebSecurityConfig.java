@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Description TODO
@@ -23,15 +27,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        
+        // 配置1：暴力配置，只允许 v1
+//        http
+//                .authorizeRequests()
+//                    .antMatchers("/v{\\d}/**").permitAll()
+//                    .anyRequest().authenticated()
+//                .and()
+//                    .httpBasic()
+//                .and()
+//                    .logout()
+//                    .permitAll();
+    
+        String[] swaggerURIPrefixs = {
+                "/v2/api-docs**",
+                "/v2/api-docs/**",
+                "/webjars/springfox-swagger-ui**",
+                "/webjars/springfox-swagger-ui/**",
+                "/swagger-ui.html**",
+                "/swagger-ui.html/**",
+                "/swagger-resources**",
+                "/swagger-resources/**",
+        };
+        
         http
                 .authorizeRequests()
-                    .antMatchers("/v1/**").permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers(
+                        swaggerURIPrefixs
+                ).authenticated()
                 .and()
-                    .httpBasic()
-                .and()
-                    .logout()
-                    .permitAll();
+                .httpBasic();
+        
+        // spring security csrf 防御默认只允许get,head,option等请求
+        // 对v1, v2, v3, ... 的接口开放 post, put, delete 等操作
+        RequestMatcher requestMatcher = new CsrfSecurityRequestMatcher();
+        http.csrf().requireCsrfProtectionMatcher(requestMatcher);
     }
 
     @Bean

@@ -105,6 +105,8 @@ elasticsearch-config:
     tag: spa_tags
     category: spa_categories
     user_group: spa_group
+#    user: spa_user
+#    group: spa_group
 #    doc: docs
 #    file: files
 #    tag: tags
