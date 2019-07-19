@@ -33,8 +33,8 @@ public class Directory {
         this.setTitle(title);
     }
 
-    public Directory(String id, String title, String thumbnail, int root, int home, int personal,
-                     int modifiable, String creator_id, Timestamp created_at) {
+    public Directory(String id, String title, String thumbnail, int root, int home, int modifiable,
+                     int personal, String creator_id, Timestamp created_at) {
         this(id, creator_id, created_at);
         this.title =title;
         this.thumbnail = thumbnail;

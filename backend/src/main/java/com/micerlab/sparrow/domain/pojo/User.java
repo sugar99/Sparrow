@@ -32,7 +32,7 @@ public class User {
         this.personal_group = "";
     }
 
-    public User(String user_id, String username, String password, String work_no, String email, int isAdmin,
+    public User(String user_id, String username, String password, String  email, String work_no, int isAdmin,
                 String personal_dir, String personal_group) {
         this(user_id, username, password, work_no, email);
         this.isAdmin = isAdmin;
