@@ -1,0 +1,3 @@
+{"_index":"legal_categories","_type":"_doc","_id":"0","_score":1,"_source":{"id":0,"title":"行政","desc":null}}
+{"_index":"legal_categories","_type":"_doc","_id":"2","_score":1,"_source":{"id":2,"title":"刑事","desc":null}}
+{"_index":"legal_categories","_type":"_doc","_id":"1","_score":1,"_source":{"id":1,"title":"民事","desc":null}}

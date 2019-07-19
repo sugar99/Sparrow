@@ -105,6 +105,35 @@ elasticsearch-config:
     tag: spa_tags
     category: spa_categories
     user_group: spa_group
+
+
+file:
+  temp:
+    path: /root/sparrow/temp
+
+---
+
+spring:
+  profiles: legal
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sparrow
+
+# 生产环境，使用localhost
+sparrow:
+  host: localhost
+
+file:
+  temp:
+    path: /root/sparrow/temp
+
+# ES索引命名
+elasticsearch-config:
+  indices:
+    doc: legal_docs
+    file: legal_files
+    tag: legal_tags
+    category: legal_categories
+    user_group: legal_group
 #    user: spa_user
 #    group: spa_group
 #    doc: docs
@@ -113,8 +142,4 @@ elasticsearch-config:
 #    category: categories
 #    user_group: groups
 
-file:
-  temp:
-    path: /root/sparrow/temp
 
----

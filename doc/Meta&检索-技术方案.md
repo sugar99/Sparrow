@@ -135,7 +135,7 @@ sparrow文档，相当于一个包含多个sparrow文件的集合。
             },
             "modified_time": {
                 "type": "date",
-                "format": "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd||epoch_millis"
+                "format": "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "meta_state": {
                 "type": "byte"
@@ -239,13 +239,16 @@ sparrow文件，相当于传统意义上的磁盘文件。
                 "type": "keyword"
             },
             "doc_id": {
-            	"type": "keyword"
+                "type": "keyword"
             },
             "type": {
                 "type": "keyword"
             },
             "ext": {
                 "type": "keyword"
+            },
+            "size": {
+                "type": "long"
             },
             "tags": {
                 "type": "long"
@@ -267,11 +270,11 @@ sparrow文件，相当于传统意义上的磁盘文件。
             },
             "created_time": {
                 "type": "date",
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+                "format": "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "modified_time": {
                 "type": "date",
-                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+                "format": "yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             },
             "version": {
                 "type": "byte"
@@ -299,8 +302,13 @@ sparrow文件，相当于传统意义上的磁盘文件。
                 }
             },
             "content": {
-                "type": "text"
-                
+                "type": "text",
+                "fields": {
+                    "cn": {
+                        "type": "text",
+                        "analyzer": "smartcn"
+                    }
+                }
             }
         }
     }
@@ -338,11 +346,11 @@ sparrow文件，相当于传统意义上的磁盘文件。
 
 文件标签 / 类目
 
-| field | type  | desc                                            |
-| ----- | ----- | ----------------------------------------------- |
-| id    | long  | 自增id，同时设置索引的 `_id` 字符串和 `id` 相同 |
-| title | title | 名称                                            |
-| desc  | title | 描述                                            |
+| field | type  | desc                                                        |
+| ----- | ----- | ----------------------------------------------------------- |
+| id    | long  | 自增id（整数），同时设置索引的 `_id` （字符串）和 `id` 相同 |
+| title | title | 名称                                                        |
+| desc  | title | 描述                                                        |
 
 **spa_tags / spa_categories mapping**
 
@@ -430,6 +438,63 @@ sparrow文件，相当于传统意义上的磁盘文件。
 | 输出     |              |
 | 原理     |              |
 |          |              |
+
+Query DSL
+
+```http
+GET {{es-remote-url}}/spa_files,spa_tags,spa_categories/_search?size=0
+```
+
+Request Body
+
+```json
+{
+    "query": {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": "算法",
+                    "fields": [
+                        "title",
+                        "title.cn^3"
+                    ]
+                }
+            },
+            "filter": {
+                "script": {
+                    "script": {
+                        "source": "!doc.containsKey('type') || doc.containsKey('type') && doc['type'].value.equals(params.type)",
+                        "params": {
+                            "type": "image"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "aggs": {
+        "group_by_title": {
+            "terms": {
+                "field": "title.raw",
+                "order": {
+                    "term_score.value": "desc"
+                }
+            },
+            "aggs": {
+                "term_score": {
+                    "max": {
+                        "script": {
+                            "source": "_score"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+
 
 
 
