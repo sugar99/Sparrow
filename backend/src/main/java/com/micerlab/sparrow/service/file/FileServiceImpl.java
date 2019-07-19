@@ -114,8 +114,7 @@ public class FileServiceImpl implements FileService
     public Result updateFileMeta(String file_id, UpdateFileMetaParams params)
     {
         JSONObject jsonMap = (JSONObject) JSONObject.toJSON(params);
-        // TODO: current time
-        String modified_time = "2019-07-09 18:03:00";
+        String modified_time = TimeUtil.currentTimeStr();
         jsonMap.put("modified_time", modified_time);
         spaFileDao.updateJsonDoc(file_id, jsonMap);
         return Result.OK().build();
