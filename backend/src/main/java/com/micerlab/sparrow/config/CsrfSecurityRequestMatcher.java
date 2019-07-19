@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * Spring security 跨域请求路径匹配器
+ * @author chenlvjia
+ */
 public class CsrfSecurityRequestMatcher implements RequestMatcher
 {
     // 允许任意接口使用以下HTTP方法
