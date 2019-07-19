@@ -22,11 +22,9 @@ public class CUDUserGroupDao {
 
     private RestHighLevelClient elasticsearchClient;
 
-    @Value("${elasticsearch-config.indices.user}")
-    private String userIndex;
+    private final String userIndex = "spa_user";
 
-    @Value("${elasticsearch-config.indices.group")
-    private String groupIndex;
+    private final String groupIndex = "spa_group";
 
 
     public CUDUserGroupDao(RestHighLevelClient elasticsearchClient) {

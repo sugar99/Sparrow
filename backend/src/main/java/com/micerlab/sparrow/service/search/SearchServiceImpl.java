@@ -21,11 +21,9 @@ public class SearchServiceImpl implements SearchService
     
     private SearchDao searchDao;
 
-    @Value("${elasticsearch-config.indices.user}")
-    private String userIndex;
+    private final String userIndex = "spa_user";
 
-    @Value("${elasticsearch-config.indices.group")
-    private String groupIndex;
+    private final String groupIndex = "spa_group";
 
     public SearchServiceImpl(SearchDao searchDao)
     {
