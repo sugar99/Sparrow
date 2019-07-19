@@ -20,7 +20,7 @@ public class StartUpState implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(StartUpState.class);
 
-    @Value("${sparrow.require-login:true}")
+    @Value("${sparrow.require-login}")
     private boolean login;
 
     private final long EXIPIRE_TIME = 60 * 1000 * 60 * 24 * 100;
