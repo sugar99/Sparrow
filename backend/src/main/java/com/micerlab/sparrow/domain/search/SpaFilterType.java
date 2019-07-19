@@ -1,6 +1,5 @@
 package com.micerlab.sparrow.domain.search;
 
-import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.utils.BusinessException;
 

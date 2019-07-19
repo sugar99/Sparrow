@@ -63,7 +63,7 @@ public class MsgReceiver {
             jsonMap.put("thumbnail_url", thumbnailInfo.get("thumbnail_url"));
             
             // 提取全文信息
-            // TODO content 和 keyword 需要记录插入到 es
+            // content 和 keyword 需要记录插入到 es
             if(FileType.DOC.getType().equals(fileMeta.getType()))
             {
                 String content = FileExtractUtil.extractString(file.getAbsolutePath());

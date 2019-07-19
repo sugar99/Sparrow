@@ -107,7 +107,8 @@ elasticsearch-config:
     file: spa_files
     tag: spa_tags
     category: spa_categories
-    user_group: spa_group
+    group: spa_group
+    user: spa_user
 
 
 file:
@@ -137,13 +138,7 @@ elasticsearch-config:
     file: legal_files
     tag: legal_tags
     category: legal_categories
-    user_group: legal_group
-#    user: spa_user
-#    group: spa_group
-#    doc: docs
-#    file: files
-#    tag: tags
-#    category: categories
-#    user_group: groups
+    group: spa_group
+    user: spa_user
 
 
