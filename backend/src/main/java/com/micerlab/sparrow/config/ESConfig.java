@@ -31,9 +31,11 @@ public class ESConfig
         private String tag = "spa_tags";
         
         private String category = "spa_categories";
-        
-        private String user_group = "spa_groups";
-        
+
+        private String user = "spa_users";
+
+        private String group = "spa_groups";
+
         public String getDoc()
         {
             return doc;
@@ -73,17 +75,23 @@ public class ESConfig
         {
             this.category = category;
         }
-        
-        public String getUser_group()
-        {
-            return user_group;
+
+        public String getUser() {
+            return user;
         }
-        
-        public void setUser_group(String user_group)
-        {
-            this.user_group = user_group;
+
+        public void setUser(String user){
+            this.user = user;
         }
-    
+
+        public String getGroup() {
+            return group;
+        }
+
+        public void setGroup(String group) {
+            this.group = group;
+        }
+
         public String spaFilterIndex(SpaFilterType spaFilterType)
         {
             if(spaFilterType == SpaFilterType.TAG)

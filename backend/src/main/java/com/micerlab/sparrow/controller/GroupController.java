@@ -2,6 +2,7 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.CreateSpaGroupParams;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.group.GroupService;
 import com.micerlab.sparrow.utils.BusinessException;
@@ -23,8 +24,8 @@ public class GroupController {
     @ApiOperation("G1.新建群组")
     @PostMapping("/v1/groups")
     @ResponseBody
-    public Result createGroup(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
-        return groupService.createGroup(BaseService.getUser_Id(request), paramMap);
+    public Result createGroup(HttpServletRequest request, @RequestBody CreateSpaGroupParams params) {
+        return groupService.createGroup(BaseService.getUser_Id(request), params);
     }
 
     @ApiOperation("G2.获取群组元数据")

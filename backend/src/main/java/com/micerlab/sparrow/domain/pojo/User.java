@@ -28,6 +28,16 @@ public class User {
         this.work_no = work_no;
         this.email = email;
         this.isAdmin = 0;
+        this.personal_dir = "";
+        this.personal_group = "";
+    }
+
+    public User(String user_id, String username, String password, String work_no, String email, int isAdmin,
+                String personal_dir, String personal_group) {
+        this(user_id, username, password, work_no, email);
+        this.isAdmin = isAdmin;
+        this.personal_dir = personal_dir;
+        this.personal_group = personal_group;
     }
 
     public String getPersonal_group() {

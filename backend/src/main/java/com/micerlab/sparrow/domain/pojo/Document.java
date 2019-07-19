@@ -20,6 +20,12 @@ public class Document {
         this.thumbnail = "./assets/images/doc.png";
     }
 
+    public Document(String id, String title, String thumbnail, String creator_id, Timestamp created_at) {
+        this(id, creator_id, created_at);
+        this.title = title;
+        this.thumbnail = thumbnail;
+    }
+
     public String getId() {
         return id;
     }
