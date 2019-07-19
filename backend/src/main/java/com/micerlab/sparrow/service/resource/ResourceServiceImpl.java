@@ -28,6 +28,7 @@ import java.util.Map;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Deprecated
 @Service("resourceService")
 @Transactional
 public class ResourceServiceImpl implements ResourceService{
