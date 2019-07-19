@@ -20,9 +20,10 @@ public class TimeUtil {
     
     public static String currentTimeStr()
     {
-        String timeStr = currentTime().toString();
-        timeStr = timeStr.substring(0, timeStr.lastIndexOf("."));
-        return timeStr;
+//        String timeStr = currentTime().toString();
+//        timeStr = timeStr.substring(0, timeStr.lastIndexOf("."));
+//        return timeStr;
+        return formatTimeStr(currentTime());
     }
     
     public static String formatTimeStr(Timestamp timestamp)

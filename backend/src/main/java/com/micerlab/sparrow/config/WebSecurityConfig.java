@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Description TODO
- * @Author Honda
+ * @Description 为SwaggerUI添加账户、密码
+ * @Author Honda, Lvjia
  * @Date 2019/7/18 15:45
  **/
 @Configuration
