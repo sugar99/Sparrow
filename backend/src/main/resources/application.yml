@@ -70,6 +70,7 @@ spring:
 # 39.108.210.48服务器在OpenVpn虚拟局域网内的ip
 sparrow:
   host: 10.0.0.1
+  require-login: true
 
 # ES索引命名
 elasticsearch-config:
@@ -97,6 +98,7 @@ spring:
 # 生产环境，使用localhost
 sparrow:
   host: localhost
+  require-login: true
 
 # ES索引命名
 elasticsearch-config:

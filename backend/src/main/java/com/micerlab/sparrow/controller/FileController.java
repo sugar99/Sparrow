@@ -100,7 +100,6 @@ public class FileController {
             SpaFile file = spaFileDao.get(file_id);
             SpaDoc doc = spaDocDao.get(file.getDoc_id());
 
-            //TODO 这里应该判断一次就够了，还是说可以同时下载不同文档的文件？
             if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
                 forbiddenFileIds.add(file_id);
                 continue;
@@ -161,8 +160,12 @@ public class FileController {
     {
         String creator = params.getCreator();
         String doc_id = params.getDoc_id();
-        //TODO creator不是请求发出者吗？
-        if(!aclService.hasPermission(creator, doc_id, userService.getUserGroupsIdList(creator), ActionType.WRITE)){
+
+        //  前端creator字段作废
+        String user_id = BaseService.getUser_Id(request);
+        params.setCreator(user_id);
+
+        if(!aclService.hasPermission(user_id, doc_id, BaseService.getGroupIdList(request), ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
         return fileService.createFileMeta(file_id, params);
@@ -175,8 +178,11 @@ public class FileController {
             @PathVariable("file_id") String file_id
     )
     {
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可读权限
+        // 判断用户对当前文档是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+                BaseService.getGroupIdList(request), ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
+        }
         return fileService.getFileMeta(file_id);
     }
     
@@ -188,8 +194,10 @@ public class FileController {
             @RequestBody UpdateFileMetaParams params
             )
     {
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+                BaseService.getGroupIdList(request), ActionType.WRITE)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
         return fileService.updateFileMeta(file_id, params);
     }
     
@@ -248,8 +256,10 @@ public class FileController {
             @PathVariable String filter_types
     )
     {
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+                BaseService.getGroupIdList(request), ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
+        }
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
         return fileService.retrieveFileSpaFilters(file_id, spaFilterType);
     }
@@ -263,8 +273,10 @@ public class FileController {
             @RequestBody UpdateFileSpaFiltersParams params
             )
     {
-        // TODO: 通过file_id获取doc_id (ES)
-        // TODO: ACL 判断用户对当前文档是否具有可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+                BaseService.getGroupIdList(request), ActionType.WRITE)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
+        }
         SpaFilterType spaFilterType = SpaFilterType.fromTypes(filter_types);
         List<Long> spaFilterIds;
         if(SpaFilterType.TAG == spaFilterType)
