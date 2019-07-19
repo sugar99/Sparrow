@@ -1,11 +1,13 @@
 package com.micerlab.sparrow.filter;
 
 import com.micerlab.sparrow.config.AccessManager;
+import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.JwtUtil;
 import com.micerlab.sparrow.utils.SpringContextUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,7 +22,8 @@ public class AuthenticateFilter extends OncePerRequestFilter {
 
     private String user_id;
 
-    private String test_id = "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368";
+    @Value("${sparrow.require-login:false}")
+    private boolean require_login;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -53,6 +56,11 @@ public class AuthenticateFilter extends OncePerRequestFilter {
      * @return boolean
      */
     private boolean isAuthenticatedUser(HttpServletRequest request) {
+        if (!require_login) {
+            UserDao userDao = SpringContextUtil.getBean("userDao");
+            this.user_id = userDao.getAdminId();
+            return true;
+        }
         String user_id = JwtUtil.getUser_id(request);
 //        请求不带Token或Token不合法，返回false
         if (user_id == null) {
