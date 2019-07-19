@@ -119,11 +119,12 @@ file:
 spring:
   profiles: legal
   datasource:
-    url: jdbc:postgresql://localhost:5432/sparrow
+    url: jdbc:postgresql://localhost:5432/sparrow_legacy
 
 # 生产环境，使用localhost
 sparrow:
   host: localhost
+  require-login: false
 
 file:
   temp:
