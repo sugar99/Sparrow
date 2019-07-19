@@ -69,5 +69,23 @@ public class SearchController
         return searchService.searchSpaFilters(spaFilterType, keyword, size);
     }
     
-    
+    @ApiOperation("S5.搜索用户")
+    @GetMapping("/v1/search/users")
+    public Result searchSpaUser(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int size
+    )
+    {
+        return searchService.searchUser(keyword, size);
+    }
+
+    @ApiOperation("S6.搜索群组")
+    @GetMapping("/v1/search/groups")
+    public Result searchSpaGroup(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int size
+    )
+    {
+        return searchService.searchGroup(keyword, size);
+    }
 }

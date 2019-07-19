@@ -4,6 +4,7 @@ import com.micerlab.sparrow.dao.postgre.ACLDao;
 import com.micerlab.sparrow.dao.postgre.GroupDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.CreateSpaGroupParams;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
 import com.micerlab.sparrow.domain.pojo.User;
@@ -42,18 +43,14 @@ public class GroupServiceImpl implements GroupService{
     /**
      * 新建群组
      * @param user_id 用户id
-     * @param paramMap 参数
+     * @param params 参数
      * @return Result (data: group)
      */
     @Override
-    public Result createGroup(String user_id, Map<String, Object> paramMap) {
+    public Result createGroup(String user_id, CreateSpaGroupParams params) {
         //群组信息
-        Group group = new Group();
-        group.setGroup_id(UUID.randomUUID().toString());
-        group.setGroup_name(paramMap.get("group_name").toString());
-        group.setGroup_desc(paramMap.get("group_desc").toString());
-        group.setCreator_id(user_id);
-        group.setCreated_at(TimeUtil.currentTime());
+        Group group = new Group(UUID.randomUUID().toString(), params.getGroup_name(), user_id,
+                TimeUtil.currentTime(), params.getGroup_desc(),0);
         //产生InsertGroupEvent, 在ES和PostgreSql中同步更新
         EventBus.getDefault().post(new InsertGroupEvent(group));
         return Result.OK().data(group).build();
@@ -67,17 +64,9 @@ public class GroupServiceImpl implements GroupService{
      */
     @Override
     public String createPersonalGroup(String user_id, String username) {
-        String admin_id = userDao.getAdminId();
-        Group group = new Group();
         String group_id = UUID.randomUUID().toString();
-        group.setGroup_id(group_id);
-        //群组名称为用户名
-        group.setGroup_name(username);
-        group.setGroup_desc("个人群组用以授权");
-        //创建者为管理员，用户不可对该群组进行任何修改
-        group.setCreator_id(admin_id);
-        group.setCreated_at(TimeUtil.currentTime());
-        group.setPersonal(1);
+        Group group = new Group(group_id, username, userDao.getAdminId(), TimeUtil.currentTime(),
+                "个人群组用以授权", 1);
         groupDao.createGroup(group);
         //将用户添加到群组中
         groupDao.addMember(group_id, user_id, TimeUtil.currentTime());
@@ -141,7 +130,7 @@ public class GroupServiceImpl implements GroupService{
      */
     @Override
     public Result addGroupMember(String group_id, Map<String, Object> paramMap) {
-        List<String> usersIdList = (List<String>) paramMap.get("usersIdList");
+        List<String> usersIdList = (List<String>) paramMap.get("users");
         Timestamp timestamp = TimeUtil.currentTime();
         for (String member_id: usersIdList) {
             //更新数据库
@@ -199,15 +188,8 @@ public class GroupServiceImpl implements GroupService{
      */
     @Override
     public Result getAuthResource(String group_id) {
-        List<Resource> resourceList = groupDao.getGroupResources(group_id);
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        for (Resource resource: resourceList) {
-            Map<String, Object> resourceInfo = new HashMap<>();
-            resourceInfo.put("resource_info", resource);
-            resourceInfo.put("permission", aclDao.getGroupPermission(group_id, resource.getResource_id()));
-            resultList.add(resourceInfo);
-        }
-        return Result.OK().data(resultList).build();
+        List<Map<String, String>> data = groupDao.getGroupResources(group_id);
+        return Result.OK().data(data).build();
     }
 
     /**

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Deprecated
 @Service("resourceService")
 @Transactional
 public class ResourceServiceImpl implements ResourceService{
@@ -212,7 +213,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result addPermission(String resource_id, Map<String, Object> paramMap) {
         String permission = paramMap.get("permission").toString();
-        List<String> groupsIdList = (List<String>) paramMap.get("groupsIdList");
+        List<String> groupsIdList = (List<String>) paramMap.get("groups");
         //更新权限
         for (String group_id: groupsIdList) {
             aclService.updateGroupPermission(group_id, resource_id, permission);

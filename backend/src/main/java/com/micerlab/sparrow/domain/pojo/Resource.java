@@ -4,6 +4,7 @@ import org.apache.ibatis.type.Alias;
 
 import java.sql.Timestamp;
 
+@Deprecated
 @Alias("resource")
 public class Resource {
 

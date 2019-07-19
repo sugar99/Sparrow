@@ -43,47 +43,47 @@ public class DirectoryController {
     @GetMapping("/v1/dirs/{dir_id}")
     @ResponseBody
     public Result getDirectoryMeta(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
-        String cur_id = directoryService.getMasterDirId(dir_id);
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对指定目录是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request),
                 ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
         }
         return directoryService.getDir(dir_id);
     }
 
-    @ApiOperation("更新目录元数据")
-    @PutMapping("/v1/dirs/{dir_id}")
+    @ApiOperation("更新目录名称")
+    @PatchMapping("/v1/dirs/{dir_id}")
     @ResponseBody
     public Result updateDirectoryMeta(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
                                       @RequestBody Map<String, Object> paramMap) {
-        String cur_id = directoryService.getMasterDirId(dir_id);
-        //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        String user_id = BaseService.getUser_Id(request);
+        //判断用户对指定目录是否具有可写权限
+        if (!aclService.hasPermission(user_id, dir_id, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
-        return directoryService.updateDir(dir_id, paramMap);
+        return directoryService.updateDir(user_id, dir_id, paramMap);
     }
 
     @ApiOperation("删除目录")
     @DeleteMapping("/v1/dirs/{dir_id}")
     @ResponseBody
     public Result deleteDirectory(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
-        String cur_id = directoryService.getMasterDirId(dir_id);
-        //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对指定目录是否具有可写权限
+        String user_id = BaseService.getUser_Id(request);
+        if (!aclService.hasPermission(user_id, dir_id, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
-        return directoryService.deleteDir(dir_id);
+        return directoryService.deleteDir(user_id, dir_id);
     }
 
     @ApiOperation("获取下级资源")
     @GetMapping("/v1/dirs/{dir_id}/slaves")
     @ResponseBody
     public Result getSlaves(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!aclService.hasPermission(user_id, dir_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+        //判断用户对指定目录是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request), ActionType.READ)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
         }
         return directoryService.getSlaveResources(dir_id);
@@ -94,8 +94,8 @@ public class DirectoryController {
     @ResponseBody
     public Result addPermission(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
                                 @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!user_id.equals(directoryService.getCreatorId(dir_id))) {
+        //判断用户是否为该目录的创建者
+        if (!BaseService.getUser_Id(request).equals(directoryService.getCreatorId(dir_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
         return aclService.addGroupPermission(dir_id, paramMap);
@@ -106,8 +106,8 @@ public class DirectoryController {
     @ResponseBody
     public Result removePermission(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
                                    @PathVariable("group_id") String group_id) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!user_id.equals(directoryService.getCreatorId(dir_id))) {
+        //判断用户是否为该目录的创建者
+        if (!BaseService.getUser_Id(request).equals(directoryService.getCreatorId(dir_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
         return aclService.deleteGroupPermission(group_id, dir_id);
@@ -117,6 +117,10 @@ public class DirectoryController {
     @GetMapping("/v1/dirs/{dir_id}/authgroups")
     @ResponseBody
     public Result getAuthGroups(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
+        //判断用户对指定目录是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
+        }
         return aclService.getAuthGroups(BaseService.getUser_Id(request), dir_id, "dir");
     }
 

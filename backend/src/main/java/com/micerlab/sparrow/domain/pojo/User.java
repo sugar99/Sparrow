@@ -15,11 +15,30 @@ public class User {
 
     private String email;
 
-    private int isAdmin = 0;
+    private int isAdmin;
 
     private String personal_dir;
 
     private String personal_group;
+
+    public User(String user_id, String username, String password, String work_no, String email) {
+        this.user_id = user_id;
+        this.username = username;
+        this.password = password;
+        this.work_no = work_no;
+        this.email = email;
+        this.isAdmin = 0;
+        this.personal_dir = "";
+        this.personal_group = "";
+    }
+
+    public User(String user_id, String username, String password, String work_no, String email, int isAdmin,
+                String personal_dir, String personal_group) {
+        this(user_id, username, password, work_no, email);
+        this.isAdmin = isAdmin;
+        this.personal_dir = personal_dir;
+        this.personal_group = personal_group;
+    }
 
     public String getPersonal_group() {
         return personal_group;

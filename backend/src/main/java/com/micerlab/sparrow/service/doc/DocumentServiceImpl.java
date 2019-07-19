@@ -44,15 +44,12 @@ public class DocumentServiceImpl implements DocumentService{
         String doc_id = UUID.randomUUID().toString();
         Timestamp timestamp = TimeUtil.currentTime();
 
-        Document document = new Document();
-        document.setId(doc_id);
-        document.setCreator_id(user_id);
-        document.setCreated_at(timestamp);
+        Document document = new Document(doc_id, user_id, timestamp);
+        //创建文档事件
         EventBus.getDefault().post(new InsertDocEvent(doc_id, "doc", user_id, timestamp, timestamp));
-
         documentDao.setMasterDir(cur_id, doc_id);
-        String personalGroupId = userDao.getUserMetaById(user_id).getPersonal_group();
-        aclService.updateGroupPermission(personalGroupId, doc_id, "100");
+        //用户对该文档有可读可写权限
+        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), doc_id, "110");
         return Result.OK().data(document).build();
     }
 

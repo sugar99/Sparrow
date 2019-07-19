@@ -19,6 +19,16 @@ public class Group {
 
     private int personal = 0;
 
+    public Group(String group_id, String group_name, String creator_id, Timestamp created_at, String group_desc,
+                 int personal) {
+        this.group_id = group_id;
+        this.group_name = group_name;
+        this.group_desc = group_desc;
+        this.creator_id = creator_id;
+        this.created_at = created_at;
+        this.personal = personal;
+    }
+
     public int getPersonal() {
         return personal;
     }
