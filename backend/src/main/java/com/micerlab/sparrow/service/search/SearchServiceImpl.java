@@ -2,7 +2,6 @@ package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.dao.es.SearchDao;
-import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SearchResultParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
