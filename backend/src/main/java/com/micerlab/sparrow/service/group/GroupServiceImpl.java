@@ -49,8 +49,8 @@ public class GroupServiceImpl implements GroupService{
     @Override
     public Result createGroup(String user_id, CreateSpaGroupParams params) {
         //群组信息
-        Group group = new Group(UUID.randomUUID().toString(), params.getGroup_name(), user_id,
-                TimeUtil.currentTime(), params.getGroup_desc(),0);
+        Group group = new Group(UUID.randomUUID().toString(), params.getGroup_name(), params.getGroup_desc(),
+                user_id, TimeUtil.currentTime(),0);
         //产生InsertGroupEvent, 在ES和PostgreSql中同步更新
         EventBus.getDefault().post(new InsertGroupEvent(group));
         return Result.OK().data(group).build();
@@ -65,8 +65,8 @@ public class GroupServiceImpl implements GroupService{
     @Override
     public String createPersonalGroup(String user_id, String username) {
         String group_id = UUID.randomUUID().toString();
-        Group group = new Group(group_id, username, userDao.getAdminId(), TimeUtil.currentTime(),
-                "个人群组用以授权", 1);
+        Group group = new Group(group_id, username, "个人群组用以授权",
+                userDao.getAdminId(), TimeUtil.currentTime(), 1);
         groupDao.createGroup(group);
         //将用户添加到群组中
         groupDao.addMember(group_id, user_id, TimeUtil.currentTime());
