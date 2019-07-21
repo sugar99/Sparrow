@@ -1,32 +1,35 @@
 package com.micerlab.sparrow.filter;
 
 import com.micerlab.sparrow.config.AccessManager;
+import com.micerlab.sparrow.config.SparrowConfig;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.JwtUtil;
 import com.micerlab.sparrow.utils.SpringContextUtil;
+import com.sun.deploy.net.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.Serializable;
 
-public class AuthenticateFilter extends OncePerRequestFilter {
+public class AuthenticateInterceptor implements HandlerInterceptor {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticateInterceptor.class);
 
     private String user_id;
 
-    @Value("${sparrow.require-login:false}")
+    @Value("${sparrow.require-login")
     private boolean require_login;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, OPTIONS, DELETE");
@@ -35,9 +38,10 @@ public class AuthenticateFilter extends OncePerRequestFilter {
         response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
         logger.debug("访问：" + request.getMethod() + " " + request.getRequestURI());
         if (!AccessManager.mathAuthenticateUriList(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
+            return true;
         }
+        SparrowConfig sparrowConfig = SpringContextUtil.getBean("sparrowConfig");
+        require_login = sparrowConfig.getRequirelogin();
         if (!isAuthenticatedUser(request)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_COMMON, "用户未登录");
         } else {
@@ -45,11 +49,9 @@ public class AuthenticateFilter extends OncePerRequestFilter {
             RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
             UserPrincipal userPrincipal = (UserPrincipal) redisTemplate.opsForValue().get(user_id);
             request.setAttribute("principal", userPrincipal);
-            filterChain.doFilter(request, response);
-            return;
+            return true;
         }
     }
-
     /**
      * 判断是否为合法用户
      * @param request 请求
