@@ -1,0 +1,44 @@
+# The # character at the beginning of a line indicates a comment. Use
+# comments to describe your configuration.
+input {
+    jdbc {
+        jdbc_driver_class => "com.mysql.cj.jdbc.Driver"
+        jdbc_driver_library => "D:\\Program\\Elastic\\script\\mysql-connector-java-8.0.11.jar"
+        jdbc_connection_string => "jdbc:mysql://10.0.0.10:3306/cases?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
+        jdbc_user => "root"
+        jdbc_password => "ifihadyou"
+        jdbc_default_timezone => "Hongkong"
+        lowercase_column_names => false
+        statement => "
+        SELECT concat('image_', F.id) as `id`, `keyword_id` as tag_id
+        FROM (select `id` from `file_t`) as F join `file_keyword_t` as FT on F.id = FT.file_id
+        order by F.id;
+        "
+    }
+}
+# The filter part of this file is commented out to indicate that it is
+# optional
+filter {
+    aggregate {
+        task_id => "%{id}"
+        code => "
+            map['id'] = event.get('id')
+            map['tags'] ||= []
+            map['tags'] << event.get('tag_id')
+            event.cancel()
+        "
+        push_previous_map_as_event => true
+        timeout => 0.05
+    }
+}
+output {
+    stdout { codec => rubydebug }
+    elasticsearch {
+        hosts => [ "10.0.0.1:9200" ]
+        index => "legal_files"
+        action => "update"
+        doc_as_upsert => "true"
+        document_type => "_doc"
+        document_id => "%{id}"
+    }
+}
