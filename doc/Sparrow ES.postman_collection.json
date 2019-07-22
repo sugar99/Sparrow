@@ -1,0 +1,739 @@
+{
+	"info": {
+		"_postman_id": "5937ba73-5afb-4a5a-8ba0-78487d9fabf4",
+		"name": "Sparrow ES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "es",
+			"item": [
+				{
+					"name": "list indices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-url}}/_cat/indices?v",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"_cat",
+								"indices"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete index",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{es-url}}/legal_docs",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"legal_docs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_docs",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_docs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reindex",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"source\": {\n\t\t\"index\": \"docs\"\n\t},\n\t\"dest\": {\n\t\t\"index\": \"spa_docs\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_reindex",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_reindex"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/_cat/health?v",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_cat",
+								"health"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/_cat/nodes?v",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_cat",
+								"nodes"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sparrow",
+			"item": [
+				{
+					"name": "index",
+					"item": [
+						{
+							"name": "create spa_files index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"doc_id\": {\n                \"type\": \"keyword\"\n            },\n            \"type\": {\n                \"type\": \"keyword\"\n            },\n            \"ext\": {\n                \"type\": \"keyword\"\n            },\n            \"size\": {\n                \"type\": \"long\"\n            },\n            \"tags\": {\n                \"type\": \"long\"\n            },\n            \"categories\": {\n                \"type\": \"long\"\n            },\n            \"store_key\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"thumbnail\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"derived_files\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"version\": {\n                \"type\": \"byte\"\n            },\n            \"original_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"parent_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"keywords\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"content\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-url}}/{{spa_files}}",
+									"host": [
+										"{{es-url}}"
+									],
+									"path": [
+										"{{spa_files}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_docs index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\": {\n            \"number_of_shards\": 5,\n            \"number_of_replicas\": 2\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"files\": {\n                \"type\": \"keyword\"\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"meta_state\": {\n                \"type\": \"byte\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_docs}}",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_docs}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_tags index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"long\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_tags}}",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_tags}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_categories index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"id\": {\n            \t\"type\": \"long\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_categories}}",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_categories}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_users index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"index\": {\n            \"number_of_shards\": 5,\n            \"number_of_replicas\": 2\n        }\n    },\n    \"mappings\": {\n        \"mapping\": {\n            \"_doc\": {\n                \"properties\": {\n                    \"name\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_users}}",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_users}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_groups index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"index\": {\n            \"number_of_shards\": 5,\n            \"number_of_replicas\": 2\n        }\n    },\n    \"mappings\": {\n        \"mapping\": {\n            \"_doc\": {\n                \"properties\": {\n                    \"name\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_groups}}",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_groups}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "search",
+					"item": [
+						{
+							"name": "search suggestions",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"bool\": {\n            \"must\": {\n                \"multi_match\": {\n                    \"query\": \"算法\",\n                    \"fields\": [\n                        \"title\",\n                        \"title.cn^3\"\n                    ]\n                }\n            },\n            \"filter\": {\n                \"script\": {\n                    \"script\": {\n                        \"source\": \"!doc.containsKey('type') || doc.containsKey('type') && doc['type'].value.equals(params.type)\",\n                        \"params\": {\n                            \"type\": \"image\"\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"aggs\": {\n        \"group_by_title\": {\n            \"terms\": {\n                \"field\": \"title.raw\",\n                \"order\": {\n                    \"term_score.value\": \"desc\"\n                }\n            },\n            \"aggs\": {\n                \"term_score\": {\n                    \"max\": {\n                        \"script\": {\n                            \"source\": \"_score\"\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_files}},{{spa_tags}},{{spa_categories}}/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_files}},{{spa_tags}},{{spa_categories}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "top association tags & categories",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"query\": \"算法导论\",\n            \"fields\": [\n                \"title\",\n                \"title.cn^3\"\n            ]\n        }\n    },\n    \"aggs\": {\n    \t\"top_tags\": {\n    \t\t\"terms\": {\n    \t\t\t\"field\": \"tags\",\n    \t\t\t\"size\": 5\n    \t\t}\n    \t},\n    \t\"top_categories\": {\n    \t\t\"terms\": {\n    \t\t\t\"field\": \"categories\",\n    \t\t\t\"size\": 5\n    \t\t}\n    \t}\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_files}}/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_files}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tags by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"ids\": {\n            \"values\": [\n                2998,\n                2697,\n                137,\n                66,\n                133\n            ]\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_tags}}/_search",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_tags}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search results",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"bool\": {\n            \"must\": {\n                \"multi_match\": {\n                    \"query\": \"数学\",\n                    \"fields\": [\n                        \"title\",\n                        \"title.cn^3\",\n                        \"desc\",\n                        \"desc.cn\"\n                    ]\n                }\n            }\n        }\n    },\n    \"aggs\": {\n        \"exts_limit\": {\n            \"filter\": {\n                \"terms\": {\n                    \"ext\": [\n                        \"jpg\",\n                        \"gif\"\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"created_time_ranges\": {\n                    \"date_range\": {\n                        \"field\": \"created_time\",\n                        \"format\": \"yyyy-MM-dd\",\n                        \"time_zone\": \"+8\",\n                        \"ranges\": [\n                            {\n                                \"key\": \"三天内\",\n                                \"from\": \"now-3d/d\"\n                            },\n                            {\n                                \"key\": \"一周内\",\n                                \"from\": \"now-1w/d\"\n                            },\n                            {\n                                \"key\": \"一个月内\",\n                                \"from\": \"now-1M/d\"\n                            },\n                            {\n                                \"key\": \"三个月内\",\n                                \"from\": \"now-3M/d\"\n                            },\n                            {\n                                \"key\": \"半年内\",\n                                \"from\": \"now-6M/d\"\n                            },\n                            {\n                                \"key\": \"一年内\",\n                                \"from\": \"now-1y/d\"\n                            },\n                            {\n                                \"key\": \"全部\",\n                                \"to\": \"now\"\n                            }\n                        ]\n                    }\n                },\n                \"modified_time_ranges\": {\n                    \"date_range\": {\n                        \"field\": \"modified_time\",\n                        \"format\": \"yyyy-MM-dd\",\n                        \"time_zone\": \"+8\",\n                        \"ranges\": [\n                            {\n                                \"key\": \"三天内\",\n                                \"from\": \"now-3d/d\"\n                            },\n                            {\n                                \"key\": \"一周内\",\n                                \"from\": \"now-1w/d\"\n                            },\n                            {\n                                \"key\": \"一个月内\",\n                                \"from\": \"now-1M/d\"\n                            },\n                            {\n                                \"key\": \"三个月内\",\n                                \"from\": \"now-3M/d\"\n                            },\n                            {\n                                \"key\": \"半年内\",\n                                \"from\": \"now-6M/d\"\n                            },\n                            {\n                                \"key\": \"一年内\",\n                                \"from\": \"now-1y/d\"\n                            },\n                            {\n                                \"key\": \"全部\",\n                                \"to\": \"now\"\n                            }\n                        ]\n                    }\n                }\n            }\n        },\n        \"time_ranges_limit\": {\n            \"filter\": {\n                \"bool\": {\n                    \"filter\": [\n                        {\n                            \"range\": {\n                                \"created_time\": {\n                                    \"time_zone\": \"+8\",\n                                    \"lte\": \"now\"\n                                }\n                            }\n                        },\n                        {\n                            \"range\": {\n                                \"modified_time\": {\n                                    \"time_zone\": \"+8\",\n                                    \"lte\": \"now\"\n                                }\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"group_by_ext\": {\n                    \"terms\": {\n                        \"field\": \"ext\"\n                    }\n                },\n                \"final_exts_limit\": {\n                    \"filter\": {\n                        \"terms\": {\n                            \"ext\": [\n                                \"jpg\",\n                                \"gif\"\n                            ]\n                        }\n                    },\n                    \"aggs\": {\n                        \"results\": {\n                            \"top_hits\": {\n                                \"from\": 0,\n                                \"size\": 10,\n                                \"highlight\": {\n                                    \"fields\": {\n                                        \"title\": {\n                                            \"number_of_fragments\": 0,\n                                            \"no_match_size\": 50\n                                        },\n                                        \"desc\": {},\n                                        \"keywords\": {},\n                                        \"content\": {}\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_files}}/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_files}}",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "meta",
+					"item": [
+						{
+							"name": "index a spa_doc",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": \"1\",\n\t\"title\": \"code\",\n\t\"desc\": \"代码仓库\",\n\t\"creator\": \"green\",\n\t\"files\": [\"1\", \"2\", \"ABC\"],\n\t\"meta_state\": 0,\n\t\"created_time\": \"2019-07-05 23:09:00\",\n\t\"modified_time\": \"2019-07-05 23:10:00\"\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_docs}}/_doc/1",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_docs}}",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get a spa_doc",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_docs}}/_doc/1",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_docs}}",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "index a spa_file",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": \"1\",\n\t\"title\": \"ABC\",\n\t\"type\": \"doc\",\n\t\"tags\": [1, 2, 3],\n\t\"created_time\": \"2019-07-19 14:31:00.000\"\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_files}}/_doc/1",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_files}}",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get a spa_file",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_files}}/_doc/1",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_files}}",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "index a tag",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"id\": 1,\n\t\"title\": \"elasticsearch\",\n\t\"desc\": \"a cool search engine\"\n}"
+								},
+								"url": {
+									"raw": "{{elasticsearch-url}}/{{spa_tags}}/_doc/1",
+									"host": [
+										"{{elasticsearch-url}}"
+									],
+									"path": [
+										"{{spa_tags}}",
+										"_doc",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tags by spa_file's id (terms query)",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"query\": {\n\t\t\"terms\": {\n\t\t\t\"id\": {\n\t\t\t\t\"index\": \"spa_files\",\n\t\t\t\t\"id\": \"1\",\n\t\t\t\t\"path\": \"tags\" \n\t\t\t}\n\t\t}\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/{{spa_tags}}/_search",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"{{spa_tags}}",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "match all （检查数据格式）",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 50,\n\t\"query\": {\n\t\t\"match_all\": {}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/{{spa_files}}/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"{{spa_files}}",
+								"_search"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "match_all",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"size\": 10,\n\t\"query\": {\n\t\t\"match_all\": {}\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{elasticsearch-url}}/authors/_search?pretty",
+									"host": [
+										"{{elasticsearch-url}}"
+									],
+									"path": [
+										"authors",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "pretty",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "content-length",
+									"value": "983"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"took\": 18,\n    \"timed_out\": false,\n    \"_shards\": {\n        \"total\": 5,\n        \"successful\": 5,\n        \"skipped\": 0,\n        \"failed\": 0\n    },\n    \"hits\": {\n        \"total\": 2263,\n        \"max_score\": 1,\n        \"hits\": [\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"43532\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.864Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"石川啄木 Takuboku Ishikawa\",\n                    \"id\": 43532,\n                    \"type\": \"author\",\n                    \"country\": \"日本\",\n                    \"pic_url\": \"http://116.56.140.131:4869/11e780b7283011e403442117714a9d94\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"47519\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.867Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"赵乾乾\",\n                    \"id\": 47519,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": null\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"52614\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.867Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"维斯瓦娃·辛波斯卡 Wisława Szymborska\",\n                    \"id\": 52614,\n                    \"type\": \"author\",\n                    \"country\": \"波兰\",\n                    \"pic_url\": \"http://116.56.140.131:4869/5e30cbdaa7e9b13fb7814d08e2b8999b\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"104951\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.882Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"霭理士 Havelock Ellis\",\n                    \"id\": 104951,\n                    \"type\": \"author\",\n                    \"country\": \"英国\",\n                    \"pic_url\": \"http://116.56.140.131:4869/dc936cd1a72d3bcaaf9fbdecc72431c4\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"128306\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.930Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"焦元溥\",\n                    \"id\": 128306,\n                    \"type\": \"author\",\n                    \"country\": \"中国台湾\",\n                    \"pic_url\": \"http://116.56.140.131:4869/04f4de011b17fb7a0f7d8d4b003c1399\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"135826\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.936Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"陈敬容\",\n                    \"id\": 135826,\n                    \"type\": \"author\",\n                    \"country\": \"中国\",\n                    \"pic_url\": \"http://116.56.140.131:4869/295b27ec89dc7877d11fe8e6e7afb7db\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"140091\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.940Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"田村由美\",\n                    \"id\": 140091,\n                    \"type\": \"author\",\n                    \"country\": \"日本\",\n                    \"pic_url\": \"http://116.56.140.131:4869/0df4f10c9d685c798cf599150d224d49\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"143521\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.942Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"雷姆·库哈斯 Rem Koolhaas\",\n                    \"id\": 143521,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/712c86ce3c853993bb8de60fe0ab2f9b\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"146473\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.943Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"顾诚\",\n                    \"id\": 146473,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/00961be3a7dcd517e7aeb7dfa1e645e6\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"158506\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.950Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"曹锦清\",\n                    \"id\": 158506,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/8f4f38222085d3db5631cf4be119700d\"\n                }\n            }\n        ]\n    }\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"id": "a4144fce-b829-4287-b088-993c34d59668",
+			"key": "elastic-url",
+			"value": "http://localhost:9200",
+			"type": "string"
+		}
+	]
+}
