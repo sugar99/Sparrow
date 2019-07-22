@@ -21,14 +21,16 @@ public class StartUpState implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(StartUpState.class);
 
     @Value("${sparrow.require-login}")
-    private boolean login;
+    private boolean require_login;
+
 
     private final long EXIPIRE_TIME = 60 * 1000 * 60 * 24 * 100;
 
     @Override
     public void run(String... args) throws Exception {
         //系统演示，默认admin账户登录
-        if (!login) {
+        logger.info("---------require_login---------: " + require_login);
+        if (!require_login) {
             logger.info("--------------系统演示，默认admin账户登录-----------");
             UserDao userDao = SpringContextUtil.getBean("userDao");
             User user = userDao.getUserMetaById(userDao.getAdminId());
