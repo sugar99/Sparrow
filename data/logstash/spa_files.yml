@@ -2,13 +2,14 @@
 # comments to describe your configuration.
 input {
     jdbc {
-        # 待修改
+        # 数据库连接配置，待修改
         jdbc_driver_class => "com.mysql.cj.jdbc.Driver"
         jdbc_driver_library => "D:\\Program\\Elastic\\script\\mysql-connector-java-8.0.11.jar"
-        jdbc_connection_string => "jdbc:mysql://localhost:3306/legal?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
+        jdbc_connection_string => "jdbc:mysql://localhost:3306/cases?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
         jdbc_user => "root"
         jdbc_password => "123456" # 待修改
         jdbc_default_timezone => "Hongkong"
+        
         lowercase_column_names => false
         statement => "
         select concat('image_', `id`) as `id`,
@@ -47,7 +48,7 @@ filter {
 output {
     stdout { codec => rubydebug }
     elasticsearch {
-        hosts => [ "10.0.0.1:9200" ] # 待修改
+        hosts => [ "localhost:9200" ] # 待修改
         index => "legal_files" # 待修改
         action => "update"
         doc_as_upsert => "true"

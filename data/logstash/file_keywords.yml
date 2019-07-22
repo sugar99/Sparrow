@@ -4,14 +4,16 @@ input {
     jdbc {
         jdbc_driver_class => "com.mysql.cj.jdbc.Driver"
         jdbc_driver_library => "D:\\Program\\Elastic\\script\\mysql-connector-java-8.0.11.jar"
-        jdbc_connection_string => "jdbc:mysql://10.0.0.10:3306/cases?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
+        jdbc_connection_string => "jdbc:mysql://localhost:3306/cases?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
         jdbc_user => "root"
-        jdbc_password => "ifihadyou"
+        jdbc_password => "123456"
         jdbc_default_timezone => "Hongkong"
         lowercase_column_names => false
         statement => "
-        SELECT concat('image_', F.id) as `id`, `keyword_id` as tag_id
-        FROM (select `id` from `file_t`) as F join `file_keyword_t` as FT on F.id = FT.file_id
+        SELECT concat('image_', F.id) as `id`, K.`title` as `keyword`
+        FROM (select `id` from `file_t`) as F 
+            join `file_keyword_t` as FT on F.id = FT.file_id
+            join `keyword_t` as K on FT.keyword_id = K.id
         order by F.id;
         "
     }
@@ -23,8 +25,8 @@ filter {
         task_id => "%{id}"
         code => "
             map['id'] = event.get('id')
-            map['tags'] ||= []
-            map['tags'] << event.get('tag_id')
+            map['keywords'] ||= []
+            map['keywords'] << event.get('keyword')
             event.cancel()
         "
         push_previous_map_as_event => true

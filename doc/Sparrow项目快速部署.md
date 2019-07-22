@@ -79,7 +79,7 @@ sparrow用以下6个索引存储相关Meta信息：
 
 > 相应的字段设计具体见 《ES Meta&检索-技术方案》
 
-使用Postman： `Sparrow ES/sparrow/index` 创建索引映射。
+使用Postman： `Sparrow ES/sparrow/index` 创建索引映射。在实际生产环境中，可自定义索引名称，例如 `docs`, `files`, `tags` 等，或者 `legal_docs`, `legal_files`, `legal_tags` 等，使得最大限度利用1个物理上的Elasticsearch服务器。
 
 > 注：如果缺失ES的smartcn插件，会抛出异常！
 
@@ -93,6 +93,8 @@ sparrow用以下6个索引存储相关Meta信息：
 
 创建索引后，sparrow系统初始化，没有数据。可以考虑从原有业务数据库中将Meta数据（文档、文件以及标签等）迁移到ES。这里以mysql为例，使用logstash将关系型数据迁移到ES。
 
+> 有关logstash的更多资料：[Getting Started with Logstash](https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html)
+
 1. 导入示例数据到mysql：
 
 ```bash
@@ -101,6 +103,7 @@ sparrow用以下6个索引存储相关Meta信息：
 
 # 留意legal.sql所在目录
 mysql > created database legal character set utf8mb4;
+mysql > use legal;
 mysql > source legal.sql;
 ```
 
@@ -117,7 +120,7 @@ mysql > source legal.sql;
 
 2. 迁移文件Meta
 
-从 mysql  `file_t` 表迁移数据到ES `spa_file` 索引，查询语句如下：
+从 mysql  `file_t` 表迁移数据到ES `spa_file` 索引，查询语句如下：
 
 ```mysql
 select concat('image_', `id`) as `id`,
@@ -149,16 +152,17 @@ select concat('image_', `id`) as `id`,
 from `file_t`;
 ```
 
-将查询语句写入 `spa_files.yml` 配置文件，使用logstash迁移数据：
+ `spa_files.yml` 配置文件中包含了以上查询语句，使用logstash迁移数据：
 
 >  修改 `spa_files.yml` 文件中的数据库配置（用户名、密码、驱动等）、以及对应的ES索引
 
 ```bash
 # dir: sparrow/doc/logstash/
+# 可考虑将logstash添加到path环境变量
 ./logstash -f spa_files.yml
 ```
 
-用类似的方法，将 `category_t` 与 `keyword_t` 分别迁移到 `spa_categories` 和 `spa_tags` 索引。
+用类似的方法，将 `category_t` 与 `keyword_t` 分别迁移到 `spa_categories` 和 `spa_tags` 索引。
 
 3. 迁移文件外联字段
 
@@ -170,7 +174,7 @@ FROM (select `id` from `file_t`) as F join `file_keyword_t` as FT on F.id = FT.f
 order by F.id;
 ```
 
-得到按 (`id`, `tag_id`) 的一条条记录，按 `id` 排序。
+得到格式为 (`id`, `tag_id`) 的一条条记录，按 `id` 排序。
 
 使用 `file_tags.yml` 配置文件迁移数据：
 
@@ -180,17 +184,17 @@ order by F.id;
 ./logstash -f file_tags.yml -w 1
 ```
 
-用类似的方法，迁移 `file_category_t` 的数据到 `spa_files` 的 `categories` 字段。
+用类似的方法，迁移 `file_category_t` 的数据到 `spa_files` 的 `categories` 字段。
 
 4. 迁移文件关键词
 
 方法类似[3.迁移外联字段]
 
 ```mysql
-SELECT concat('image_', F.id) as `id`, K.`keyword` as `keyword`
+SELECT concat('image_', F.id) as `id`, K.`title` as `keyword`
 FROM (select `id` from `file_t`) as F 
-    join `file_keyword_t` as FT on F.id = FT.file_id
-    join `keyword_t` as K on FT.keyword_id = K.id
+	join `file_keyword_t` as FT on F.id = FT.file_id
+	join `keyword_t` as K on FT.keyword_id = K.id
 order by F.id;
 ```
 
@@ -514,7 +518,7 @@ file:
 root=/root/sparrow/data-for-1.7.4
 ```
 
-### 2.2 Maven打包
+### 2.3 Maven打包
 
 ```shell
 [root@demo ~]# cd sparrow/backend/
@@ -522,7 +526,7 @@ root=/root/sparrow/data-for-1.7.4
 [root@demo ~]# mvn package -Dmaven.test.skip=true
 ```
 
-### 2.3 启动项目
+### 2.4 启动项目
 项目默认端口为8089 可在启动时添加参数 --server.port=xxxx，指定端口
 
 ```

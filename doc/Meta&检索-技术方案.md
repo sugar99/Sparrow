@@ -430,14 +430,13 @@ sparrow文件，相当于传统意义上的磁盘文件。
 
 #### A.搜索建议 [S1接口]
 
-<img src="../assets/search-suggestion.png">
+<img src="../assets/search-type.png">
 
-| 接口作用 | 获取搜索建议 |
-| -------- | ------------ |
-| 输入     |              |
-| 输出     |              |
-| 原理     |              |
-|          |              |
+| 接口作用 | 获取搜索建议                                                 |
+| -------- | ------------------------------------------------------------ |
+| 输入     | 搜索类型、关键词                                             |
+| 输出     | 在选定搜索类型限制下，与关键词相匹配的【文件标题】、【类目】、【标签】（去除重复） |
+| 原理     | 1. 同时搜索spa_files, spa_tags, spa_categories 3个索引，匹配title字段<br/>2. 对spa_files过滤type字段，限制文件类型<br/>3. 聚集title字段（去除重复），按step1中匹配的分数排序 |
 
 Query DSL
 
@@ -494,17 +493,243 @@ Request Body
 }
 ```
 
-
-
-
-
 #### B.获取相关 [S2接口]
 
+<img src="../assets/search-suggestion.png">
 
+| 接口作用 | 获取高度相关的类目标签                                       |
+| -------- | ------------------------------------------------------------ |
+| 输入     | 关键词                                                       |
+| 输出     | 对于与关键词相匹配的文件，这些文件中包含次数最多的n个类目标签 |
+| 原理     | 1. 搜索spa_files索引，匹配title字段<br/>2. 分别聚集tags字段和categories字段，得到词频最高的标签id和类目id<br/>3. 分别从spa_tags和spa_categories中获取这些id的记录 |
+
+Query DSL
+
+```http
+GET {{es-remote-url}}/spa_files/_search?size=0
+```
+
+Request Body
+
+```json
+{
+    "query": {
+        "multi_match": {
+            "query": "算法导论",
+            "fields": [
+                "title",
+                "title.cn^3"
+            ]
+        }
+    },
+    "aggs": {
+    	"top_tags": {
+    		"terms": {
+    			"field": "tags",
+    			"size": 5
+    		}
+    	},
+    	"top_categories": {
+    		"terms": {
+    			"field": "categories",
+    			"size": 5
+    		}
+    	}
+    }
+}
+```
 
 #### C.搜索结果 [S3接口]
 
+<img src="../assets/search-result.png">
 
+| 接口作用 | 获取文件搜索结果                                             |
+| -------- | ------------------------------------------------------------ |
+| 输入     | * 搜索类型<br/>* 关键词<br/>* 选中标签id数组<br/>* 选中类目id数组<br/>* 选中拓展名数组<br/>* 创建时间起始区间<br/>* 修改时间起始区间 |
+| 输出     |                                                              |
+| 原理     | 1. 搜索spa_files索引，匹配title字段<br/>2. 分别聚集tags字段和categories字段，得到词频最高的标签id和类目id<br/>3. 分别从spa_tags和spa_categories中获取这些id的记录 |
+
+![1563799735233](assets/1563799735233.png)
+
+ 详细流程
+
+![1563799769822](assets/1563799769822.png)
+
+Query DSL
+
+```http
+GET {{es-remote-url}}/spa_files/_search?size=0
+```
+
+Request Body
+
+```json
+{
+    "query": {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": "数学",
+                    "fields": [
+                        "title",
+                        "title.cn^3",
+                        "desc",
+                        "desc.cn"
+                    ]
+                }
+            }
+        }
+    },
+    "aggs": {
+        "exts_limit": {
+            "filter": {
+                "terms": {
+                    "ext": [
+                        "jpg",
+                        "gif"
+                    ]
+                }
+            },
+            "aggs": {
+                "created_time_ranges": {
+                    "date_range": {
+                        "field": "created_time",
+                        "format": "yyyy-MM-dd",
+                        "time_zone": "+8",
+                        "ranges": [
+                            {
+                                "key": "三天内",
+                                "from": "now-3d/d"
+                            },
+                            {
+                                "key": "一周内",
+                                "from": "now-1w/d"
+                            },
+                            {
+                                "key": "一个月内",
+                                "from": "now-1M/d"
+                            },
+                            {
+                                "key": "三个月内",
+                                "from": "now-3M/d"
+                            },
+                            {
+                                "key": "半年内",
+                                "from": "now-6M/d"
+                            },
+                            {
+                                "key": "一年内",
+                                "from": "now-1y/d"
+                            },
+                            {
+                                "key": "全部",
+                                "to": "now"
+                            }
+                        ]
+                    }
+                },
+                "modified_time_ranges": {
+                    "date_range": {
+                        "field": "modified_time",
+                        "format": "yyyy-MM-dd",
+                        "time_zone": "+8",
+                        "ranges": [
+                            {
+                                "key": "三天内",
+                                "from": "now-3d/d"
+                            },
+                            {
+                                "key": "一周内",
+                                "from": "now-1w/d"
+                            },
+                            {
+                                "key": "一个月内",
+                                "from": "now-1M/d"
+                            },
+                            {
+                                "key": "三个月内",
+                                "from": "now-3M/d"
+                            },
+                            {
+                                "key": "半年内",
+                                "from": "now-6M/d"
+                            },
+                            {
+                                "key": "一年内",
+                                "from": "now-1y/d"
+                            },
+                            {
+                                "key": "全部",
+                                "to": "now"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "time_ranges_limit": {
+            "filter": {
+                "bool": {
+                    "filter": [
+                        {
+                            "range": {
+                                "created_time": {
+                                    "time_zone": "+8",
+                                    "lte": "now"
+                                }
+                            }
+                        },
+                        {
+                            "range": {
+                                "modified_time": {
+                                    "time_zone": "+8",
+                                    "lte": "now"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "aggs": {
+                "group_by_ext": {
+                    "terms": {
+                        "field": "ext"
+                    }
+                },
+                "final_exts_limit": {
+                    "filter": {
+                        "terms": {
+                            "ext": [
+                                "jpg",
+                                "gif"
+                            ]
+                        }
+                    },
+                    "aggs": {
+                        "results": {
+                            "top_hits": {
+                                "from": 0,
+                                "size": 10,
+                                "highlight": {
+                                    "fields": {
+                                        "title": {
+                                            "number_of_fragments": 0,
+                                            "no_match_size": 50
+                                        },
+                                        "desc": {},
+                                        "keywords": {},
+                                        "content": {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 ### 3.2.标签类目检索 [S4接口]
 
@@ -520,32 +745,14 @@ Request Body
 
 ### 3.4.待完善需求
 
-* [x] 关键词检索 & 全文检索
-
-* [x] 搜索结果高亮
-
-* [x] 模糊搜索
+* [ ] 模糊搜索
 
 * [ ] 文件版本
-
-  
-
-
-#### 3.4.1.关键词检索 & 全文检索
-
-
-
-#### 3.4.2.搜索结果高亮
-
 
 
 #### 3.4.3.模糊搜索
 
 建议只匹配长度短的字段（例如 `title`）
-
-
-
-
 
 
 
