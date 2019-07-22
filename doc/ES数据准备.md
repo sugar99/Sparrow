@@ -94,6 +94,33 @@ sparrow用以下6个索引存储相关Meta信息：
 
 ##### A.迁移文件Meta
 
+```mysql
+select concat('image_', `id`) as `id`,
+	concat('image_', `id`) as `original_id`,
+	`title`,
+	date_format(str_to_date(`created_time`, '%Y/%m/%d %H:%i'), get_format(DATETIME, 'JIS')) as `created_time`,
+	date_format(str_to_date(`modified_time`, '%Y/%m/%d %H:%i'), get_format(DATETIME, 'JIS')) as `modified_time`,
+	`desc`,
+	`creator`,
+	`content`,
+
+	'image' as `type`,
+	CASE FLOOR(RAND() * 3)
+		WHEN 0 THEN 'jpg'
+		WHEN 1 THEN 'png'
+		WHEN 2 THEN 'gif'
+	END as `ext`,
+
+	1024 as `size`,
+	NULL as `store_key`,
+	NULL as `thumbnail`, 
+	NULL as `derived_files`,
+	NULL as `doc_id`,
+	0 as `version`,
+	NULL as `parent_id`
+from `file_t`;
+```
+
 
 
 
@@ -141,6 +168,8 @@ elasticdump --input=spa_categories.json --output=http://localhost:9200/spa_categ
 ### 2.1.后端代码配置
 
 #### 2.1.1.ES配置
+
+在application.yml配置文件中：
 
 1. 配置ES的ip地址与端口号
 2. 指定sparrow使用的6个ES索引
