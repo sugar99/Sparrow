@@ -33,6 +33,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ES数据持久化基础服务：CRUD等
+ * @author chenlvjia
+ */
 @Component
 public class ESBaseDao
 {
@@ -198,7 +202,7 @@ public class ESBaseDao
      * @param index ES索引
      * @param id ES文档id
      * @param jsonMap 用json表示的ES文档
-     * @return 更新后的ES文档
+     * @return 更新请求的处理结果
      */
     public UpdateResponse updateESDoc(String index, String id, JSONObject jsonMap)
     {
