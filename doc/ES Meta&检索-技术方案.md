@@ -1,6 +1,8 @@
 # ES Meta&检索-技术方案
 
 > 作者：陈绿佳、郑铠锋
+>
+> 有关ES的环境准备，具体请见  [doc/ES/ES资料整理.md](doc/ES/ES资料整理.md) 与 [doc/Sparrow项目快速部署.md](./Sparrow项目快速部署.md) 中关于ES的章节。
 
 [TOC]
 
@@ -955,7 +957,7 @@ private ESConfig.Indices sparrowIndices;
 
 ### ★4.2.ES CRUD封装
 
-在ES Meta管理时涉及大量的CRUD操作，而ES官方提供的API操作用起来不是很方便，ES记录的参数、返回值基本都是表示Json结构的 `Map<String, Object>` ，代码写起来很冗余。由此想到对基本的CRUD操作进行封装。
+在ES Meta管理时涉及大量的CRUD操作，而ES官方提供的API操作用起来不是很方便，ES记录的参数、返回值基本都是表示Json结构的 `Map<String, Object>` ，代码写起来很冗余。由此想到对基本的CRUD操作进行封装。
 
 实现思路：模仿 [Spring Data Elasticsearch](https://github.com/spring-projects/spring-data-elasticsearch) 的风格，封装基本的CRUD操作，用 [Alibaba Fastjson](https://github.com/alibaba/fastjson) 库将参数又 `Map<String, Object>` 映射为Java对象（POJO）。
 
