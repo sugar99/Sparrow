@@ -1297,13 +1297,13 @@ Request Body:
 
 ```json
 {
-    "title": "", //"文件名"
-    "store_key": "", //文件在Minio中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
-    "doc_id": "", //当前上传文件所属的文档ID
-    "parent_id": "", //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为""
-    "ext": "", // 文件后缀名
-    "creator": "", // 文件的创建者
-   	"size": "" // 文件的大小
+    "title": "ABC", //"文件名"
+    "store_key": "xxx", //文件在Minio中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
+    "doc_id": "1", //当前上传文件所属的文档ID
+    "parent_id": null, //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为null
+    "ext": "pdf", // 文件后缀名
+    "creator": "xxxx", // 文件的创建者
+   	"size": "1024" // 文件的大小
 }
 ```
 

@@ -43,7 +43,7 @@ public class DocumentController {
         return documentService.createDoc(user_id, cur_id);
     }
 
-    @ApiOperation("获取文档元数据")
+    @ApiOperation("D7.获取文档Meta")
     @GetMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result getDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
@@ -55,7 +55,7 @@ public class DocumentController {
         return documentService.getDoc(doc_id);
     }
 
-    @ApiOperation("更新文档元数据")
+    @ApiOperation("D8.更新文档Meta")
     @PatchMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result updateDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id,

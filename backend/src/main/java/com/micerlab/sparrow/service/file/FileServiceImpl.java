@@ -45,6 +45,9 @@ public class FileServiceImpl implements FileService
         return null;
     }
     
+    /**
+     * 创建文件Meta。客户端上传文件至oss存储后，调用该接口
+     */
     public Result createFileMeta(String file_id, CreateSpaFileParams params)
     {
         // TODO: 文件历史版本关联
@@ -92,7 +95,7 @@ public class FileServiceImpl implements FileService
         
         spaFileDao.index(file_id, file, true);
         spaDocDao.update(doc_id, doc);
-        msgProducer.sendMsg(file_id);
+        msgProducer.sendMsg(file_id); // 使用rabbitmq异步消息处理文件缩略图，提取文件关键词
         return Result.OK().build();
     }
     

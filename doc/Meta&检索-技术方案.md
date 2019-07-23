@@ -346,11 +346,11 @@ sparrow文件，相当于传统意义上的磁盘文件。
 
 文件标签 / 类目
 
-| field | type  | desc                                                        |
-| ----- | ----- | ----------------------------------------------------------- |
-| id    | long  | 自增id（整数），同时设置索引的 `_id` （字符串）和 `id` 相同 |
-| title | title | 名称                                                        |
-| desc  | title | 描述                                                        |
+| field | type | desc                                                        |
+| ----- | ---- | ----------------------------------------------------------- |
+| id    | long | 自增id（整数），同时设置索引的 `_id` （字符串）和 `id` 相同 |
+| title | text | 名称                                                        |
+| desc  | text | 描述                                                        |
 
 **spa_tags / spa_categories mapping**
 
@@ -408,21 +408,78 @@ sparrow文件，相当于传统意义上的磁盘文件。
 }
 ```
 
-#### D.spa_groups
+#### D.spa_users / spa_groups
 
 用户与群组，和业务数据库中 `user_t` , `group_t` 数据保持一致。便于用户群组的搜索。
 
+| field | type | desc                           |
+| ----- | ---- | ------------------------------ |
+| id    | text | uuid，与业务数据库中id保持一致 |
+| name  | text | 名称                           |
+| desc  | text | 描述（该字段暂时没用上）       |
 
+**spa_users / spa_groups mapping**
+
+```json
+{
+    "settings": {
+        "index": {
+            "number_of_shards": 5,
+            "number_of_replicas": 2
+        }
+    },
+    "mappings": {
+        "mapping": {
+            "_doc": {
+                "properties": {
+                    "name": {
+                        "type": "text",
+                        "analyzer": "smartcn"
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 ### 2.2.Meta维护
 
+Meta数据的维护基本是ES数据的CRUD操作，有些操作对外提供API服务，而有些操作只在service层和dao层提供方法给其它业务调用。
 
+| 接口                     | 实现                                     |
+| ------------------------ | ---------------------------------------- |
+| D7.获取文档Meta          |                                          |
+| D8.更新文档Meta          | 只允许部分字段更新                       |
+| F5. 创建文件Meta         |                                          |
+| F9.获取文件Meta          |                                          |
+| F10.更新文件Meta         | 只允许部分字段更新                       |
+| F11-F14 标签类目CRUD     |                                          |
+| F15.获取文件的类目或标签 |                                          |
+| F16.更新文件的类目或标签 | 该接口同时用于类目标签的新增、更新、删除 |
 
+#### 2.2.1.创建文件Meta [F5接口]
 
+| 参数      | 含义                                                         |
+| --------- | ------------------------------------------------------------ |
+| title     | 文件名                                                       |
+| store_key | 文件在oss中的key                                             |
+| doc_id    | 当前上传文件所属的文档ID                                     |
+| parent_id | 父版本文件id<br/>当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为null |
+| ext       | 文件后缀名                                                   |
+| size      | 文件的大小（字节数）                                         |
+| creator   | 创建者id（从后端鉴权服务获取）                               |
 
+客户端上传文件至oss存储后，调用该接口存储文件Meta，业务流程如下（不包括鉴权）：
 
+1. 获取指定doc_id的文档Meta
+2. 检测文档files数组是否包含parent_id
+3. 用请求参数构造新文件Meta
+4. 如果parent_id不为null，获取指定parent_id的文件Meta，用父版本文件Meta的部分字段填充新文件的Meta
+5. 若文档的files数组包含给定parent_id，用file_id替换parent_id，否则在files数组中插入file_id。更新文档modified_time字段
+6. 将新文件Meta，文档Meta分别写入ES
 
-
+7. 使用异步消息处理文件缩略图，提取（文档类型的）文件全文字段、关键词，将这些字段写入ES
 
 ## 3.检索实现
 
@@ -434,9 +491,23 @@ sparrow文件，相当于传统意义上的磁盘文件。
 
 | 接口作用 | 获取搜索建议                                                 |
 | -------- | ------------------------------------------------------------ |
-| 输入     | 搜索类型、关键词                                             |
+| 输入     | * 搜索类型 type<br/>* 关键词 keyword                         |
 | 输出     | 在选定搜索类型限制下，与关键词相匹配的【文件标题】、【类目】、【标签】（去除重复） |
 | 原理     | 1. 同时搜索spa_files, spa_tags, spa_categories 3个索引，匹配title字段<br/>2. 对spa_files过滤type字段，限制文件类型<br/>3. 聚集title字段（去除重复），按step1中匹配的分数排序 |
+
+SQL伪代码为：
+
+> 设匹配函数 `boolean match(field, keyword)` ，即用关键词匹配特定字段，并在匹配的记录中插入 `match_score` 作为匹配的分数。
+
+```mysql
+SELECT `title`
+FROM (SELECT * FROM spa_files WHERE match(`title`, ${keyword}) AND `type` = ${type})
+	UNION (SELECT * FROM spa_tags WHERE match(`title`, ${keyword}))
+	UNION (SELECT * FROM spa_categories WHERE match(`title`, ${keyword}))
+GROUP BY `title`
+ORDER BY MAX(`match_score`) DESC 
+LIMIT 10;
+```
 
 Query DSL
 
@@ -499,9 +570,29 @@ Request Body
 
 | 接口作用 | 获取高度相关的类目标签                                       |
 | -------- | ------------------------------------------------------------ |
-| 输入     | 关键词                                                       |
+| 输入     | 关键词 keyword                                               |
 | 输出     | 对于与关键词相匹配的文件，这些文件中包含次数最多的n个类目标签 |
 | 原理     | 1. 搜索spa_files索引，匹配title字段<br/>2. 分别聚集tags字段和categories字段，得到词频最高的标签id和类目id<br/>3. 分别从spa_tags和spa_categories中获取这些id的记录 |
+
+假设文件与标签的外联表为 `file_tag_t` (`file_id`, `tag_id`)，获取标签的伪SQL查询语句：
+
+```sql
+WITH F as (
+    SELECT `id`
+    FROM `spa_files`
+    WHERE match(`title`, ${keyword})
+), T as (
+	SELECT `tag_id`
+	FROM `file_tag_t` as FT join F on FT.file_id = F.id
+	GROUP BY FT.`tag_id`
+    ORDER BY COUNT(F.id)
+)
+SELECT *
+FROM `spa_tags` as S join T on S.id = T.tag_id
+LIMIT 5;
+```
+
+> 注：伪SQL语句只为解释ES查询语句的原理，实际上并不存在！
 
 Query DSL
 
@@ -545,15 +636,19 @@ Request Body
 
 | 接口作用 | 获取文件搜索结果                                             |
 | -------- | ------------------------------------------------------------ |
-| 输入     | * 搜索类型<br/>* 关键词<br/>* 选中标签id数组<br/>* 选中类目id数组<br/>* 选中拓展名数组<br/>* 创建时间起始区间<br/>* 修改时间起始区间 |
-| 输出     |                                                              |
-| 原理     | 1. 搜索spa_files索引，匹配title字段<br/>2. 分别聚集tags字段和categories字段，得到词频最高的标签id和类目id<br/>3. 分别从spa_tags和spa_categories中获取这些id的记录 |
+| 输入     | * 搜索类型 type<br/>* 关键词 keyword<br/>* 选中标签id数组 tags<br/>* 选中类目id数组 categories<br/>* 选中拓展名数组 exts<br/>* 创建时间选取区间 created_time<br/>* 修改时间选取区间 modified_time |
+| 输出     | 1. 匹配以上关键词与所有过滤条件的文件记录<br/>2. 在限制了创建时间区间、修改时间区间的条件下，各个拓展名所包含的文件数量<br/>3. 在限制了拓展名的条件下，各个创建时间、各个修改时间所包含的文件数量 |
+| 原理     | 1. 搜索spa_files索引，得到文件集合D1<br/>    A.限定type字段<br/>    B.用keyword匹配title和desc字段<br/>    C.限定tags字段匹配tags数组中的所有标签<br/>    D.限定categories字段匹配categories数组中的所有类目<br/>2. 由D1过滤ext字段，得到D2<br/>3. 从D2，分别聚集created_time字段和modified_time字段，得到各个时间维度所包含的文件数量<br/>4. 对D1中的文件限定created_time和modified_time字段，得到D3<br/>5. 从D3，聚集ext字段，得到各个拓展名维度所包含的文件数量<br/>6. 自D3限制ext字段，得到最终匹配搜索的文件结果D4<br/>7. 高亮搜索结果 |
+
+用【管道过滤器】模式描述上述流程，其中包含filter的是过滤器管道，包含agg的是聚集管道。上一级管道的输出可作为下一级管道的输入。
 
 ![1563799735233](assets/1563799735233.png)
 
- 详细流程
+ 详细流程如下：
 
-![1563799769822](assets/1563799769822.png)
+![1563847877508](assets/1563847877508.png)
+
+其实直接使用所有过滤条件，从 D0 > D1 > D4 的路径，也是可以得到最终的搜索结果的。不过由于D3处的结果已经使用了大多数过滤条件，继续再做个拓展名过滤，便可得到最终的搜索结果，利用了之前两个过滤管道累积的计算结果，计算开销更小。最终采用的方式是 D0 > D1 > D3 > D4 。
 
 Query DSL
 
@@ -565,11 +660,11 @@ Request Body
 
 ```json
 {
-    "query": {
+     "query": {
         "bool": {
             "must": {
                 "multi_match": {
-                    "query": "数学",
+                    "query": "算法",
                     "fields": [
                         "title",
                         "title.cn^3",
@@ -577,7 +672,40 @@ Request Body
                         "desc.cn"
                     ]
                 }
-            }
+            },
+            "filter": [
+                {
+                    "term": {
+                        "type": "image"
+                    }
+                },
+                {
+                    "terms_set": {
+                        "tags": {
+                            "terms": [
+                                133,
+                                137
+                            ],
+                            "minimum_should_match_script": {
+                                "source": "2"
+                            }
+                        }
+                    }
+                },
+                {
+                    "terms_set": {
+                        "categories": {
+                            "terms": [
+                                0,
+                                6
+                            ],
+                            "minimum_should_match_script": {
+                                "source": "2"
+                            }
+                        }
+                    }
+                }
+            ]
         }
     },
     "aggs": {
@@ -733,15 +861,17 @@ Request Body
 
 ### 3.2.标签类目检索 [S4接口]
 
+简单的检索，用关键词匹配标签（类目）名称和详情字段即可。
 
+| 接口作用 | 获取高度相关的类目标签                             |
+| -------- | -------------------------------------------------- |
+| 输入     | 关键词 keyword                                     |
+| 输出     | 与关键词相匹配的标签（类目）                       |
+| 原理     | 搜索spa_tags索引，用keyword匹配title字段和desc字段 |
 
-### 3.3.用户群组检索 [S5接口]
+### 3.3.用户群组检索 [S5,S6接口]
 
-
-
-
-
-
+原理基本与[3.2.标签类目检索]相同。
 
 ### 3.4.待完善需求
 
@@ -749,13 +879,25 @@ Request Body
 
 * [ ] 文件版本
 
+#### 3.4.1.文件版本
 
-#### 3.4.3.模糊搜索
+文件版本管理。
+
+
+
+#### 3.4.2.模糊搜索
 
 建议只匹配长度短的字段（例如 `title`）
 
 
 
-#### 3.4.4.文件版本
 
-文件版本管理
+
+## 4.代码实现
+
+
+
+
+
+
+
