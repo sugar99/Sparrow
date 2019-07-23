@@ -64,6 +64,17 @@ npm install -g elasticdump
 
 #### 1.1.2 数据准备
 
+启动ES：
+
+```bash
+# dir: elasticsearch-7.2.0/bin/
+# 方式1.前台启动，输出日志到控制台
+./elasticsearch 
+
+# 方式2.后台启动
+./elasticsearch -d
+```
+
 ##### 1.1.2.1 创建索引映射
 
 sparrow用以下6个索引存储相关Meta信息：
