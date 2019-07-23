@@ -8,7 +8,6 @@ import com.micerlab.sparrow.domain.principal.UserPrincipal;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.JwtUtil;
 import com.micerlab.sparrow.utils.SpringContextUtil;
-import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
