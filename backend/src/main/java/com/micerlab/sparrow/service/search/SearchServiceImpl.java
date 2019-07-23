@@ -7,6 +7,7 @@ import com.micerlab.sparrow.domain.params.SearchResultParams;
 import com.micerlab.sparrow.domain.search.SpaFilterType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,11 @@ import java.util.Map;
 @Service
 public class SearchServiceImpl implements SearchService
 {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     private SearchDao searchDao;
 
-    private final String userIndex = "spa_user";
-
-    private final String groupIndex = "spa_group";
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
 
     public SearchServiceImpl(SearchDao searchDao)
     {
@@ -55,13 +54,13 @@ public class SearchServiceImpl implements SearchService
 
     @Override
     public Result searchUser(String keyword, int size) {
-        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, userIndex, size);
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, sparrowIndices.getUser(), size);
         return Result.OK().data(data).build();
     }
 
     @Override
     public Result searchGroup(String keyword, int size) {
-        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, groupIndex, size);
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, sparrowIndices.getGroup(), size);
         return Result.OK().data(data).build();
     }
 }

@@ -37,9 +37,6 @@ public class GroupServiceImpl implements GroupService{
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private ACLDao aclDao;
-
     /**
      * 新建群组
      * @param user_id 用户id
