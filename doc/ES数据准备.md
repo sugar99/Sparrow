@@ -92,13 +92,116 @@ sparrow用以下6个索引存储相关Meta信息：
 
 创建索引后，sparrow系统初始化，没有数据。可以考虑从原有业务数据库中将Meta数据（文档、文件以及标签等）迁移到ES。这里以mysql为例，使用logstash将关系型数据迁移到ES。
 
-##### A.迁移文件Meta
+1. 导入示例数据到mysql：
 
+```bash
+# 命令行登录mysql
+> mysql -uroot -p123456
 
+# 留意legal.sql所在目录
+mysql > created database legal character set utf8mb4;
+mysql > source legal.sql;
+```
 
+示例数据库中表格信息与ES索引对应如下：
 
+| mysql表格                    | 包含信息               | ES索引                       | logstash迁移配置文件 |
+| ---------------------------- | ---------------------- | ---------------------------- | -------------------- |
+| file_t                       | 文件Meta               | spa_files                    | spa_files.yml        |
+| category_t                   | 类目                   | spa_categories               | spa_categories.yml   |
+| keyword_t                    | 关键词                 | spa_tags                     | spa_tags.yml         |
+| file_category_t              | 文件与类目的外联关系   | spa_files 的 categories 字段 | file_categories.yml  |
+| file_keyword_t               | 文件与关键词的外联关系 | spa_files 的 tags 字段       | file_tags.yml        |
+| keyword_t<br/>file_keyword_t | 关键词                 | spa_files 的 keywords 字段   | file_keywords.yml    |
 
+2. 迁移文件Meta
 
+从 mysql  `file_t` 表迁移数据到ES `spa_file` 索引，查询语句如下：
+
+```mysql
+select concat('image_', `id`) as `id`,
+	concat('image_', `id`) as `original_id`,
+	`title`,
+	`desc`,
+	`creator`,
+	`content`,
+	
+	-- 转换时间格式
+	date_format(str_to_date(`created_time`, '%Y/%m/%d %H:%i'), get_format(DATETIME, 'JIS')) as `created_time`,
+	date_format(str_to_date(`modified_time`, '%Y/%m/%d %H:%i'), get_format(DATETIME, 'JIS')) as `modified_time`,
+
+	'image' as `type`,
+	CASE FLOOR(RAND() * 3)
+		WHEN 0 THEN 'jpg'
+		WHEN 1 THEN 'png'
+		WHEN 2 THEN 'gif'
+	END as `ext`,
+
+	-- 赋予字段初始值（也可省略这些字段）
+	1024 as `size`, 
+	NULL as `store_key`,
+	NULL as `thumbnail`, 
+	NULL as `derived_files`,
+	NULL as `doc_id`,
+	0 as `version`,
+	NULL as `parent_id`
+from `file_t`;
+```
+
+将查询语句写入 `spa_files.yml` 配置文件，使用logstash迁移数据：
+
+>  修改 `spa_files.yml` 文件中的数据库配置（用户名、密码、驱动等）、以及对应的ES索引
+
+```bash
+# dir: sparrow/doc/logstash/
+./logstash -f spa_files.yml
+```
+
+用类似的方法，将 `category_t` 与 `keyword_t` 分别迁移到 `spa_categories` 和 `spa_tags` 索引。
+
+3. 迁移文件外联字段
+
+从 mysql  `file_keyword_t` 表迁移标签id的数据到ES `spa_file` 索引，查询语句如下：
+
+```mysql
+SELECT concat('image_', F.id) as `id`, `keyword_id` as tag_id
+FROM (select `id` from `file_t`) as F join `file_keyword_t` as FT on F.id = FT.file_id
+order by F.id;
+```
+
+得到按 (`id`, `tag_id`) 的一条条记录，按 `id` 排序。
+
+使用 `file_tags.yml` 配置文件迁移数据：
+
+```bash
+# dir: sparrow/doc/logstash/
+# 使用单线程，保证同一id对应的多个tag_id能按次序收集到tags数组中
+./logstash -f file_tags.yml -w 1
+```
+
+用类似的方法，迁移 `file_category_t` 的数据到 `spa_files` 的 `categories` 字段。
+
+4. 迁移文件关键词
+
+方法类似[3.迁移外联字段]
+
+```mysql
+SELECT concat('image_', F.id) as `id`, K.`keyword` as `keyword`
+FROM (select `id` from `file_t`) as F 
+    join `file_keyword_t` as FT on F.id = FT.file_id
+    join `keyword_t` as K on FT.keyword_id = K.id
+order by F.id;
+```
+
+```bash
+# dir: sparrow/doc/logstash/
+# 使用单线程，保证同一id对应的多个keyword能按次序收集到keywords数组中
+./logstash -f file_keywords.yml -w 1
+```
+
+5. 检测索引状态与数据格式
+
+![1563785909429](assets/1563785909429.png)
 
 #### *1.1.3.备份与恢复数据
 
@@ -141,6 +244,8 @@ elasticdump --input=spa_categories.json --output=http://localhost:9200/spa_categ
 ### 2.1.后端代码配置
 
 #### 2.1.1.ES配置
+
+在application.yml配置文件中：
 
 1. 配置ES的ip地址与端口号
 2. 指定sparrow使用的6个ES索引
