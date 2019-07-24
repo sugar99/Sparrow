@@ -137,7 +137,7 @@ public class FileUtil {
 //            thumbnailInfo.put("thumbnail_url",null);
     
             // 默认缩略图
-            thumbnailInfo.put("thumbnail_url", "default_thumbnail.jpg");
+            thumbnailInfo.put("thumbnail_url", "default");
         }
         if(pngFile != null) {
             pngFile.delete();
