@@ -102,6 +102,7 @@ sparrow:
 
 # ES索引命名
 elasticsearch-config:
+  host: localhost
   indices:
     doc: spa_docs
     file: spa_files

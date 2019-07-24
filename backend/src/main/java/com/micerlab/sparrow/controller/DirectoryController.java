@@ -66,6 +66,21 @@ public class DirectoryController {
         return directoryService.updateDir(user_id, dir_id, paramMap);
     }
 
+    //TODO 临时
+    @ApiOperation("更新目录名称(put)")
+    @PutMapping("/v1/dirs/{dir_id}")
+    @ResponseBody
+    public Result updateDirectoryMeta_1(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
+                                      @RequestBody Map<String, Object> paramMap) {
+        String user_id = BaseService.getUser_Id(request);
+        //判断用户对指定目录是否具有可写权限
+        if (!aclService.hasPermission(user_id, dir_id, ResourceType.DIR, BaseService.getGroupIdList(request),
+                ActionType.WRITE)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
+        }
+        return directoryService.updateDir(user_id, dir_id, paramMap);
+    }
+
     @ApiOperation("删除目录")
     @DeleteMapping("/v1/dirs/{dir_id}")
     @ResponseBody
