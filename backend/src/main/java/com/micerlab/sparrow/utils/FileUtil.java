@@ -133,8 +133,11 @@ public class FileUtil {
             thumbnailInfo = fileStoreService.uploadThumbnail(thumbnail);
             thumbnail.delete();
         }else{
-            thumbnailInfo.put("thumbnail_path","default_thumbnail.jpg");
-            thumbnailInfo.put("thumbnail_url",null);
+//            thumbnailInfo.put("thumbnail_path","default_thumbnail.jpg");
+//            thumbnailInfo.put("thumbnail_url",null);
+    
+            // 默认缩略图
+            thumbnailInfo.put("thumbnail_url", "default_thumbnail.jpg");
         }
         if(pngFile != null) {
             pngFile.delete();
