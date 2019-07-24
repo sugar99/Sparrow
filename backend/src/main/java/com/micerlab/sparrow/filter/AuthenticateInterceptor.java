@@ -36,6 +36,9 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");
         response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
         logger.debug("访问：" + request.getMethod() + " " + request.getRequestURI());
+        if (request.getMethod().equals("OPTIONS")){
+            return true;
+        }
         if (!AccessManager.mathAuthenticateUriList(request.getRequestURI())) {
             logger.debug("访问的地址不需要认证");
             return true;
