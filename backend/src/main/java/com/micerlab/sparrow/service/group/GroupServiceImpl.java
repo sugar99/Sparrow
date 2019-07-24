@@ -95,15 +95,13 @@ public class GroupServiceImpl implements GroupService{
     /**
      * 更新群组元数据
      * @param group_id 群组id
-     * @param paramMap 参数
+     * @param params 参数
      * @return Result (data: null)
      */
     @Override
-    public Result updateGroupMeta(String group_id, Map<String, Object> paramMap) {
-        String group_name = paramMap.get("group_name").toString();
-        String group_desc= paramMap.get("group_desc").toString();
+    public Result updateGroupMeta(String group_id, CreateSpaGroupParams params) {
         //产生updateGroupEvent，在ES和PostgreSql中同步更新群组信息
-        EventBus.getDefault().post(new UpdateGroupEvent(group_id, group_name, group_desc));
+        EventBus.getDefault().post(new UpdateGroupEvent(group_id, params.getGroup_name(), params.getGroup_desc()));
         return Result.OK().build();
     }
 
