@@ -4,6 +4,7 @@ import com.micerlab.sparrow.dao.postgre.ACLDao;
 import com.micerlab.sparrow.dao.postgre.DirectoryDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.pojo.Directory;
 import com.micerlab.sparrow.domain.pojo.Group;
@@ -42,7 +43,7 @@ public class DirectoryServiceImpl implements DirectoryService{
         directoryDao.createDir(directory);
         directoryDao.setMasterDir(cur_id, dir_id);
         //用户对该目录有可读可写权限
-        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), dir_id, "110");
+        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), dir_id, ResourceType.DIR, "110");
         return Result.OK().data(directory).build();
     }
 

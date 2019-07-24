@@ -2,6 +2,7 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.ActionType;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.service.base.BaseService;
@@ -33,7 +34,7 @@ public class DirectoryController {
         String cur_id = paramMap.get("cur_id").toString();
         String user_id = BaseService.getUser_Id(request);
         //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
+        if (!aclService.hasPermission(user_id, cur_id, ResourceType.DIR, BaseService.getGroupIdList(request), ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
         return directoryService.createDir(user_id, cur_id);
@@ -44,7 +45,7 @@ public class DirectoryController {
     @ResponseBody
     public Result getDirectoryMeta(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
         //判断用户对指定目录是否有可读权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, ResourceType.DIR, BaseService.getGroupIdList(request),
                 ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
         }
@@ -58,7 +59,7 @@ public class DirectoryController {
                                       @RequestBody Map<String, Object> paramMap) {
         String user_id = BaseService.getUser_Id(request);
         //判断用户对指定目录是否具有可写权限
-        if (!aclService.hasPermission(user_id, dir_id, BaseService.getGroupIdList(request),
+        if (!aclService.hasPermission(user_id, dir_id, ResourceType.DIR, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
@@ -71,7 +72,7 @@ public class DirectoryController {
     public Result deleteDirectory(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
         //判断用户对指定目录是否具有可写权限
         String user_id = BaseService.getUser_Id(request);
-        if (!aclService.hasPermission(user_id, dir_id, BaseService.getGroupIdList(request),
+        if (!aclService.hasPermission(user_id, dir_id, ResourceType.DIR, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
@@ -83,7 +84,7 @@ public class DirectoryController {
     @ResponseBody
     public Result getSlaves(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
         //判断用户对指定目录是否有可读权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, ResourceType.DIR, BaseService.getGroupIdList(request), ActionType.READ)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
         }
         return directoryService.getSlaveResources(dir_id);
@@ -98,7 +99,7 @@ public class DirectoryController {
         if (!BaseService.getUser_Id(request).equals(directoryService.getCreatorId(dir_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
-        return aclService.addGroupPermission(dir_id, paramMap);
+        return aclService.addGroupPermission(dir_id, ResourceType.DIR, paramMap);
     }
 
     @ApiOperation("移除群组对指定目录的操作权限")
@@ -118,7 +119,7 @@ public class DirectoryController {
     @ResponseBody
     public Result getAuthGroups(HttpServletRequest request, @PathVariable("dir_id") String dir_id) {
         //判断用户对指定目录是否有可读权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), dir_id, ResourceType.DIR, BaseService.getGroupIdList(request), ActionType.READ)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
         }
         return aclService.getAuthGroups(BaseService.getUser_Id(request), dir_id, "dir");

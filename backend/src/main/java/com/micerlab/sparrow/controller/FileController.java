@@ -66,7 +66,7 @@ public class FileController {
     @PostMapping("/v1/files/policy")
     public Result getPolicy(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         //判断用户对当前文档是否有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), BaseService.getGroupIdList(request),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), ResourceType.DOC, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
@@ -77,7 +77,7 @@ public class FileController {
     @PostMapping("/v1/files/url")
     public Result getPresignedUrl(@RequestBody Map<String, Object> params, HttpServletRequest request){
         //判断用户对当前文档是否有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), BaseService.getGroupIdList(request),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), params.get("cur_id").toString(), ResourceType.DOC, BaseService.getGroupIdList(request),
                 ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
@@ -100,7 +100,7 @@ public class FileController {
             SpaFile file = spaFileDao.get(file_id);
             SpaDoc doc = spaDocDao.get(file.getDoc_id());
 
-            if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
+            if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc.getId(), ResourceType.DOC, BaseService.getGroupIdList(httpServletRequest), ActionType.WRITE)){
                 forbiddenFileIds.add(file_id);
                 continue;
             }
@@ -124,7 +124,7 @@ public class FileController {
         SpaFile fileMeta = spaFileDao.get(file_id);
         String doc_id = fileMeta.getDoc_id();
         //判断用户对当前文档是否有可读权限
-        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
+        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, ResourceType.DOC, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
         String title = fileMeta.getTitle();
@@ -139,7 +139,7 @@ public class FileController {
     public Result getFileVersions(@PathVariable("file_id") String file_id, HttpServletRequest httpServletRequest){
         String doc_id = spaFileDao.get(file_id).getDoc_id();
         //判断用户对当前文档是否有可读权限
-        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
+        if(!aclService.hasPermission(BaseService.getUser_Id(httpServletRequest), doc_id, ResourceType.DOC, BaseService.getGroupIdList(httpServletRequest), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
         return fileService.getFileVersions(file_id);
@@ -165,7 +165,7 @@ public class FileController {
         String user_id = BaseService.getUser_Id(request);
         params.setCreator(user_id);
 
-        if(!aclService.hasPermission(user_id, doc_id, BaseService.getGroupIdList(request), ActionType.WRITE)){
+        if(!aclService.hasPermission(user_id, doc_id, ResourceType.DOC, BaseService.getGroupIdList(request), ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
         return fileService.createFileMeta(file_id, params);
@@ -179,7 +179,7 @@ public class FileController {
     )
     {
         // 判断用户对当前文档是否有可读权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),ResourceType.DOC,
                 BaseService.getGroupIdList(request), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
@@ -194,7 +194,7 @@ public class FileController {
             @RequestBody UpdateFileMetaParams params
             )
     {
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),ResourceType.DOC,
                 BaseService.getGroupIdList(request), ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }
@@ -256,7 +256,7 @@ public class FileController {
             @PathVariable String filter_types
     )
     {
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),ResourceType.DOC,
                 BaseService.getGroupIdList(request), ActionType.READ)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DOC, "");
         }
@@ -273,7 +273,7 @@ public class FileController {
             @RequestBody UpdateFileSpaFiltersParams params
             )
     {
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), spaFileDao.get(file_id).getDoc_id(),ResourceType.DOC,
                 BaseService.getGroupIdList(request), ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DOC, "");
         }

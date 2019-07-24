@@ -81,7 +81,7 @@ public class ResourceServiceImpl implements ResourceService{
         resourceDao.createMasterSlaveRelation(cur_id, resource_id);
         //默认创建者对创建的资源有可读权限；personal_group_id 创建者个人群组
         String personal_group_id = userDao.getUserMetaById(user_id).getPersonal_group();
-        aclService.updateGroupPermission(personal_group_id, resource_id, "100");
+//        aclService.updateGroupPermission(personal_group_id, resource_id, "100");
         return Result.OK().data(resource).build();
     }
 
@@ -215,9 +215,9 @@ public class ResourceServiceImpl implements ResourceService{
         String permission = paramMap.get("permission").toString();
         List<String> groupsIdList = (List<String>) paramMap.get("groups");
         //更新权限
-        for (String group_id: groupsIdList) {
-            aclService.updateGroupPermission(group_id, resource_id, permission);
-        }
+//        for (String group_id: groupsIdList) {
+//            aclService.updateGroupPermission(group_id, resource_id, permission);
+//        }
         return Result.OK().build();
     }
 
