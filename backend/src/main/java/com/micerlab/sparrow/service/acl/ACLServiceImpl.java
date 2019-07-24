@@ -2,6 +2,7 @@ package com.micerlab.sparrow.service.acl;
 
 import com.micerlab.sparrow.dao.postgre.*;
 import com.micerlab.sparrow.domain.ActionType;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
@@ -15,9 +16,6 @@ import java.util.Map;
 
 @Service("aclService")
 public class ACLServiceImpl implements ACLService{
-
-    @Autowired
-    private ResourceDao resourceDao;
 
     @Autowired
     private ACLDao aclDao;
@@ -40,13 +38,13 @@ public class ACLServiceImpl implements ACLService{
      * @return boolean
      */
     @Override
-    public boolean hasPermission(String user_id, String resource_id, List<String> groupsIdList, ActionType action) {
+    public boolean hasPermission(String user_id, String resource_id, ResourceType resourceType, List<String> groupsIdList, ActionType action) {
         //管理员拥有所有权限
         if (user_id.equals(userDao.getAdminId())) {
             return true;
         }
         //获取对资源有操作权限的所有群组
-        List<Group> hasPermissionGroupsList = resourceDao.getResourceGroups(resource_id);
+        List<Group> hasPermissionGroupsList = resourceType.getType().equals("dir") ? directoryDao.getAuthGroups(resource_id): documentDao.getAuthGroups(resource_id);
         //O(n^2) 操作，后续需要改进
         for (Group group: hasPermissionGroupsList) {
             for (String groupId: groupsIdList) {
@@ -76,7 +74,7 @@ public class ACLServiceImpl implements ACLService{
      * @param permission 权限
      */
     @Override
-    public void updateGroupPermission(String group_id, String resource_id, String permission) {
+    public void updateGroupPermission(String group_id, String resource_id, ResourceType resourceType, String permission) {
         //新增权限
         if (aclDao.getGroupPermission(group_id, resource_id) == null) {
             aclDao.addGroupPermission(group_id, resource_id, permission);
@@ -92,18 +90,22 @@ public class ACLServiceImpl implements ACLService{
             aclDao.updateGroupPermission(group_id, resource_id, newPermission.toString());
         }
         //对该资源的上层目录有可读权限
-        if (resourceDao.getMasterResourceMeta(resource_id) != null) {
-            updateGroupPermission(group_id, resourceDao.getMasterResourceMeta(resource_id).getResource_id(), "100");
+        if ((resourceType.getType().equals("dir")? directoryDao.getMasterDir(resource_id): documentDao.getMasterDir(resource_id)) != null) {
+            if (resourceType.getType().equals("dir")){
+                updateGroupPermission(group_id, directoryDao.getMasterDir(resource_id).getId(), ResourceType.DIR, "100");
+            } else {
+                updateGroupPermission(group_id, documentDao.getMasterDir(resource_id).getId(), ResourceType.DOC, "100");
+            }
         }
     }
 
     @Override
-    public Result addGroupPermission(String resource_id, Map<String, Object> paramMap) {
+    public Result addGroupPermission(String resource_id, ResourceType resourceType,  Map<String, Object> paramMap) {
         String permission = paramMap.get("permission").toString();
         List<String> groupsIdList = (List<String>) paramMap.get("groups");
         //更新权限
         for (String group_id: groupsIdList) {
-            updateGroupPermission(group_id, resource_id, permission);
+            updateGroupPermission(group_id, resource_id, resourceType, permission);
         }
         return Result.OK().build();
     }
@@ -132,7 +134,6 @@ public class ACLServiceImpl implements ACLService{
                     : documentDao.getAuthGroups(resource_id);
         String creator_id = type.equals("dir")? directoryDao.getDir(resource_id).getCreator_id()
                     : documentDao.getDoc(resource_id).getCreator_id();
-//        String creator_id = resourceDao.getResourceMeta(resource_id).getCreator_id();
         Map<String, Object> data = new HashMap<>();
         //接口调用者是否为资源的创建者，前端根据此标志进行渲染
         data.put("isOwner", user_id.equals(creator_id)? 1 : 0);

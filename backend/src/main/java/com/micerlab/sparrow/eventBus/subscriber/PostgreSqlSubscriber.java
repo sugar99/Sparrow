@@ -4,6 +4,7 @@ import com.micerlab.sparrow.dao.postgre.DocumentDao;
 import com.micerlab.sparrow.dao.postgre.GroupDao;
 import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.pojo.Document;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
@@ -74,7 +75,7 @@ public class PostgreSqlSubscriber {
 
         userDao.createUser(user);
         //个人群组对个人目录用可读可写权限
-        aclService.updateGroupPermission(personal_group_id, personal_id, "110");
+        aclService.updateGroupPermission(personal_group_id, personal_id, ResourceType.DIR, "110");
     }
 
     /**

@@ -39,12 +39,12 @@ public class GroupController {
     @PutMapping("/v1/groups/{group_id}")
     @ResponseBody
     public Result updateGroupMeta(HttpServletRequest request, @PathVariable("group_id") String group_id,
-                                  @RequestBody Map<String, Object> paramMap) {
+                                  @RequestBody CreateSpaGroupParams params) {
         //判断用户是否为群组的群主
         if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
-        return groupService.updateGroupMeta(group_id, paramMap);
+        return groupService.updateGroupMeta(group_id, params);
     }
 
     @ApiOperation("G4.删除群组")

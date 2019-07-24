@@ -16,7 +16,7 @@ public interface GroupService {
 
     String getGroupOwnerId(String group_id);
 
-    Result updateGroupMeta(String group_id, Map<String, Object> paramMap);
+    Result updateGroupMeta(String group_id, CreateSpaGroupParams params);
 
     Result deleteGroup(String group_id);
 

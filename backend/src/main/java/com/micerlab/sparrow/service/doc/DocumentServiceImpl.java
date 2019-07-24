@@ -5,6 +5,7 @@ import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.postgre.DocumentDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import com.micerlab.sparrow.domain.pojo.Directory;
@@ -49,7 +50,7 @@ public class DocumentServiceImpl implements DocumentService{
         EventBus.getDefault().post(new InsertDocEvent(doc_id, "doc", user_id, timestamp, timestamp));
         documentDao.setMasterDir(cur_id, doc_id);
         //用户对该文档有可读可写权限
-        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), doc_id, "110");
+        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), doc_id, ResourceType.DOC, "110");
         return Result.OK().data(document).build();
     }
 
