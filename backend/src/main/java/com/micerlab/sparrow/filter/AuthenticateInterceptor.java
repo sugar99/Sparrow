@@ -37,14 +37,17 @@ public class AuthenticateInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
         logger.debug("访问：" + request.getMethod() + " " + request.getRequestURI());
         if (!AccessManager.mathAuthenticateUriList(request.getRequestURI())) {
+            logger.debug("访问的地址不需要认证");
             return true;
         }
         SparrowConfig sparrowConfig = SpringContextUtil.getBean("sparrowConfig");
         require_login = sparrowConfig.getRequirelogin();
         if (!isAuthenticatedUser(request)) {
+            logger.debug("用户未登录");
             throw new BusinessException(ErrorCode.FORBIDDEN_COMMON, "用户未登录");
         } else {
             //将用户信息存放到 request.attribute中，整个请求的上下文都可以使用用户信息
+            logger.debug("用户已登录");
             RedisTemplate<Serializable, Object> redisTemplate = SpringContextUtil.getBean("redisTemplate");
             UserPrincipal userPrincipal = (UserPrincipal) redisTemplate.opsForValue().get(user_id);
             request.setAttribute("principal", userPrincipal);
