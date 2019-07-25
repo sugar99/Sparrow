@@ -251,12 +251,12 @@ public class ResourceServiceImpl implements ResourceService{
     public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
         // 更新文档元数据的事件订阅者
-        String title = params.getTitle();
-        String desc = params.getDesc();
-        Timestamp modified_time = TimeUtil.currentTime();
-        EventBus.getDefault().post(new UpdateDocEvent(doc_id, title, desc, modified_time));
-        
-        // 调用ES / Postgre 订阅者处理
+//        String title = params.getTitle();
+//        String desc = params.getDesc();
+//        Timestamp modified_time = TimeUtil.currentTime();
+//        EventBus.getDefault().post(new UpdateDocEvent(doc_id, title, desc, modified_time));
+//
+//         调用ES / Postgre 订阅者处理
         return Result.OK().build();
     }
     

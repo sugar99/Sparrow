@@ -87,9 +87,6 @@ public class UserServiceImpl implements UserService{
                 Cookie cookie = new Cookie("auth_token", token);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-//                String cookieStr =  "auth_toke=" + token + ";Path=/";
-//                response.setHeader("Set-Cookie", cookieStr);
-                
                 // 将用户信息存入Redis中
                 UserPrincipal userPrincipal = new UserPrincipal(user_id, user.getUsername(), user.getEmail(), work_no);
                 List<String> userGroupsIdList = userDao.getUserGroupIds(user_id);
