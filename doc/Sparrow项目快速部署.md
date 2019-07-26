@@ -346,7 +346,25 @@ create database sparrow
 
 ### 1.4 MinIO
 
+#### 1.4.1 环境部署
+
+##### 安装MinIo
+
+```shell
+# 下载并更改权限
+[root@demo ~]# wget https://dl.min.io/server/minio/release/linux-ppc64le/minio
+[root@demo ~]# chmod +x minio
+```
+
+##### 启动MinIo
+
+```shell
+# 启动Minio，/data表示之后上传的文件都存在该目录下
+[root@demo ~]# ./minio server /data
+```
+
 ### 1.5 Java
+
 #### 1.5.1 环境部署
 
 ```shell
@@ -443,7 +461,42 @@ sudo apt-get install git
 [root@demo ~]# sudo apt-get install git
 ```
 
+### 1.9 RabbitMQ
 
+#### 1.9.1 环境部署
+
+##### 安装RabbitMQ
+
+```shell
+# RabbitMQ的安装依赖Erlang，所以需要先安装Erlang
+[root@demo ~]# wget http://erlang.org/download/otp_src_22.0-rc2.tar.gz
+[root@demo ~]# tar -xvf otp_src_20.3.tar.gz
+[root@demo ~]# mkdir /usr/local/erlang
+[root@demo ~]# cd otp_src_20.3
+[root@demo otp_src_20.3]# ./configure --prefix=/usr/local/erlang --without-Javac
+[root@demo otp_src_20.3]# make && make install
+# 编译安装完成后配置Erlang环境变量
+[root@demo otp_src_20.3]# vim /etc/profile
+# 追加环境变量到文件末尾
+export PATH=$PATH:/usr/local/erlang/bin
+# 使用source /etc/profile命令可以使新建立的环境变量立刻生效而不用重新启动系统
+[root@demo otp_src_20.3]# source /etc/profile
+
+# 安装RabbitMQ
+[root@demo ~]# wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.7.16/rabbitmq-server-3.7.16-1.el7.noarch.rpm
+[root@demo ~]# yum install rabbitmq-server-3.7.16-1.el7.noarch.rpm
+```
+
+##### 启动RabbitMQ
+
+```shell
+# 进入sbin目录下
+[root@demo ~]# cd rabbitmq-server-3.7.16/sbin
+# 启动服务
+[root@demo sbin]# rabbitmq-server start
+# 查看服务状态
+[root@demo sbin]# rabbitmq-server status
+```
 
 
 ## 2. 后台项目打包运行
