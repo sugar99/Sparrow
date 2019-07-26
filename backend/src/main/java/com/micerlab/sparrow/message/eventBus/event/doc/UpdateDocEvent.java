@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.eventBus.event.doc;
+package com.micerlab.sparrow.message.eventBus.event.doc;
 
 import java.sql.Timestamp;
 

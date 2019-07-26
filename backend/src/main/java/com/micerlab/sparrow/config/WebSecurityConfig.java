@@ -1,5 +1,8 @@
 package com.micerlab.sparrow.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -24,7 +27,28 @@ import java.util.List;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+    
+    @Autowired
+    private SparrowConfig sparrowConfig;
+    
+    private Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+    
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        SparrowConfig.DeveloperAccount developerAccount = sparrowConfig.getDeveloperAccount();
+        logger.info("developer account: username: " + developerAccount.getUsername() +
+                "; password: " + developerAccount.getPassword());
+        UserDetails user =
+                User.withDefaultPasswordEncoder()
+                        .username(developerAccount.getUsername())
+                        .password(developerAccount.getPassword())
+                        .roles("USER")
+                        .build();
+        
+        return new InMemoryUserDetailsManager(user);
+    }
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         
@@ -39,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .logout()
 //                    .permitAll();
     
+        // 拦截swagger ui相关的url
         String[] swaggerURIPrefixs = {
                 "/v2/api-docs**",
                 "/v2/api-docs/**",
@@ -63,17 +88,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         RequestMatcher requestMatcher = new CsrfSecurityRequestMatcher();
         http.csrf().requireCsrfProtectionMatcher(requestMatcher);
     }
-
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("sparrow")
-                        .password("sparrow")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+    
+    
 }

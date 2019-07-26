@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.amqp;
+package com.micerlab.sparrow.message.amqp;
 
 import com.micerlab.sparrow.config.RabbitConfig;
 import org.slf4j.Logger;

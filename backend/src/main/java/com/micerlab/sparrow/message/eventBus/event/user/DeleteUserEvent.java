@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.eventBus.event.user;
+package com.micerlab.sparrow.message.eventBus.event.user;
 
 public class DeleteUserEvent {
     private String user_id;

@@ -1,5 +1,9 @@
 
-
+# sparrow开发者账号，用于访问swagger ui等加密链接
+sparrow:
+  developer-account:
+    username: sparrow
+    password: sparrow
 
 logging:
   config: classpath:logback-spring.xml

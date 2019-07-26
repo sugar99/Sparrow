@@ -1,8 +1,7 @@
-package com.micerlab.sparrow.eventBus.event.file;
+package com.micerlab.sparrow.message.eventBus.event.file;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class UpdateFileEvent

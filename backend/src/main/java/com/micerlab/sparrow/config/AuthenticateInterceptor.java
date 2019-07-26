@@ -1,7 +1,5 @@
-package com.micerlab.sparrow.filter;
+package com.micerlab.sparrow.config;
 
-import com.micerlab.sparrow.config.AccessManager;
-import com.micerlab.sparrow.config.SparrowConfig;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;

@@ -1,11 +1,11 @@
-package com.micerlab.sparrow.amqp;
+package com.micerlab.sparrow.message.amqp;
 
 import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.config.RabbitConfig;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.meta.FileType;
 import com.micerlab.sparrow.domain.meta.SpaFile;
-import com.micerlab.sparrow.eventBus.event.file.UpdateFileEvent;
+import com.micerlab.sparrow.message.eventBus.event.file.UpdateFileEvent;
 import com.micerlab.sparrow.service.file.FileExtractService;
 import com.micerlab.sparrow.service.fileStore.FileStoreService;
 import com.micerlab.sparrow.utils.FileExtractUtil;

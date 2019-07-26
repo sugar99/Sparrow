@@ -1,17 +1,15 @@
 package com.micerlab.sparrow.service.group;
 
-import com.micerlab.sparrow.dao.postgre.ACLDao;
 import com.micerlab.sparrow.dao.postgre.GroupDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.CreateSpaGroupParams;
 import com.micerlab.sparrow.domain.pojo.Group;
-import com.micerlab.sparrow.domain.pojo.Resource;
 import com.micerlab.sparrow.domain.pojo.User;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
-import com.micerlab.sparrow.eventBus.event.group.DeleteGroupEvent;
-import com.micerlab.sparrow.eventBus.event.group.InsertGroupEvent;
-import com.micerlab.sparrow.eventBus.event.group.UpdateGroupEvent;
+import com.micerlab.sparrow.message.eventBus.event.group.DeleteGroupEvent;
+import com.micerlab.sparrow.message.eventBus.event.group.InsertGroupEvent;
+import com.micerlab.sparrow.message.eventBus.event.group.UpdateGroupEvent;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;

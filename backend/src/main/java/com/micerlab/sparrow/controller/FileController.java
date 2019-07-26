@@ -287,10 +287,10 @@ public class FileController {
     
     /**
      * added by chenlvjia
-     * 请勿删除
+     * 测试是否正确访问到文件拓展名配置文件，请勿删除
      * @param type 文件类型
      */
-    @ApiOperation("测试接口：获取文件类型的拓展名")
+    @ApiOperation("测试接口：获取文件类型的拓展名（勿删）")
     @GetMapping("/v1/files/exts")
     public Result testLoadExts(@RequestParam String type)
     {
