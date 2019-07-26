@@ -1,6 +1,5 @@
 package com.micerlab.sparrow.config;
 
-import com.micerlab.sparrow.filter.AuthenticateInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

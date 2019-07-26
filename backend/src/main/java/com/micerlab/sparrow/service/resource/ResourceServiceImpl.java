@@ -10,16 +10,12 @@ import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
-import com.micerlab.sparrow.domain.pojo.User;
-import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
-import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
-import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
+import com.micerlab.sparrow.message.eventBus.event.doc.DeleteDocEvent;
+import com.micerlab.sparrow.message.eventBus.event.doc.InsertDocEvent;
 import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.greenrobot.eventbus.EventBus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

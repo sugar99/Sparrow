@@ -17,9 +17,9 @@ public enum ErrorCode
     PARAM_ERR_SEARCH_TYPE(400_001, "search_type ∈ " + Arrays.asList(FileType.values()).toString()),
     PARAM_ERR_FILTER_TYPE(400_002, "filter_type ∈ {tag, category}"),
     PARAM_ERR_FILTER_TYPES(400_003, "filter_types ∈ {tags, categories}"),
-    PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_001, "请求数据字段验证不通过"),
-    PARAM_ERR_REQUEST_DATA_REQUIRED_FIELD_IS_NULL(400_002, "请求数据必须字段不可为空"),
-    PARAM_ERR_PARENT_ID_NOT_IN_DOC(400_002, "父版本文件不在指定文档下"),
+    PARAM_ERR_REQUEST_DATA_FIELD_UNPASS(400_004, "请求数据字段验证不通过"),
+    PARAM_ERR_REQUEST_DATA_REQUIRED_FIELD_IS_NULL(400_005, "请求数据必须字段不可为空"),
+    PARAM_ERR_PARENT_ID_NOT_IN_DOC(400_006, "父版本文件不在指定文档下"),
     
     
     // 403 Forbidden 权限：未授权 / 非法访问
@@ -36,10 +36,10 @@ public enum ErrorCode
     NOT_FOUND_COMMON(404_000, "Not Found"),
     NOT_FOUND_USERNAME_OR_PASSWORD_INVALID(404_001, "用户不存在或密码错误"),
     NOT_FOUND_FILE_ID(404_002, "文件id不存在"),
-    NOT_FOUND_DOC_ID(404_002, "文档id不存在"),
-    NOT_FOUND_TAG_ID(404_002, "标签id不存在"),
-    NOT_FOUND_CATEGORY_ID(404_002, "类目id不存在"),
-    NOT_FOUND_FILE_IN_DOC(400_002, "文件不在指定文档内"),
+    NOT_FOUND_DOC_ID(404_003, "文档id不存在"),
+    NOT_FOUND_TAG_ID(404_004, "标签id不存在"),
+    NOT_FOUND_CATEGORY_ID(404_005, "类目id不存在"),
+    NOT_FOUND_FILE_IN_DOC(400_006, "文件不在指定文档内"),
     
     
     // 500 Internal Server Error 服务器错误

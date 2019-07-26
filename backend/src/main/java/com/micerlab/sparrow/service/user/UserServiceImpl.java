@@ -9,7 +9,7 @@ import com.micerlab.sparrow.domain.params.UserLoginParams;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.User;
 import com.micerlab.sparrow.domain.principal.UserPrincipal;
-import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
+import com.micerlab.sparrow.message.eventBus.event.user.InsertUserEvent;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.JwtUtil;
 import com.micerlab.sparrow.utils.SpringContextUtil;

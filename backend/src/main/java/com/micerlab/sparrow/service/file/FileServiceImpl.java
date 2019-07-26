@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.service.file;
 
 import com.alibaba.fastjson.JSONObject;
-import com.micerlab.sparrow.amqp.MsgProducer;
+import com.micerlab.sparrow.message.amqp.MsgProducer;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.es.SpaFilterDao;

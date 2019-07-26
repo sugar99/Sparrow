@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.eventBus.event.group;
+package com.micerlab.sparrow.message.eventBus.event.group;
 
 import com.micerlab.sparrow.domain.pojo.Group;
 

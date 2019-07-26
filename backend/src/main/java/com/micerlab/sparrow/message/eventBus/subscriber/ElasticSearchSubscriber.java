@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.eventBus.subscriber;
+package com.micerlab.sparrow.message.eventBus.subscriber;
 
 import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.CUDUserGroupDao;
@@ -7,13 +7,13 @@ import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
 import com.micerlab.sparrow.domain.meta.SpaDoc;
 import com.micerlab.sparrow.domain.pojo.Group;
-import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
-import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
-import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
-import com.micerlab.sparrow.eventBus.event.file.UpdateFileEvent;
-import com.micerlab.sparrow.eventBus.event.group.InsertGroupEvent;
-import com.micerlab.sparrow.eventBus.event.group.UpdateGroupEvent;
-import com.micerlab.sparrow.eventBus.event.user.InsertUserEvent;
+import com.micerlab.sparrow.message.eventBus.event.doc.DeleteDocEvent;
+import com.micerlab.sparrow.message.eventBus.event.doc.InsertDocEvent;
+import com.micerlab.sparrow.message.eventBus.event.doc.UpdateDocEvent;
+import com.micerlab.sparrow.message.eventBus.event.file.UpdateFileEvent;
+import com.micerlab.sparrow.message.eventBus.event.group.InsertGroupEvent;
+import com.micerlab.sparrow.message.eventBus.event.group.UpdateGroupEvent;
+import com.micerlab.sparrow.message.eventBus.event.user.InsertUserEvent;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
