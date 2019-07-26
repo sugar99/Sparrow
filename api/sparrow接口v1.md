@@ -1,8 +1,17 @@
-###  用户模块
+# Sparrow系统 RESTful API 接口文档
 
-#### U1.新建用户（后续后台管理页面，管理员调用）
+>作者：陈绿佳、郑铠锋、梁宏达、陈晓滨
+
+[TOC]
+
+## U. 用户模块
+### U1.新建用户
 
 [POST] /v1/users
+
+```http
+POST /v1/users
+```
 
 Request Body
 
@@ -25,9 +34,13 @@ Response Body
 }
 ```
 
-#### U2.用户登录
+### U2.用户登录
 
-[POST] /v1/users/login
+[POST] /v1/login
+
+```http
+POST /v1/login
+```
 
 Request Body
 
@@ -42,35 +55,75 @@ Response Body
 
 ```json
 {
-  "statusCode": 200,
-  "msg": "success",
-  "data": null
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "userInfo": {
+      "work_no": "0001",
+      "email": "zhangSan@gmail.com",
+      "username": "张三"
+    },
+    "master_dirs": [
+      {
+        "resource_id": "b64b725b-ef13-4e3f-9d98-ddb3152981a6",
+        "resource_name": "home"
+      },
+      {
+        "resource_id": "e3a10377-edcc-4a8a-8cce-396b0e223f48",
+        "resource_name": "root"
+      }
+    ],
+    "resource_id": "b57a392d-6510-4116-99db-f76cc16a78e5",
+    "resource_name": "张三"
+  }
 }
 ```
 
-#### U3.获取用户元数据（用户登录系统时调用）
+### U3.获取用户元数据
 
-[GET] /v1/users/{current}/
+[GET] /v1/users/{user_id}
 
-* current: 查看当前用户的个人信息，可替换为user_id
+* user_id: 用户id，可替换为current（查询当前用户的元数据）
+
+```http
+GET /v1/users/1
+```
 
 Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": {
-        "work_no": "7788", // 员工工号
-        "username": "hello", // 用户名
-        "email": "hello@Gmail.com" // 邮箱
-    }
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "userInfo": {
+      "work_no": "0001",
+      "email": "zhangSan@gmail.com",
+      "username": "张三"
+    },
+    "master_dirs": [
+      {
+        "resource_id": "b64b725b-ef13-4e3f-9d98-ddb3152981a6",
+        "resource_name": "home"
+      },
+      {
+        "resource_id": "e3a10377-edcc-4a8a-8cce-396b0e223f48",
+        "resource_name": "root"
+      }
+    ],
+    "resource_id": "b57a392d-6510-4116-99db-f76cc16a78e5",
+    "resource_name": "张三"
+  }
 }
 ```
 
-#### U4.注销登录
+### U4.注销登录
 
 [POST] /v1/users/logout
+
+```http
+POST /v1/users/logout
+```
 
 Response Body
 
@@ -82,46 +135,51 @@ Response Body
 }
 ```
 
-#### U5.获取用户所在群组
+### U5.获取用户所在群组
 
-[GET] /v1/users/{current}/groups
+[GET] /v1/users/{user_id}/groups
 
-* current: 查看当前用户所在的群组，可替换为任意user_id，查看不同用户所在的群组
+* user_id: 用户id，可替换为current
+
+```http
+GET /v1/users/1/groups
+```
 
 Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": [
-        {
-            "group_id": "b57a392d-6510-4116-99db-f76cc16a78e5", // 群组id
-            "group_name": "programmer", // 群组名称
-            "creator_id": "1cbbf901-24ad-40fd-a35a-5dce15c82333", // 创建者id
-            "created_at": "2019-02-23 07:30:25" // 创建时间
-        },
-        {
-			"group_id": "c96c2465-62b0-47d6-b164-d51cb849deab",
-            "group_name": "tester",
-            "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
-            "created_at": "2019-06-16 12:45:12"
-        }
-    ]
+  "status": 200,
+  "msg": "OK",
+  "data": [
+    {
+      "group_id": "16bd8e6b-d05d-4dfc-b6ce-ebfca1efc228",
+      "group_name": "admin",
+      "group_desc": "管理员",
+      "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+      "created_at": "2019-07-08T09:54:21.121+0000",
+      "personal": 0
+    }
+  ]
 }
 ```
 
-### 群组模块
+## G. 群组模块
 
-#### G1.新建群组
+### G1.新建群组
 
-[POST] /v1/groups/
+[POST] /v1/groups
+
+```
+POST /v1/groups
+```
 
 Request Body
 
 ```json
 {
-    "group_name": "programmer" // 群组名称
+    "group_name": "programmer", // 群组名称
+    "group_desc": "苦逼程序员" // 群组描述字段
 }
 ```
 
@@ -130,49 +188,62 @@ Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": {
-        "group_id": "e3a10377-edcc-4a8a-8cce-396b0e223f48", // 群组id
-        "group_name": "programmer", // 群组名称
-        "creator_id": " 1cbbf901-24ad-40fd-a35a-5dce15c82333", // 创建者id
-        "created_at": "2019-07-01 20:58:10" // 创建时间
-    }
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "group_id": "92d8e6c3-a661-4157-814c-a3838ef83456",
+    "group_name": "巴萨球迷",
+    "group_desc": "巴萨是最菜的",
+    "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+    "created_at": "2019-07-09T16:58:05.462+0000",
+    "personal": 0
+  }
 }
 ```
 
-#### G2.获取群组元数据
+### G2.获取群组元数据
 
 [GET] /v1/groups/{group_id}
 
 * group_id: 群组id
 
+```http
+GET /v1/groups/1
+```
+
 Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": {
-        "group_id": "e3a10377-edcc-4a8a-8cce-396b0e223f48", // 群组id
-        "group_name": "programmer", // 群组名称
-        "creator_id": " 1cbbf901-24ad-40fd-a35a-5dce15c82333", // 创建者id
-        "created_at": "2019-07-01 20:58:10" // 创建时间
-    }
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "group_id": "92d8e6c3-a661-4157-814c-a3838ef83456",
+    "group_name": "巴萨球迷",
+    "group_desc": "巴萨是最菜的",
+    "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+    "created_at": "2019-07-09T16:58:05.462+0000",
+    "personal": 0
+  }
 }
 ```
 
-#### G3.修改群组元数据
+### G3.修改群组元数据
 
 [PUT] /v1/groups/{group_id}
 
 * group_id: 群组id
 
+```http
+PUT /v1/groups/1
+```
+
 Request Body
 
 ```json
 {
-    "group_name": "newbility" // 群组名称
+    "group_name": "newbility", // 群组名称
+    "group_desc": "非常牛b" // 群组描述字段
 }
 ```
 
@@ -180,15 +251,19 @@ Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": null
+  "status": 200,
+  "msg": "OK",
+  "data": null
 }
 ```
 
-#### G4.删除群组
+### G4.删除群组
 
 [DELETE] /v1/groups/{group_id}
+
+```http
+DELETE /v1/groups/1
+```
 
 * group_id: 群组id
 
@@ -202,11 +277,15 @@ Resposne Body
 }
 ```
 
-#### G5.添加群组用户
+### G5.添加群组用户
 
 [POST] /v1/groups/{group_id}/members
 
 * group_id: 群组id
+
+```http
+POST /v1/groups/1/members
+```
 
 Request Body
 
@@ -231,9 +310,13 @@ Response Body
 }
 ```
 
-#### G6.获取群组用户
+### G6.获取群组用户
 
 [GET] /v1/groups/{group_id}/members
+
+```http
+GET /v1/groups/1/members
+```
 
 * group_id: 群组id
 
@@ -241,31 +324,33 @@ Response Body
 
 ```json
 {
-    "statusCode": 200,
-    "msg": "success",
-    "data": [
-        {
-        	"user_id": "1cbbf901-24ad-40fd-a35a-5dce15c82333", // 用户id
-            "username": "jennifer", // 用户名
-            "work_no": "7788" // 用户工号
-        },
-        {
-            "user_id": "24c16cd4-a2e6-4bd5-91b2-ab51c87b7514",
-            "username": "oliver",
-            "work_no": "9527"
-        }
-    ]
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "memberList": [
+      {
+        "user_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+        "work_no": "0001",
+        "username": "张三"
+      }
+    ],
+    "isOwner": 1
+  }
 }
 ```
 
 
 
-#### G7.删除群组用户
+### G7.删除群组用户
 
 [DELETE] /v1/groups/{group_id}/members/{member_id}
 
 * group_id: 群组id
 * member_id: 成员id 
+
+```http
+DELETE /v1/groups/1/members/1
+```
 
 Response Body
 
@@ -277,14 +362,14 @@ Response Body
 }
 ```
 
-### 检索模块
+## S. 检索模块
 
-#### S1.搜索建议
+### S1.搜索建议
 
-[GET] `/v1/search/suggestions{?type,keyword,size}`
+[GET] /search/suggestions{?type,keyword,size}
 
 ```http
-GET /v1/search/suggestions?type=all&keyword=算法&size=10
+GET /search/suggestions?type=all&keyword=算法&size=10
 ```
 
 Response Body
@@ -308,12 +393,12 @@ Response Body
 }
 ```
 
-#### S2.获取高度相关的类目标签
+### S2.获取高度相关的类目标签
 
-[GET] `/v1/search/top-associations{?keyword,tag_count,category_count}`
+[GET] `/search/top-associations{?keyword,tag_count,category_count}`
 
 ```http
-GET /v1/search/top-associations?keyword=算法&tag_count=5&category_count=5
+GET /search/top-associations?keyword=算法&tag_count=5&category_count=5
 ```
 
 Response Body
@@ -375,549 +460,160 @@ Response Body
 }
 ```
 
-#### S3.搜索结果
+### S3.搜索结果
 
-[POST] `/v1/search/results` 
-
-```json
-{
-    "type": "image",
-    "keyword": "算法",
-    "tags": [
-       133,
-       137
-    ],
-    "categories": [
-        0,
-        6
-    ],
-    "exts": [
-       "jpg",
-       "gif",
-        "all"
-    ],
-    "created_time": {
-        "from": "2010-01-01",
-        "to": null
-    },
-    "modified_time": {
-        "to": "now"
-    },
-    "time_zone": "+8",
-    "page": 1,
-    "per_page": 5
-}
-```
-
-Response Body
-
-```json
-{
-  "status": 200,
-  "msg": "OK",
-  "data": {
-    "group_by_created_time": [
-      {
-        "key": "全部",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      },
-      {
-        "key": "三天内",
-        "doc_count": 0,
-        "from": "2019-07-05T16:00:00Z",
-        "from_as_string": "2019-07-06",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一周内",
-        "doc_count": 6,
-        "from": "2019-07-01T16:00:00Z",
-        "from_as_string": "2019-07-02",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一个月内",
-        "doc_count": 23,
-        "from": "2019-06-08T16:00:00Z",
-        "from_as_string": "2019-06-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "三个月内",
-        "doc_count": 25,
-        "from": "2019-04-08T16:00:00Z",
-        "from_as_string": "2019-04-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "半年内",
-        "doc_count": 27,
-        "from": "2019-01-08T16:00:00Z",
-        "from_as_string": "2019-01-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年内",
-        "doc_count": 27,
-        "from": "2018-07-08T16:00:00Z",
-        "from_as_string": "2018-07-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年前",
-        "doc_count": 6,
-        "from": null,
-        "from_as_string": null,
-        "to": "2018-07-08T16:00:00Z",
-        "to_as_string": "2018-07-09"
-      },
-      {
-        "key": "自定义",
-        "doc_count": 33,
-        "from": "2009-12-31T16:00:00Z",
-        "from_as_string": "2010-01-01",
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      }
-    ],
-    "group_by_modified_time": [
-      {
-        "key": "全部",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      },
-      {
-        "key": "三天内",
-        "doc_count": 0,
-        "from": "2019-07-05T16:00:00Z",
-        "from_as_string": "2019-07-06",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一周内",
-        "doc_count": 15,
-        "from": "2019-07-01T16:00:00Z",
-        "from_as_string": "2019-07-02",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一个月内",
-        "doc_count": 23,
-        "from": "2019-06-08T16:00:00Z",
-        "from_as_string": "2019-06-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "三个月内",
-        "doc_count": 25,
-        "from": "2019-04-08T16:00:00Z",
-        "from_as_string": "2019-04-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "半年内",
-        "doc_count": 27,
-        "from": "2019-01-08T16:00:00Z",
-        "from_as_string": "2019-01-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年内",
-        "doc_count": 27,
-        "from": "2018-07-08T16:00:00Z",
-        "from_as_string": "2018-07-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年前",
-        "doc_count": 6,
-        "from": null,
-        "from_as_string": null,
-        "to": "2018-07-08T16:00:00Z",
-        "to_as_string": "2018-07-09"
-      },
-      {
-        "key": "自定义",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      }
-    ],
-    "group_by_ext": [
-      {
-        "key": "全部",
-        "doc_count": 61
-      },
-      {
-        "key": "png",
-        "doc_count": 28
-      },
-      {
-        "key": "gif",
-        "doc_count": 17
-      },
-      {
-        "key": "jpg",
-        "doc_count": 16
-      }
-    ],
-    "total": 33,
-    "results": [
-      
-      {
-        "ext": "jpg",
-        "created_time": "2017-07-01 21:34:16",
-        "derived_files": null,
-        "creator": "green",
-        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
-        "type": "image",
-        "title": "算法",
-        "version": 0,
-        "tags": [
-          6,
-          133,
-          137,
-          2552,
-          2697,
-          2998,
-          22409,
-          24310
-        ],
-        "modified_time": "2017-07-06 21:34:16",
-        "@timestamp": "2019-07-01T15:45:33.593Z",
-        "parent_id": null,
-        "@version": "1",
-        "id": "image_10432347",
-        "categories": [
-          0,
-          1,
-          6
-        ],
-        "original_id": 10432347,
-        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
-        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg"
-      },
-      {
-        "ext": "gif",
-        "created_time": "2019-06-26 21:34:16",
-        "derived_files": null,
-        "creator": "green",
-        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/26337727.jpeg",
-        "type": "image",
-        "title": "算法设计与分析基础",
-        "version": 0,
-        "tags": [
-          133,
-          137,
-          2697,
-          2998,
-          22409,
-          24310,
-          27823
-        ],
-        "modified_time": "2019-07-01 21:34:16",
-        "@timestamp": "2019-07-01T15:45:40.696Z",
-        "parent_id": null,
-        "@version": "1",
-        "id": "image_26337727",
-        "categories": [
-          0,
-          6
-        ],
-        "original_id": 26337727,
-        "desc": "作者基于丰富的教学经验，开发了一套全新的算法分类方法。该分类法站在通用问题求解策略的高度，对现有大多数算法准确分类，从而引领读者沿着一条清晰、一致、连贯的思路来探索算法设计与分析这一迷人领域。《算法设计与分析基础(第3版)》作为第3版，相对前版调整了多个章节的内容和顺序，同时增加了一些算法，并扩展了算法的应用，使得具体算法和通用算法设计技术的对应更加清晰有序；各章累计增加了70道习题，其中包括一些有趣的谜题和面试问题。《算法设计与分析基础(第3版)》十分适合用作算法设计和分析的基础教材，也适合任何有兴趣探究算法奥秘的读者使用，只要读者具备数据结构和离散数学的知识即可。",
-        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/26337727.jpeg"
-      }
-    ]
-  }
-}
-```
-
-##### S3-1.文档全文搜索
-
-```json
-{
-    "type": "doc_content",
-    "keyword": "算法",
-    "tags": [
-       133,
-       137
-    ],
-    "categories": [
-        0,
-        6
-    ],
-    "exts": [
-       "pdf",
-       "docx"
-    ],
-    "created_time": {
-        "from": "2010-01-01",
-    },
-    "modified_time": {
-        "to": "now"
-    },
-    "time_zone": "+8",
-    "page": 1,
-    "per_page": 5,
-    "desc_highlight_count": 2,
-    "content_highlight_count": 5,
-    "highlight_tag": "em"
-}
-```
-
-Response Body
-
-```json
-{
-  "status": 200,
-  "msg": "OK",
-  "data": {
-    "group_by_created_time": [
-      {
-        "key": "全部",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      },
-      {
-        "key": "三天内",
-        "doc_count": 0,
-        "from": "2019-07-05T16:00:00Z",
-        "from_as_string": "2019-07-06",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一周内",
-        "doc_count": 6,
-        "from": "2019-07-01T16:00:00Z",
-        "from_as_string": "2019-07-02",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一个月内",
-        "doc_count": 23,
-        "from": "2019-06-08T16:00:00Z",
-        "from_as_string": "2019-06-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "三个月内",
-        "doc_count": 25,
-        "from": "2019-04-08T16:00:00Z",
-        "from_as_string": "2019-04-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "半年内",
-        "doc_count": 27,
-        "from": "2019-01-08T16:00:00Z",
-        "from_as_string": "2019-01-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年内",
-        "doc_count": 27,
-        "from": "2018-07-08T16:00:00Z",
-        "from_as_string": "2018-07-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年前",
-        "doc_count": 6,
-        "from": null,
-        "from_as_string": null,
-        "to": "2018-07-08T16:00:00Z",
-        "to_as_string": "2018-07-09"
-      },
-      {
-        "key": "自定义",
-        "doc_count": 33,
-        "from": "2009-12-31T16:00:00Z",
-        "from_as_string": "2010-01-01",
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      }
-    ],
-    "group_by_modified_time": [
-      {
-        "key": "全部",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      },
-      {
-        "key": "三天内",
-        "doc_count": 0,
-        "from": "2019-07-05T16:00:00Z",
-        "from_as_string": "2019-07-06",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一周内",
-        "doc_count": 15,
-        "from": "2019-07-01T16:00:00Z",
-        "from_as_string": "2019-07-02",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一个月内",
-        "doc_count": 23,
-        "from": "2019-06-08T16:00:00Z",
-        "from_as_string": "2019-06-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "三个月内",
-        "doc_count": 25,
-        "from": "2019-04-08T16:00:00Z",
-        "from_as_string": "2019-04-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "半年内",
-        "doc_count": 27,
-        "from": "2019-01-08T16:00:00Z",
-        "from_as_string": "2019-01-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年内",
-        "doc_count": 27,
-        "from": "2018-07-08T16:00:00Z",
-        "from_as_string": "2018-07-09",
-        "to": null,
-        "to_as_string": null
-      },
-      {
-        "key": "一年前",
-        "doc_count": 6,
-        "from": null,
-        "from_as_string": null,
-        "to": "2018-07-08T16:00:00Z",
-        "to_as_string": "2018-07-09"
-      },
-      {
-        "key": "自定义",
-        "doc_count": 33,
-        "from": null,
-        "from_as_string": null,
-        "to": "2019-07-09T02:10:53.658Z",
-        "to_as_string": "2019-07-09"
-      }
-    ],
-    "group_by_ext": [
-      {
-        "key": "全部",
-        "doc_count": 61
-      },
-      {
-        "key": "png",
-        "doc_count": 28
-      },
-      {
-        "key": "gif",
-        "doc_count": 17
-      },
-      {
-        "key": "jpg",
-        "doc_count": 16
-      }
-    ],
-    "total": 33,
-    "results": [
-      {
-        "ext": "jpg",
-        "created_time": "2017-07-01 21:34:16",
-        "derived_files": null,
-        "creator": "green",
-        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
-        "type": "image",
-        "title": "算法",
-        "version": 0,
-        "tags": [
-          6,
-          133,
-          137,
-          2552,
-          2697,
-          2998,
-          22409,
-          24310
-        ],
-        "modified_time": "2017-07-06 21:34:16",
-        "@timestamp": "2019-07-01T15:45:33.593Z",
-        "parent_id": null,
-        "@version": "1",
-        "id": "image_10432347",
-        "categories": [
-          0,
-          1,
-          6
-        ],
-        "original_id": 10432347,
-        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
-        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
-         "keywords": ["<em>算法</em>", "2", "3"],
-         "title_highlight": "<em>算法</em>",
-         "desc_highlights": [
-        	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》是近年来关于<em>算法</em>设计和分析的不可多得的优秀教材。",
-           	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》围绕<em>算法</em>设计技术组织素材，对每种<em>算法</em>技术选择了多个典型范例进行分析。"
-          ],
-         "content_highlights": [
-             "《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》是近年来关于<em>算法</em>设计和分析的不可多得的优秀教材。",
-           	"《大学计算机教育国外著名教材系列:<em>算法</em>设计(影印版)》围绕<em>算法</em>设计技术组织素材，对每种<em>算法</em>技术选择了多个典型范例进行分析。"
-         ]
-      }
-    ]
-  }
-}
-```
-
-#### S4.搜索类目或标签
-
-[GET] `/v1/search/tags?{keyword, size}`
-
-[GET] `/v1/search/categories?{keyword, size}`
+[POST] `/search/results` 
 
 ```http
-GET /v1/search/tags?keyword=算法&size=5
+POST /search/results
+```
+
+```json
+{
+  "type": "all",
+  "keyword": "算法",
+  "tags": [
+    1,
+    3
+  ],
+  "categories": [
+    1,
+    2
+  ],
+  "exts": [
+    "jpg",
+    "all",
+    "jpg",
+    "gif",
+    "doc",
+    "pdf"
+  ],
+  "time_zone": "+8",
+  "page": 2,
+  "per_page": 40
+}
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "group_by_created_time": [
+      {
+        "key": "全部",
+        "doc_count": 33
+      },
+      {
+        "key": "三天内",
+        "doc_count": 6
+      },
+      {
+        "key": "一周内",
+        "doc_count": 15
+      },
+      {
+        "key": "一个月内",
+        "doc_count": 23
+      },
+      {
+        "key": "三个月内",
+        "doc_count": 25
+      },
+      {
+        "key": "半年内",
+        "doc_count": 27
+      },
+      {
+        "key": "一年内",
+        "doc_count": 27
+      },
+      {
+        "key": "一年前",
+        "doc_count": 0
+      }
+    ],
+    "group_by_modified_time": [
+      {
+        "key": "全部",
+        "doc_count": 33
+      },
+      {
+        "key": "三天内",
+        "doc_count": 6
+      },
+      {
+        "key": "一周内",
+        "doc_count": 15
+      },
+      {
+        "key": "一个月内",
+        "doc_count": 23
+      },
+      {
+        "key": "三个月内",
+        "doc_count": 25
+      },
+      {
+        "key": "半年内",
+        "doc_count": 27
+      },
+      {
+        "key": "一年内",
+        "doc_count": 27
+      },
+      {
+        "key": "一年前",
+        "doc_count": 0
+      }
+    ],
+    "result": [
+      {
+        "id": "image_10432347",
+        "title": "算法",
+        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
+        "type": "image",
+        "ext": "jpg",
+        "categories": [
+          0,
+          1,
+          6
+        ],
+        "tags": [
+          6,
+          133,
+          137,
+          2552,
+          2697,
+          2998,
+          22409,
+          24310
+        ],
+        "creator": "green",
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
+        "derived_files": [],
+        "created_time": "2017-07-01 21:34:16",
+        "modified_time": "2017-07-06 21:34:16",
+        "version": 0,
+        "original_id": "10432347",
+        "parent_id": null
+      }
+    ]
+  }
+}
+```
+
+### S4.搜索类目或标签
+
+[GET] `/search/tags?{keyword, size}`
+
+[GET] `/search/categories?{keyword, size}`
+
+```http
+GET /search/tags?keyword=算法&size=5
 ```
 
 Response Body
@@ -957,164 +653,118 @@ Response Body
 }
 ```
 
+## D. 目录文档模块
 
-### 目录文档模块
+### D1.新建资源
 
-#### D1.新建资源
+#### D1.1 新建目录
 
-[POST] /v1/resources/{type}
-
-* type: 资源类型
-
-Request Body
-
-```json
-{
-	"cur_id": "e911f136-35ad-416a-b195-7b1fad4bd7f1 ", // 当前所在目录id
-}
-```
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": {
-        "resource_id": "b6519605-6132-4ba5-9039-cec0f7fc9fe3", // 资源id
-        "resource_name": "undefined", // 默认资源名称
-        "type": "dir", // 资源类型
-        "creator_id": "5c397e61-ee45-4af1-b094-4363b5fdf305", // 创建者id
-        "created_at": "2019-07-01 19:51:08" // 创建时间
-    }
-}
-```
-
-#### D2.获取资源元数据（业务数据库 PostgreSQL)
-
-[GET] /v1/resources/{resource_id}
-
-* resource_id: 资源id
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": {
-        "resource_id": "b6519605-6132-4ba5-9039-cec0f7fc9fe3", // 资源id
-        "resource_name": "meeting", // 资源名称
-        "type": "dir", // 资源类型
-        "creator_id": "5c397e61-ee45-4af1-b094-4363b5fdf305", // 创建者id
-        "created_at": "2019-07-01 19:51:08" // 创建时间
-    }
-}
-```
-
-
-
-#### D3.修改资源元数据
-
-[PUT] /v1/resources/{resource_id}
-
-* resource_id: 资源id
-
-Request Body
-
-```json
-{
-    "resource_name": "meeting" // 资源名称
-}
-```
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": null
-}
-```
-
-#### D4.删除资源
-
-[DELETE] /v1/resources/{resource_id}
-
-* resource_id: 资源id
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": null   
-}
-```
-
-#### D5.获取下级目录或挂载文档
-
-[GET] /v1/resources/{resource_id}/slaves
-
-* resource_id: 资源id
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": [
-        {
-            "resource_id": "573d9b62-9e07-430c-b2a0-4825fbccc785", // 资源id
-            "resource_name": "七月例会", // 资源名称
-            "type": "dir", // 资源类型
-            "creator": "小组长", // 创建者名称
-            "created_at": "2019-07-01 09:21:28" // 创建时间
-        },
-        {
-            "resource_id": "627f3add-e93a-435d-bd39-2f8023253f35",
-            "resource_name": "八月例会",
-            "type": "dir",
-            "creator": "小组长",
-            "created_at": "2019-08-01 09:30:21"
-        }
-    ]
-}
-```
-
-
-
-#### D6.获取对该资源有操作权限的群组信息
-
-[GET] /v1/resources/{resource_id}/authgroups
-
-* resource_id: 资源id
-
-Response Body
-
-```json
-{
-    "statusCode": 200,
-    "msg": "success",
-    "data": [
-        {
-            "group_id": "b64b725b-ef13-4e3f-9d98-ddb3152981a6", // 群组id
-            "group_name": "manager", // 群组名称
-            "permission": "111" // 权限
-        }
-    ]
-}
-```
-
-#### D7.获取文档Meta
-
-[GET] `/v1/docs/{doc_id}`
+[POST] /v1/dirs
 
 ```http
-GET /v1/docs/1
+POST /v1/dirs
+```
+
+Request Body
+
+```json
+{
+	"cur_id": "e911f136-35ad-416a-b195-7b1fad4bd7f1 " // 当前所在目录id
+}
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "id": "afb502c2-d769-442b-be61-90b2a48d00a3",
+    "title": "未命名",
+    "thumbnail": "./assets/images/docCnt.png",
+    "root": 0,
+    "home": 0,
+    "personal": 0,
+    "modifiable": 1,
+    "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+    "created_at": "2019-07-15T12:48:45.099+0000"
+  }
+}
+```
+
+#### D1.1 新建文档
+
+[POST] /v1/docs
+
+```http
+POST /v1/docs
+```
+
+Request Body
+
+```
+{
+    "cur_id": "e911f136-35ad-416a-b195-7b1fad4bd7f1"
+}
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "id": "3123956c-2284-40ef-9c7e-7d1982d5b9a4",
+    "title": "未命名",
+    "thumbnail": "./assets/images/doc.png",
+    "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+    "created_at": "2019-07-16T12:30:41.020+0000"
+  }
+}
+```
+
+
+
+
+### D2.获取资源元数据
+
+#### D2.1 获取目录元数据 
+
+[GET] /v1/dirs/{dir_id}
+
+* dir_id: 目录id
+
+```http
+GET /v1/dirs/1
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "id": "afb502c2-d769-442b-be61-90b2a48d00a3",
+    "title": "测试目录",
+    "thumbnail": "./assets/images/docCnt.png",
+    "root": 0,
+    "home": 0,
+    "personal": 0,
+    "modifiable": 1,
+    "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+    "created_at": "2019-07-15T12:48:45.099+0000"
+  }
+}
+```
+
+#### D2.2 获取文档元数据
+[GET] `/docs/{doc_id}`
+
+```http
+GET /docs/1
 ```
 
 Response Body
@@ -1139,13 +789,38 @@ Response Body
     }
 }
 ```
+### D3.更新资源元数据
+#### D3.1 更新目录名称
+[PATCH] /v1/dirs/{dir_id}
 
-#### D8.更新文档Meta
-
-[PATCH] `/v1/docs/{doc_id}`
+* dir_id: 目录id
 
 ```http
-PATCH /v1/files/1
+PATCH /v1/dirs/1
+```
+
+Request Body
+
+```json
+{
+    "title": "meeting", // 资源名称
+}
+```
+
+Response Body
+
+```json
+{
+    "statusCode": 200,
+    "msg": "success",
+    "data": null
+}
+```
+#### D3.2 更新文档元数据
+[PATCH] `/docs/{doc_id}`
+
+```http
+PATCH /files/1
 ```
 
 Request Body
@@ -1179,12 +854,144 @@ Response Body
     }
 }
 ```
+### D4.删除资源
+#### D4.1 删除目录
+[DELETE] /v1/dirs/{dir_id}
 
-### 文件模块
+* dir_id: 目录id
 
-#### F1.获取policy（针对于使用阿里云 oss 实施的项目）
+```http
+DELETE /v1/dirs/1
+```
+
+Response Body
+
+```json
+{
+    "statusCode": 200,
+    "msg": "success",
+    "data": null   
+}
+```
+#### D4.2 删除文档
+[DELETE] /v1/docs/{dir_id}
+
+* doc_id: 文档id
+
+```http
+DELETE /v1/docs/1
+```
+
+Response Body
+
+```json
+{
+    "statusCode": 200,
+    "msg": "success",
+    "data": null   
+}
+```
+
+### D5.获取下级资源
+
+#### D5.1 获取指定目录下的子目录或文档
+
+[GET] /v1/dirs/{dir_id}/slaves
+
+* dir_id: 目录id
+
+```http
+GET /v1/dirs/1/slaves
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": [
+    {
+      "created_time": "2019-07-16T12:06:18.398+0000",
+      "thumbnail": "./assets/images/docCnt.png",
+      "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+      "id": "e65439e3-5d38-4a52-b700-bc28d666d098",
+      "type": "dir",
+      "title": "未命名"
+    },
+    {
+      "created_time": "2019-07-16T12:17:05.634+0000",
+      "thumbnail": "./assets/images/docCnt.png",
+      "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+      "id": "2e9e2804-cf39-4980-bc0d-be295032a721",
+      "type": "dir",
+      "title": "未命名"
+    },
+    {
+      "created_time": "2019-07-16T12:30:41.020+0000",
+      "thumbnail": "./assets/images/doc.png",
+      "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+      "id": "3123956c-2284-40ef-9c7e-7d1982d5b9a4",
+      "type": "doc",
+      "title": "未命名"
+    }
+  ]
+}
+```
+
+#### D5.2 获取指定文档下的文件
+[GET] /v1/docs/{doc_id}/slaves
+
+* doc_id: 文档id
+
+```http
+GET /v1/docs/1/slaves
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": [
+    {
+      "ext": "png",
+      "created_time": "2019-07-25 11:18:17.746",
+      "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+      "derived_files": [],
+      "thumbnail": null,
+      "keywords": [],
+      "resource_type": "file",
+      "title": "panda",
+      "type": "image",
+      "thumbnail_url": "http://39.108.210.48:9000/douban-test/image/thumbnail/temp6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=SWLNR4NMXK02HG0K6BM6%2F20190725%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190725T151817Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=c2ac75320897974ffbfacad83856ffd8314061612310e669fb742e0d5efb11f0",
+      "doc_id": "1",
+      "version": 0,
+      "content": "",
+      "tags": [],
+      "modified_time": "2019-07-25 11:18:17.746",
+      "size": 23332,
+      "parent_id": null,
+      "categories": [],
+      "id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+      "original_id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+      "desc": "",
+      "store_key": "image/6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png"
+    }
+  ]
+}
+```
+
+## F. 文件模块
+
+### F1.获取policy（针对于使用阿里云 oss 实施的项目）
 
 [POST] /v1/files/policy
+
+```http
+POST /v1/files/policy
+```
 
 Request Body:
 
@@ -1214,9 +1021,13 @@ Response Body:
     }
 }
 ```
-#### F2.获取签名URL（针对于使用Minio实施的项目）
+### F2.获取签名URL（针对于使用Minio实施的项目）
 
 [POST] /v1/files/url
+
+```http
+POST /v1/files/url
+```
 
 Request Body:
 
@@ -1239,7 +1050,7 @@ Response Body:
 }
 ```
 
-#### F3. 文件直传 oss（针对阿里云 oss 实施）
+### F3. 文件直传 oss（针对阿里云 oss 实施）
 
 [POST]  **host**
 
@@ -1273,7 +1084,7 @@ Response Body:
 }
 ```
 
-#### F4. 文件直传 oss（针对 Minio 实施）
+### F4. 文件直传 oss（针对 Minio 实施）
 
 [PUT] **host**
 
@@ -1287,23 +1098,27 @@ Request Body:
 }
 ```
 
-#### F5. 创建文件Meta（上传文件成功后Callback接口）
+### F5. 上传文件成功后创建Meta（Callback接口）
 
 [POST] /v1/files/{id}
 
 * id: 文件id
 
+```http
+POST /v1/files/1
+```
+
 Request Body:
 
 ```json
 {
-    "title": "ABC", //"文件名"
-    "store_key": "xxx", //文件在Minio中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
-    "doc_id": "1", //当前上传文件所属的文档ID
-    "parent_id": null, //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为null
-    "ext": "pdf", // 文件后缀名
-    "creator": "xxxx", // 文件的创建者
-   	"size": "1024" // 文件的大小
+    "title": "", //"文件名"
+    "store_key": "", //文件在Minio中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
+    "doc_id": "", //当前上传文件所属的文档ID
+    "parent_id": "", //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为""
+    "ext": "", // 文件后缀名
+    "creator": "", // 文件的创建者
+   	"size": "" // 文件的大小
 }
 ```
 
@@ -1317,9 +1132,13 @@ Response Body:
 }
 ```
 
-#### F6. 删除文件
+### F6. 删除文件
 
 [DELETE] /v1/files
+
+```http
+DELETE /v1/files
+```
 
 Request Body:
 
@@ -1339,15 +1158,19 @@ Response Body:
 }
 ```
 
-#### F7. 下载文件 
+### F7. 下载文件 
 
-[GET] /v1/files/​{file_id}/download
+[GET] /v1/files/{file_id}/download
 
 * id: 为下载文件的file_id
 
+```http
+GET /v1/files/1/download
+```
+
 Response Body: HttpServletResponse
 
-#### F8. 获取文件历史版本列表
+### F8. 获取文件历史版本列表
 
 [GET] /v1/files/​{file_id}/versions
 
@@ -1378,14 +1201,14 @@ Response Body:
 }
 ```
 
-#### F9.获取文件Meta
+### F9. 获取文件Meta
 
 获取文件meta
 
-[GET] `/v1/files/{file_id}`
+[GET] `/files/{file_id}`
 
 ```http
-GET /v1/files/1
+GET /files/1
 ```
 
 Response Body
@@ -1426,14 +1249,16 @@ Response Body
 }
 ```
 
-#### F10.更新文件Meta
+### F10. 更新文件Meta
+
+更新文件meta
 
 > 部分更新，仅可更新部分字段
 
-[PATCH] `/v1/files/{file_id}`
+[PATCH] `/files/{file_id}`
 
 ```http
-PATCH /v1/files/1
+PATCH /files/1
 ```
 
 Request Body
@@ -1502,11 +1327,16 @@ Response Body
 }
 ```
 
-#### F11.创建类目或标签
+### F11. 创建类目或标签
 
-[POST] `/v1/tags/`
+[POST] `/tags/`
 
-[POST] `/v1/categories/`
+[POST] `/categories/`
+
+```http
+POST /tag/
+POST /categories/
+```
 
 Request Body
 
@@ -1531,14 +1361,14 @@ Response Body
 }
 ```
 
-#### F12.获取类目或标签
+### F12. 获取类目或标签
 
-[GET] `/v1/tags/{tag_id}`
+[GET] `/tags/{tag_id}`
 
-[GET] `/v1/categories/{category_id}`
+[GET] `/categories/{category_id}`
 
 ```http
-GET /v1/tags/1
+GET /tags/1
 ```
 
 Response Body
@@ -1555,14 +1385,14 @@ Response Body
 }
 ```
 
-#### F13. 更新类目或标签
+### F13. 更新类目或标签
 
-[PUT] `/v1/tags/{tag_id}`
+[PUT] `/tags/{tag_id}`
 
-[PUT] `/v1/categories/{category_id}`
+[PUT] `/categories/{category_id}`
 
 ```http
-PUT /v1/tags/1
+PUT /tags/1
 ```
 
 Request Body
@@ -1589,14 +1419,14 @@ Response Body
 ```
 
 
-#### F14.删除类目或标签
+### F14. 删除类目或标签
 
-[DELETE] `/v1/tags/{tag_id}`
+[DELETE] `/tags/{tag_id}`
 
-[DELETE] `/v1/categories/{category_id}`
+[DELETE] `/categories/{category_id}`
 
 ```http
-DELETE /v1/tags/1
+DELETE /tags/1
 ```
 
 Response Body
@@ -1609,14 +1439,14 @@ Response Body
 }
 ```
 
-#### F15.获取文件的类目或标签
+### F15. 获取文件的类目或标签
 
-[GET] `/v1/files/{file_id}/tags`
+[GET] `/files/{file_id}/tags`
 
-[GET] `/v1/files/{file_id}/categories`
+[GET] `/files/{file_id}/categories`
 
 ```http
-GET /v1/files/1/tags
+GET /files/1/tags
 ```
 
 Response Body
@@ -1652,14 +1482,14 @@ Response Body
 }
 ```
 
-#### F16.更新文件的类目或标签
+### F16. 更新文件的类目或标签
 
-[PUT] `/v1/files/{file_id}/tags`
+[PUT] `/files/{file_id}/tags`
 
-[PUT] `/v1/files/{file_id}/categories`
+[PUT] `/files/{file_id}/categories`
 
 ```http
-PUT /v1/files/1/tags
+PUT /files/1/tags
 ```
 
 Request Body
@@ -1680,12 +1510,16 @@ Response Body
 }
 ```
 
-### 权限模块
+## A. 权限模块
 
-#### F1.授予群组对指定目录或文档的操作权限
+### A1.添加群组对指定目录或文档的操作权限	
 [POST] /v1/resources/{resource_id}/permissions
 
 * resource_id: 资源id
+
+```http
+POST /v1/resources/1/permissions
+```
 
 Request Body
 
@@ -1693,7 +1527,7 @@ Request Body
 {
     "permission": "100", // 权限
     // 群组id列表
-    "groupsIdList": [
+    "groups": [
         "b64b725b-ef13-4e3f-9d98-ddb3152981a6",
         "b57a392d-6510-4116-99db-f76cc16a78e5"
     ]
@@ -1712,10 +1546,14 @@ Response Body
 
 
 
-#### F2.撤销群组对指定目录或文档的操作权限
+### A2.撤销群组对指定目录或文档的操作权限
 [DELETE] /v1/resources/{resource_id}/permissions
 
 * resource_id: 资源id
+
+```http
+DELETE /v1/resources/1/permissions
+```
 
 Request Body
 
@@ -1732,6 +1570,74 @@ Response Body
     "statusCode": 200,
     "msg": "success",
     "data": null
+}
+```
+
+### A3.获取对指定资源有操作权限的群组信息
+
+[GET] /v1/resources/{resource_id}/authgroups
+
+* resource_id: 资源id
+
+```http
+GET /v1/resources/1/authgroups
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+    "isOwner": 1,
+    "groupList": [
+      {
+        "permission": "100",
+        "groupInfo": {
+          "group_id": "75895fa6-9054-49cf-8db2-08312f1766d8",
+          "group_name": "巴萨球迷",
+          "group_desc": "巴萨是最菜的",
+          "creator_id": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+          "created_at": "2019-07-09T17:05:39.321+0000",
+          "personal": 0
+        }
+      }
+    ]
+  }
+}
+```
+
+### A4.获取群组具有操作权限的所有资源信息
+
+[GET] /v1/groups/{group_id}/authresources
+
+* group_id: 群组id
+
+```http
+GET /v1/groups/1/authresources
+```
+
+Response Body
+
+```json
+{
+    "statusCode": 200,
+    "msg": "success",
+    "data": {
+        "resourceList": [
+           {
+        	"resourceInfo": {
+            	"resource_id": "b64b725b-ef13-4e3f-9d98-ddb3152981a6", // 资源id
+            	"resouce_name": "manager", // 资源名称
+            	"desc": "", // 资源描述
+            	"creator_id": "", // 创建者id
+            	"created_at": "", // 创建时间
+            },
+            "permission": "111" // 权限
+          }
+    	]
+    }
 }
 ```
 
