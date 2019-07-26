@@ -2,7 +2,7 @@ package com.micerlab.sparrow.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.SparrowApplicationTests;
-import com.micerlab.sparrow.domain.search.SpaFilter;
+import com.micerlab.sparrow.domain.meta.SpaFilter;
 import org.junit.Test;
 
 public class FastJsonTest extends SparrowApplicationTests

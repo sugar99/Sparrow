@@ -2,7 +2,7 @@ package com.micerlab.sparrow.service.fileStore;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.file.SpaFile;
+import com.micerlab.sparrow.domain.meta.SpaFile;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.FileUtil;

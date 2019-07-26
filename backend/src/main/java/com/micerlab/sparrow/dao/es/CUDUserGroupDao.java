@@ -1,5 +1,6 @@
 package com.micerlab.sparrow.dao.es;
 
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -10,6 +11,8 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,6 +23,9 @@ import java.util.Map;
 public class CUDUserGroupDao {
 
     private RestHighLevelClient elasticsearchClient;
+
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
 
     public CUDUserGroupDao(RestHighLevelClient elasticsearchClient) {
         this.elasticsearchClient = elasticsearchClient;
@@ -35,7 +41,7 @@ public class CUDUserGroupDao {
         Map<String, String> jsonMap = new HashMap<>();
         jsonMap.put("name", username);
         jsonMap.put("work_no", work_no);
-        IndexRequest indexRequest = new IndexRequest(SparrowIndex.SPA_USER.getIndex()).id(user_id).source(jsonMap);
+        IndexRequest indexRequest = new IndexRequest(sparrowIndices.getUser()).id(user_id).source(jsonMap);
 
         try {
             IndexResponse response = elasticsearchClient.index(indexRequest, RequestOptions.DEFAULT);
@@ -57,7 +63,7 @@ public class CUDUserGroupDao {
         jsonMap.put("name", group_name);
         jsonMap.put("desc", group_desc);
         jsonMap.put("creator", creator);
-        IndexRequest indexRequest = new IndexRequest(SparrowIndex.SPA_GROUP.getIndex()).id(group_id).source(jsonMap);
+        IndexRequest indexRequest = new IndexRequest(sparrowIndices.getGroup()).id(group_id).source(jsonMap);
 
         try {
             IndexResponse response = elasticsearchClient.index(indexRequest, RequestOptions.DEFAULT);
@@ -71,7 +77,7 @@ public class CUDUserGroupDao {
         Map<String, String> jsonMap = new HashMap<>();
         jsonMap.put("name", group_name);
         jsonMap.put("desc", group_desc);
-        UpdateRequest updateRequest = new UpdateRequest(SparrowIndex.SPA_GROUP.getIndex(), group_id).doc(jsonMap);
+        UpdateRequest updateRequest = new UpdateRequest(sparrowIndices.getGroup(), group_id).doc(jsonMap);
 
         try {
             UpdateResponse response = elasticsearchClient.update(updateRequest, RequestOptions.DEFAULT);
@@ -82,7 +88,7 @@ public class CUDUserGroupDao {
     }
 
     public void deleteGroup(String group_id) {
-        DeleteRequest deleteRequest = new DeleteRequest(SparrowIndex.SPA_GROUP.getIndex(), group_id);
+        DeleteRequest deleteRequest = new DeleteRequest(sparrowIndices.getGroup(), group_id);
         try {
             DeleteResponse response = elasticsearchClient.delete(deleteRequest, RequestOptions.DEFAULT);
         } catch (IOException ex) {

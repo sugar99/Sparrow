@@ -1,10 +1,9 @@
 package com.micerlab.sparrow.dao.es;
 
-import com.micerlab.sparrow.domain.file.FileType;
+import com.micerlab.sparrow.config.ESConfig;
+import com.micerlab.sparrow.domain.meta.FileType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -16,10 +15,10 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 @Component
@@ -27,12 +26,11 @@ public class SearchSuggestionDao
 {
     private static Logger logger = LoggerFactory.getLogger(SearchSuggestionDao.class);
     
-    private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
     
-    public SearchSuggestionDao(RestHighLevelClient restHighLevelClient)
-    {
-        this.restHighLevelClient = restHighLevelClient;
-    }
+    @Autowired
+    private ESBaseDao ESBaseDao;
     
     /*
     {
@@ -84,12 +82,12 @@ public class SearchSuggestionDao
     }
      */
     
-    public List<String> suggestions(String type, String keyword, int size) throws IOException
+    public List<String> suggestions(String type, String keyword, int size)
     {
         SearchRequest searchRequest = new SearchRequest(
-                SparrowIndex.SPA_FILES.getIndex(),
-                SparrowIndex.SPA_CATEGORIES.getIndex(),
-                SparrowIndex.SPA_TAGS.getIndex()
+                sparrowIndices.getFile(),
+                sparrowIndices.getCategory(),
+                sparrowIndices.getTag()
         );
         
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -101,7 +99,7 @@ public class SearchSuggestionDao
         logger.debug(searchSourceBuilder.toString());
         
         searchRequest.source(searchSourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = ESBaseDao.search(searchRequest);
         Terms group_by_title = searchResponse.getAggregations().get("group_by_title");
         
         List<String> suggestions = new LinkedList<>();

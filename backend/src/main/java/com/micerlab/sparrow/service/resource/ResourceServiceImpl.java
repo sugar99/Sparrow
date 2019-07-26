@@ -1,11 +1,14 @@
 package com.micerlab.sparrow.service.resource;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.postgre.ACLDao;
 import com.micerlab.sparrow.dao.postgre.ResourceDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
+import com.micerlab.sparrow.utils.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.domain.pojo.Resource;
@@ -25,6 +28,7 @@ import java.util.Map;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Deprecated
 @Service("resourceService")
 @Transactional
 public class ResourceServiceImpl implements ResourceService{
@@ -77,7 +81,7 @@ public class ResourceServiceImpl implements ResourceService{
         resourceDao.createMasterSlaveRelation(cur_id, resource_id);
         //默认创建者对创建的资源有可读权限；personal_group_id 创建者个人群组
         String personal_group_id = userDao.getUserMetaById(user_id).getPersonal_group();
-        aclService.updateGroupPermission(personal_group_id, resource_id, "100");
+//        aclService.updateGroupPermission(personal_group_id, resource_id, "100");
         return Result.OK().data(resource).build();
     }
 
@@ -209,11 +213,11 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result addPermission(String resource_id, Map<String, Object> paramMap) {
         String permission = paramMap.get("permission").toString();
-        List<String> groupsIdList = (List<String>) paramMap.get("groupsIdList");
+        List<String> groupsIdList = (List<String>) paramMap.get("groups");
         //更新权限
-        for (String group_id: groupsIdList) {
-            aclService.updateGroupPermission(group_id, resource_id, permission);
-        }
+//        for (String group_id: groupsIdList) {
+//            aclService.updateGroupPermission(group_id, resource_id, permission);
+//        }
         return Result.OK().build();
     }
 
@@ -237,20 +241,22 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result retrieveDocMeta(String doc_id)
     {
-        Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
-        return Result.OK().data(docMeta).build();
+        JSONObject docJson = spaDocDao.getJsonDoc(doc_id);
+        if(docJson == null)
+            throw new BusinessException(ErrorCode.NOT_FOUND_DOC_ID, doc_id);
+        return Result.OK().data(docJson).build();
     }
 
     @Override
     public Result updateDocMeta(String doc_id, SpaDocUpdateParams params)
     {
         // 更新文档元数据的事件订阅者
-        String title = params.getTitle();
-        String desc = params.getDesc();
-        Timestamp modified_time = TimeUtil.currentTime();
-        EventBus.getDefault().post(new UpdateDocEvent(doc_id, title, desc, modified_time));
-        
-        // 调用ES / Postgre 订阅者处理
+//        String title = params.getTitle();
+//        String desc = params.getDesc();
+//        Timestamp modified_time = TimeUtil.currentTime();
+//        EventBus.getDefault().post(new UpdateDocEvent(doc_id, title, desc, modified_time));
+//
+//         调用ES / Postgre 订阅者处理
         return Result.OK().build();
     }
     

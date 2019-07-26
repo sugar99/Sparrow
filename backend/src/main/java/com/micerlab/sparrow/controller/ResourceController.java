@@ -14,12 +14,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-//即将弃用
-@Api
+@ApiIgnore
+@Deprecated
 @RestController
 public class ResourceController {
 
@@ -40,9 +41,9 @@ public class ResourceController {
         String type = paramMap.get("type").toString();
         String user_id = BaseService.getUser_Id(request);
         //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
-        }
+//        if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
+//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
+//        }
         return resourceService.createResource(user_id, cur_id, type);
     }
 
@@ -52,10 +53,10 @@ public class ResourceController {
     public Result getResourceMeta(HttpServletRequest request, @PathVariable("resource_id") String resource_id) {
         String cur_id = resourceService.getMasterDirId(resource_id);
         //判断用户对当前目录是否具有可读权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
-                ActionType.READ)){
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
-        }
+//        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+//                ActionType.READ)){
+//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
+//        }
         String type = resourceDao.getResourceMeta(resource_id).getResource_type();
         if (type.equals("doc")) {
             return resourceService.retrieveDocMeta(resource_id);
@@ -71,10 +72,10 @@ public class ResourceController {
                                      @RequestBody Map<String, Object> paramMap) {
         String cur_id = resourceService.getMasterDirId(resource_id);
         //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
-                ActionType.WRITE)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
-        }
+//        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+//                ActionType.WRITE)) {
+//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
+//        }
         String type = resourceDao.getResourceMeta(resource_id).getResource_type();
         if (type.equals("doc")) {
             SpaDocUpdateParams params = (new JSONObject(paramMap)).toJavaObject(SpaDocUpdateParams.class);
@@ -90,10 +91,10 @@ public class ResourceController {
     public Result deleteResource(HttpServletRequest request, @PathVariable("resource_id") String resource_id) {
         String cur_id = resourceService.getMasterDirId(resource_id);
         //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
-                ActionType.WRITE)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
-        }
+//        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+//                ActionType.WRITE)) {
+//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
+//        }
         String type = resourceDao.getResourceMeta(resource_id).getResource_type();
         return resourceService.deleteResource(resource_id, type);
     }
@@ -104,37 +105,13 @@ public class ResourceController {
     public Result getSlavesResource(HttpServletRequest request, @PathVariable("resource_id") String resource_id) {
         String user_id = BaseService.getUser_Id(request);
         //判断用户对指定资源是否具有可读权限
-        if (!aclService.hasPermission(user_id, resource_id, BaseService.getGroupIdList(request), ActionType.READ)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
-        }
+//        if (!aclService.hasPermission(user_id, resource_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
+//        }
         String type = resourceDao.getResourceMeta(resource_id).getResource_type();
         return resourceService.getSlavesResource(user_id, resource_id, type);
     }
-    
-    @ApiOperation("D7.获取文档Meta")
-    @GetMapping("/v1/docs/{doc_id}")
-    public Result retrieveDocMeta(
-            HttpServletRequest request,
-            @PathVariable String doc_id
-    )
-    {
-        // TODO: ACL 鉴定是否拥有该 doc_id 的读取权限
-        
-        return resourceService.retrieveDocMeta(doc_id);
-    }
 
-    @ApiOperation("D8.更新文档Meta")
-    @PatchMapping("/v1/docs/{doc_id}")
-    public Result updateDocMeta(
-            HttpServletRequest request,
-            @PathVariable String doc_id,
-            @RequestBody SpaDocUpdateParams params
-            )
-    {
-        // TODO: ACL 鉴定是否拥有该 doc_id 的修改权限
-
-        return resourceService.updateDocMeta(doc_id, params);
-    }
     
     @ApiOperation("F1.授予群组对指定目录或文档的操作权限")
     @PostMapping("/v1/resources/{resource_id}/permissions")

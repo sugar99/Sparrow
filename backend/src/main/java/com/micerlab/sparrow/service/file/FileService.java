@@ -3,8 +3,8 @@ package com.micerlab.sparrow.service.file;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
-import com.micerlab.sparrow.domain.search.SpaFilter;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilter;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface FileService {
     
     Result createFileMeta(String file_id, CreateSpaFileParams params);
     
-    Result retrieveFileMeta(String file_id);
+    Result getFileMeta(String file_id);
     
     Result updateFileMeta(String file_id, UpdateFileMetaParams params);
     

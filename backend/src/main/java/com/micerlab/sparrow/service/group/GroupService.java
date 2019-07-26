@@ -1,13 +1,14 @@
 package com.micerlab.sparrow.service.group;
 
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.CreateSpaGroupParams;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 public interface GroupService {
 
-    Result createGroup(String user_id, Map<String, Object> paramMap);
+    Result createGroup(String user_id, CreateSpaGroupParams params);
 
     String createPersonalGroup(String user_id, String username);
 
@@ -15,7 +16,7 @@ public interface GroupService {
 
     String getGroupOwnerId(String group_id);
 
-    Result updateGroupMeta(String group_id, Map<String, Object> paramMap);
+    Result updateGroupMeta(String group_id, CreateSpaGroupParams params);
 
     Result deleteGroup(String group_id);
 

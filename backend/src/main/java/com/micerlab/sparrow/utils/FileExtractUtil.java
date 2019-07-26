@@ -25,14 +25,40 @@ import java.nio.charset.Charset;
 import java.text.NumberFormat;
 
 /**
- * @Description TODO
+ * @Description 文件内容提取工具类（pdf / doc / ppt ...）
  * @Author Honda
  * @Date 2019/7/12 16:09
  **/
-public class FileExtractUtil {/**
- * 默认检测 txt 的字符集
- */
-private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
+public class FileExtractUtil {
+
+    public static String removeSpace(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            if (isSpace(str.charAt(i))) {
+                sb.append(' ');
+                // 跳过其余可能的空格
+                for (i++; i < str.length() && isSpace(str.charAt(i)); i++);
+            }
+            if (i < str.length()) {
+                sb.append(str.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 判断字符 c 是否为“空格”（制表符，换行符等均属于空格）
+     * @param c 待判断字符
+     * @return
+     */
+    private static boolean isSpace(char c) {
+        return c == ' ' || c == '\n' || c == '\t' || c == '\r';
+    }
+
+    /**
+     * 默认检测 txt 的字符集
+     */
+    private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
 
     /**
      * 根据文件后缀名提取文本内容， 目前内容只支持 pdf, doc, docx, ppt, pptx, xls, xlsx 的提取
@@ -69,7 +95,7 @@ private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
                 res = txt2String(new File(path));
                 break;
         }
-        return res;
+        return res == null ? res : removeSpace(res);
     }
 
     /**
@@ -104,6 +130,7 @@ private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
         stripper.setStartPage(1);
         stripper.setEndPage(pages);
         content = stripper.getText(document);
+        document.close();
         return content;
     }
 
@@ -193,21 +220,15 @@ private static String[] charsetsToBeTested = {"Unicode", "UTF-8", "UTF-16"};
     public static String txt2String(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
         // 检查字符集
-        Charset charset = CharsetDetector.detectCharset(file, charsetsToBeTested);
-        if (charset != null) {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), charset);
-            BufferedReader reader = new BufferedReader(isr);
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-                sb.append('\n');
-            }
-            reader.close();
-        } else {
-            throw new RuntimeException("Unrecognized charset.");
+       // Charset charset = CharsetDetector.detectCharset(file, charsetsToBeTested);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
+        BufferedReader reader = new BufferedReader(isr);
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+            sb.append('\n');
         }
-
-
+        reader.close();
         return sb.toString();
     }
 

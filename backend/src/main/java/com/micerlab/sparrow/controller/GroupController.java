@@ -2,6 +2,7 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.CreateSpaGroupParams;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.group.GroupService;
 import com.micerlab.sparrow.utils.BusinessException;
@@ -23,8 +24,8 @@ public class GroupController {
     @ApiOperation("G1.新建群组")
     @PostMapping("/v1/groups")
     @ResponseBody
-    public Result createGroup(HttpServletRequest request, @RequestBody Map<String, Object> paramMap) {
-        return groupService.createGroup(BaseService.getUser_Id(request), paramMap);
+    public Result createGroup(HttpServletRequest request, @RequestBody CreateSpaGroupParams params) {
+        return groupService.createGroup(BaseService.getUser_Id(request), params);
     }
 
     @ApiOperation("G2.获取群组元数据")
@@ -38,22 +39,20 @@ public class GroupController {
     @PutMapping("/v1/groups/{group_id}")
     @ResponseBody
     public Result updateGroupMeta(HttpServletRequest request, @PathVariable("group_id") String group_id,
-                                  @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
+                                  @RequestBody CreateSpaGroupParams params) {
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
-        return groupService.updateGroupMeta(group_id, paramMap);
+        return groupService.updateGroupMeta(group_id, params);
     }
 
     @ApiOperation("G4.删除群组")
     @DeleteMapping("/v1/groups/{group_id}")
     @ResponseBody
     public Result deleteGroup(HttpServletRequest request, @PathVariable("group_id") String group_id) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.deleteGroup(group_id);
@@ -64,9 +63,8 @@ public class GroupController {
     @ResponseBody
     public Result addGroupMember(HttpServletRequest request, @PathVariable("group_id") String group_id,
                                  @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.addGroupMember(group_id, paramMap);
@@ -84,11 +82,21 @@ public class GroupController {
     @ResponseBody
     public Result deleteGroupMember(HttpServletRequest request, @PathVariable("group_id") String group_id,
                                     @PathVariable("member_id") String member_id) {
-        String user_id = BaseService.getUser_Id(request);
         //判断用户是否为群组的群主
-        if (!user_id.equals(groupService.getGroupOwnerId(group_id))) {
+        if (!BaseService.getUser_Id(request).equals(groupService.getGroupOwnerId(group_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_OWNER, "");
         }
         return groupService.deleteGroupMember(group_id, member_id);
+    }
+
+    @ApiOperation("G8. 获取群组拥有操作权限的资源列表")
+    @GetMapping("/v1/groups/{group_id}/authgroups")
+    @ResponseBody
+    public Result getAuthResources(HttpServletRequest request, @PathVariable("group_id") String group_id) {
+        //判断用户是否为群组的成员
+        if (!BaseService.getGroupIdList(request).contains(group_id)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NOT_GROUP_MEMBER, "");
+        }
+        return groupService.getAuthResource(group_id);
     }
 }

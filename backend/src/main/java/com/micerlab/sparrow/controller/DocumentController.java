@@ -2,8 +2,10 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.ActionType;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
+import com.micerlab.sparrow.domain.params.UpdateAuthGroupsParams;
 import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.doc.DocumentService;
@@ -37,43 +39,43 @@ public class DocumentController {
         String cur_id = paramMap.get("cur_id").toString();
         String user_id = BaseService.getUser_Id(request);
         //判断用户对当前目录是否具有可写权限
-        if (!aclService.hasPermission(user_id, cur_id, BaseService.getGroupIdList(request), ActionType.WRITE)) {
+        if (!aclService.hasPermission(user_id, cur_id, ResourceType.DIR, BaseService.getGroupIdList(request), ActionType.WRITE)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
         return documentService.createDoc(user_id, cur_id);
     }
 
-//    @ApiOperation("获取文档元数据")
-//    @GetMapping("/v1/docs/{doc_id}")
-//    @ResponseBody
-//    public Result retrieveDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
-//        String cur_id = resourceService.getMasterDirId(doc_id);
-//        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
-//                ActionType.READ)){
-//            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
-//        }
-//        return resourceService.retrieveDocMeta(doc_id);
-//    }
+    @ApiOperation("D7.获取文档Meta")
+    @GetMapping("/v1/docs/{doc_id}")
+    @ResponseBody
+    public Result getDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
+        //判断用户对指定文档是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request),
+                ActionType.READ)){
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_CUR_DIR, "");
+        }
+        return documentService.getDoc(doc_id);
+    }
 
-    @ApiOperation("更新文档元数据")
-    @PutMapping("/v1/docs/{doc_id}")
+    @ApiOperation("D8.更新文档Meta")
+    @PatchMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result updateDocMeta(HttpServletRequest request, @PathVariable("doc_id") String doc_id,
                                 @RequestBody SpaDocUpdateParams paramMap) {
-        String cur_id = documentService.getMasterDirId(doc_id);
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对指定文档是否有可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request),
                 ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
         return documentService.updateDoc(doc_id, paramMap);
     }
 
-    @ApiOperation("删除目录")
+    @ApiOperation("删除文档")
     @DeleteMapping("/v1/docs/{doc_id}")
     @ResponseBody
     public Result deleteDocument(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
-        String cur_id = documentService.getMasterDirId(doc_id);
-        if (!aclService.hasPermission(BaseService.getUser_Id(request), cur_id, BaseService.getGroupIdList(request),
+        //判断用户对指定文档是否可写权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request),
                 ActionType.WRITE)){
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
@@ -84,8 +86,8 @@ public class DocumentController {
     @GetMapping("/v1/docs/{doc_id}/slaves")
     @ResponseBody
     public Result getSlaves(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!aclService.hasPermission(user_id, doc_id, BaseService.getGroupIdList(request), ActionType.READ)) {
+        //判断用户对指定文档是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request), ActionType.READ)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
         }
         return documentService.getSlaveFiles(doc_id);
@@ -95,12 +97,12 @@ public class DocumentController {
     @PostMapping("/v1/docs/{doc_id}/permissions")
     @ResponseBody
     public Result addPermission(HttpServletRequest request, @PathVariable("doc_id") String doc_id,
-                                @RequestBody Map<String, Object> paramMap) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!user_id.equals(documentService.getCreatorId(doc_id))) {
+                                @RequestBody UpdateAuthGroupsParams params) {
+        //判断用户是否为文档的创建者
+        if (!BaseService.getUser_Id(request).equals(documentService.getCreatorId(doc_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
-        return aclService.addGroupPermission(doc_id, paramMap);
+        return aclService.addGroupPermission(doc_id, ResourceType.DOC, params);
     }
 
     @ApiOperation("移除群组对指定文档的操作权限")
@@ -108,17 +110,21 @@ public class DocumentController {
     @ResponseBody
     public Result removePermission(HttpServletRequest request, @PathVariable("doc_id") String doc_id,
                                    @PathVariable("group_id") String group_id) {
-        String user_id = BaseService.getUser_Id(request);
-        if (!user_id.equals(documentService.getCreatorId(doc_id))) {
+        //判断用户是否为文档的创建者
+        if (!BaseService.getUser_Id(request).equals(documentService.getCreatorId(doc_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
         return aclService.deleteGroupPermission(group_id, doc_id);
     }
 
-    @ApiOperation("获取对该目录有操作权限的群组")
+    @ApiOperation("获取对该文档有操作权限的群组")
     @GetMapping("/v1/docs/{doc_id}/authgroups")
     @ResponseBody
     public Result getAuthGroups(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
+        //判断用户对指定文档是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request), ActionType.READ)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
+        }
         return aclService.getAuthGroups(BaseService.getUser_Id(request), doc_id, "doc");
     }
 

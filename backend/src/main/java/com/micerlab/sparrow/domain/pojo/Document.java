@@ -7,10 +7,24 @@ import java.sql.Timestamp;
 @Alias("document")
 public class Document {
     private String id;
-    private String title = "未命名";
-    private String thumbnail = "./assets/images/doc.png";
+    private String title;
+    private String thumbnail;
     private String creator_id;
     private Timestamp created_at;
+
+    public Document(String id, String creator_id, Timestamp created_at) {
+        this.id = id;
+        this.creator_id = creator_id;
+        this.created_at = created_at;
+        this.title = "未命名";
+        this.thumbnail = "./assets/images/doc.png";
+    }
+
+    public Document(String id, String title, String thumbnail, String creator_id, Timestamp created_at) {
+        this(id, creator_id, created_at);
+        this.title = title;
+        this.thumbnail = thumbnail;
+    }
 
     public String getId() {
         return id;

@@ -5,6 +5,7 @@ import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 
 import java.util.Map;
 
+@Deprecated
 public interface ResourceService {
 
     Result createResource(String user_id, String cur_id, String type);

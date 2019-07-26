@@ -1,0 +1,34 @@
+# The # character at the beginning of a line indicates a comment. Use
+# comments to describe your configuration.
+input {
+    jdbc {
+        jdbc_driver_class => "com.mysql.cj.jdbc.Driver"
+        jdbc_driver_library => "D:\\Program\\Elastic\\script\\mysql-connector-java-8.0.11.jar"
+        jdbc_connection_string => "jdbc:mysql://localhost:3306/cases?requireSSL=true&useSSL=true&verifyServerCertificate=false&serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf-8"
+        jdbc_user => "root"
+        jdbc_password => "123456"
+        jdbc_default_timezone => "Hongkong"
+        lowercase_column_names => false
+        statement => "
+        select `id`, `title`, NULL as `desc`
+        from `keyword_t`
+        
+        "
+    }
+}
+# The filter part of this file is commented out to indicate that it is
+# optional
+filter {
+    
+}
+output {
+    stdout { codec => rubydebug }
+    elasticsearch {
+        hosts => [ "localhost:9200" ]
+        index => "legal_tags"
+        action => "update"
+        doc_as_upsert => "true"
+        document_type => "_doc"
+        document_id => "%{id}"
+    }
+}

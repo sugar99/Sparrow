@@ -1,9 +1,9 @@
 package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
-import com.micerlab.sparrow.domain.file.FileType;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
+import com.micerlab.sparrow.domain.search.SearchType;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class SearchController
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "10") int size)
     {
-        FileType.validateFileType(type);
+        SearchType.validateSearchType(type);
         return searchService.getSearchSuggestions(type,keyword,size);
     }
     
@@ -48,7 +48,7 @@ public class SearchController
     @ApiOperation("S3.搜索结果")
     @PostMapping("/v1/search/results")
     public Result getSearchResults(
-        @RequestBody SearchRequestParams params
+        @RequestBody SearchResultParams params
     )
     {
 //        return Result.OK().data(params).build();
@@ -68,5 +68,23 @@ public class SearchController
         return searchService.searchSpaFilters(spaFilterType, keyword, size);
     }
     
-    
+    @ApiOperation("S5.搜索用户")
+    @GetMapping("/v1/search/users")
+    public Result searchSpaUser(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int size
+    )
+    {
+        return searchService.searchUser(keyword, size);
+    }
+
+    @ApiOperation("S6.搜索群组")
+    @GetMapping("/v1/search/groups")
+    public Result searchSpaGroup(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int size
+    )
+    {
+        return searchService.searchGroup(keyword, size);
+    }
 }

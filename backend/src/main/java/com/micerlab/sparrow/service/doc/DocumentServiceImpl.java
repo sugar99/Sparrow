@@ -1,8 +1,11 @@
 package com.micerlab.sparrow.service.doc;
 
+import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.postgre.DocumentDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
+import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 import com.micerlab.sparrow.domain.pojo.Directory;
@@ -11,6 +14,7 @@ import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.UpdateDocEvent;
 import com.micerlab.sparrow.service.acl.ACLService;
+import com.micerlab.sparrow.utils.BusinessException;
 import com.micerlab.sparrow.utils.TimeUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,39 +40,65 @@ public class DocumentServiceImpl implements DocumentService{
     @Autowired
     private ACLService aclService;
 
+    /**
+     * 创建文档
+     * @param user_id User's Id
+     * @param cur_id Current Directory's Id
+     * @return Result
+     */
     @Override
     public Result createDoc(String user_id, String cur_id) {
         String doc_id = UUID.randomUUID().toString();
         Timestamp timestamp = TimeUtil.currentTime();
 
-        Document document = new Document();
-        document.setId(doc_id);
-        document.setCreator_id(user_id);
-        document.setCreated_at(timestamp);
+        Document document = new Document(doc_id, user_id, timestamp);
+        //创建文档事件
         EventBus.getDefault().post(new InsertDocEvent(doc_id, "doc", user_id, timestamp, timestamp));
-
         documentDao.setMasterDir(cur_id, doc_id);
-        String personalGroupId = userDao.getUserMetaById(user_id).getPersonal_group();
-        aclService.updateGroupPermission(personalGroupId, doc_id, "100");
+        //用户对该文档有可读可写权限
+        aclService.updateGroupPermission(userDao.getUserMetaById(user_id).getPersonal_group(), doc_id, ResourceType.DOC, "110");
         return Result.OK().data(document).build();
     }
 
+    /**
+     * 获取文档元数据
+     * @param doc_id Document's Id
+     * @return Document
+     */
     @Override
     public Result getDoc(String doc_id) {
-        Map<String, Object> docMeta = spaDocDao.retrieveDocMeta(doc_id);
-        return Result.OK().data(docMeta).build();
+        JSONObject docJson = spaDocDao.getJsonDoc(doc_id);
+        if(docJson == null)
+            throw new BusinessException(ErrorCode.NOT_FOUND_DOC_ID, doc_id);
+        return Result.OK().data(docJson).build();
     }
 
+    /**
+     * 获得创建者id
+     * @param doc_id Document's Id
+     * @return Creator's Id
+     */
     @Override
     public String getCreatorId(String doc_id) {
         return documentDao.getDoc(doc_id).getCreator_id();
     }
 
+    /**
+     * 获取父目录id
+     * @param doc_id Document's Id
+     * @return Master Dirctory's Id
+     */
     @Override
     public String getMasterDirId(String doc_id) {
         return documentDao.getMasterDir(doc_id).getId();
     }
 
+    /**
+     * 更新文档元数据
+     * @param doc_id Document's Id
+     * @param params 参数
+     * @return Result
+     */
     @Override
     public Result updateDoc(String doc_id, SpaDocUpdateParams params) {
         String title = params.getTitle();
@@ -78,12 +108,23 @@ public class DocumentServiceImpl implements DocumentService{
         return Result.OK().build();
     }
 
+    /**
+     * 删除文档
+     * @param doc_id Directory's Id
+     * @return Result
+     */
     @Override
     public Result deleteDoc(String doc_id) {
+        //产生删除文档事件
         EventBus.getDefault().post(new DeleteDocEvent(doc_id));
         return Result.OK().build();
     }
 
+    /**
+     * 获取下级文件
+     * @param doc_id Document's Id
+     * @return List of Files
+     */
     @Override
     public Result getSlaveFiles(String doc_id) {
         List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);

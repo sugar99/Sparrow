@@ -15,9 +15,9 @@ public interface DirectoryService {
 
     String getMasterDirId(String dir_id);
 
-    Result updateDir(String dir_id, Map<String, Object> paramMap);
+    Result updateDir(String user_id, String dir_id, Map<String, Object> paramMap);
 
-    Result deleteDir(String dir_id);
+    Result deleteDir(String user_id, String dir_id);
 
     Result getSlaveResources(String dir_id);
 }

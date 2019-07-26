@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface GroupDao {
@@ -70,5 +71,5 @@ public interface GroupDao {
      */
     void removeAllResource(@Param("group_id") String group_id);
 
-    List<Resource> getGroupResources(@Param("group_id") String group_id);
+    List<Map<String, String>> getGroupResources(@Param("group_id") String group_id);
 }

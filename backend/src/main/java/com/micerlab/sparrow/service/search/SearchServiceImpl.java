@@ -1,12 +1,11 @@
 package com.micerlab.sparrow.service.search;
 
+import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.dao.es.SearchDao;
-import com.micerlab.sparrow.dao.es.SparrowIndex;
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.params.SearchRequestParams;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.micerlab.sparrow.domain.params.SearchResultParams;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +14,12 @@ import java.util.Map;
 @Service
 public class SearchServiceImpl implements SearchService
 {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     private SearchDao searchDao;
-    
+
+    @Autowired
+    private ESConfig.Indices sparrowIndices;
+
     public SearchServiceImpl(SearchDao searchDao)
     {
         this.searchDao = searchDao;
@@ -36,7 +37,7 @@ public class SearchServiceImpl implements SearchService
         return Result.OK().data(topAssociations).build();
     }
     
-    public Result getSearchResults(SearchRequestParams params)
+    public Result getSearchResults(SearchResultParams params)
     {
         Map<String, Object> data = searchDao.searchResults(params);
         return Result.OK().data(data).build();
@@ -50,13 +51,13 @@ public class SearchServiceImpl implements SearchService
 
     @Override
     public Result searchUser(String keyword, int size) {
-        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_USER.getIndex(), size);
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, sparrowIndices.getUser(), size);
         return Result.OK().data(data).build();
     }
 
     @Override
     public Result searchGroup(String keyword, int size) {
-        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, SparrowIndex.SPA_GROUP.getIndex(), size);
+        List<Map<String, Object>> data = searchDao.searchUserOrGroup(keyword, sparrowIndices.getGroup(), size);
         return Result.OK().data(data).build();
     }
 }

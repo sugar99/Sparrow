@@ -1,0 +1,1757 @@
+{
+	"info": {
+		"_postman_id": "c2680189-2559-4a67-a303-e88503371a65",
+		"name": "ES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "index",
+			"item": [
+				{
+					"name": "list indices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/_cat/indices?v",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_cat",
+								"indices"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new_index",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"mappings\":{\n\t\t\"_doc\": {\n\t\t\t\"properties\": {\n\t\t\t\t\"master_FQDN\": {\n\t\t\t\t\t\"type\": \"keyword\"\n\t\t\t\t},\n\t\t\t\t\"FQDN\": {\n\t\t\t\t\t\"type\": \"keyword\"\n\t\t\t\t},\n\t\t\t\t\"desc\": {\n\t\t\t\t\t\"type\": \"text\",\n\t\t\t\t\t\"analyzer\": \"smartcn\"\n\t\t\t\t},\n\t\t\t\t\"type\": {\n\t\t\t\t\t\"type\": \"keyword\"\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-url}}/entities?pretty",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"entities"
+							],
+							"query": [
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete index",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_tags",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_docs",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_docs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reindex",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"source\": {\n\t\t\"index\": \"docs\"\n\t},\n\t\"dest\": {\n\t\t\"index\": \"spa_docs\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_reindex",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_reindex"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get index setting",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update index setting",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"settings\": {\n        \"index\": {\n            \"blocks\": {\n                \"read_only_allow_delete\": \"false\"\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_docs/_settings",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_docs",
+								"_settings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "doc",
+			"item": [
+				{
+					"name": "new doc (specify id)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": 0,\n\t\"title\": \"其它\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_categories/_doc/100",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_categories",
+								"_doc",
+								"100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "new doc (rnd id)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"豆瓣电影\",\n\t\"desc\": \"xxxxxxx\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_docs/_doc",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_docs",
+								"_doc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get doc",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_doc/image_10432347",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_doc",
+								"image_10432347"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a doc",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_docs/_doc/8dEMCWwBq9Cm8GPxIHoH",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_docs",
+								"_doc",
+								"8dEMCWwBq9Cm8GPxIHoH"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "multi-get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"docs\": [\n        {\n            \"_id\": 2998\n        },\n        {\n            \"_id\": 2697\n        },\n        {\n            \"_id\": 137\n        },\n        {\n            \"_id\": 66\n        },\n        {\n            \"_id\": 133\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_tags/_mget",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_tags",
+								"_mget"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bulk (ScutEntities)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"index\":{\"_id\":\"S9999\"}}\n{\"uuid\":\"S9999\",\"type\":\"project\",\"name\":\"华南理工大学大学城校区\",\"master_FQDN\":\"\",\"FQDN\":\"华南理工大学大学城校区\",\"FQDN_alias\":\"华南理工大学大学城校区\",\"desc\":\"位于广州市番禺区广州大学城内，2004年建设，校园占地面积294多万平方米，也称为“华工南校”\"}\n{\"index\":{\"_id\":\"S9998\"}}\n{\"uuid\":\"S9998\",\"type\":\"project\",\"name\":\"华南理工大学五山校区\",\"master_FQDN\":\"\",\"FQDN\":\"华南理工大学五山校区\",\"FQDN_alias\":\"华南理工大学五山校区\",\"desc\":\"位于广州市天河区石牌高校区，是华工的老校区，历史悠久，有百步梯、红楼等名胜建筑，也称为“华工北校”\"}\n{\"index\":{\"_id\":\"S999920010001\"}}\n{\"uuid\":\"S999920010001\",\"type\":\"building\",\"name\":\"B7实验楼\",\"master_FQDN\":\"华南理工大学大学城校区\",\"FQDN\":\"华南理工大学大学城校区 B7实验楼\",\"FQDN_alias\":\"华南理工大学大学城校区 B7实验楼\",\"desc\":\"软件学院实验室、办公楼、教务处\"}\n{\"index\":{\"_id\":\"S999920010002\"}}\n{\"uuid\":\"S999920010002\",\"type\":\"building\",\"name\":\"B8实验楼\",\"master_FQDN\":\"华南理工大学大学城校区\",\"FQDN\":\"华南理工大学大学城校区 B8实验楼\",\"FQDN_alias\":\"华南理工大学大学城校区 B8实验楼\",\"desc\":\"软件学院智能机器人研究实验室、就业指导中心\"}\n{\"index\":{\"_id\":\"S999920010003\"}}\n{\"uuid\":\"S999920010003\",\"type\":\"building\",\"name\":\"图书馆\",\"master_FQDN\":\"华南理工大学大学城校区\",\"FQDN\":\"华南理工大学大学城校区 图书馆\",\"FQDN_alias\":\"华南理工大学大学城校区 图书馆\",\"desc\":\"华工大学城校区唯一一所图书馆，设施完备，现代化的学习环境，是考试月复习的不错去处\"}\n{\"index\":{\"_id\":\"S999920010004\"}}\n{\"uuid\":\"S999920010004\",\"type\":\"building\",\"name\":\"中区图书馆\",\"master_FQDN\":\"华南理工大学五山校区\",\"FQDN\":\"华南理工大学五山校区 中区图书馆\",\"FQDN_alias\":\"华南理工大学五山校区 中区图书馆\",\"desc\":\"华工五山校区规模最大的图书馆，近年来仍在建设中，宽敞开阔，藏书甚多，更有可供学生预定使用的会议室\"}\n{\"index\":{\"_id\":\"S999920010005\"}}\n{\"uuid\":\"S999920010005\",\"type\":\"building\",\"name\":\"博学楼\",\"master_FQDN\":\"华南理工大学五山校区\",\"FQDN\":\"华南理工大学五山校区 博学楼\",\"FQDN_alias\":\"华南理工大学五山校区 博学楼\",\"desc\":\"华工五山校区较大的教学楼，是学生们喜欢夜自习的地方\"}\n{\"index\":{\"_id\":\"S999920010006\"}}\n{\"uuid\":\"S999920010006\",\"type\":\"building\",\"name\":\"第二食堂\",\"master_FQDN\":\"华南理工大学大学城校区\",\"FQDN\":\"华南理工大学大学城校区 第二食堂\",\"FQDN_alias\":\"华南理工大学大学城校区 第二食堂\",\"desc\":\"华工南校仅有的两家食堂之一，靠近中环公交站，是C10、C11、C13等宿舍楼学生经常关顾的食堂\"}\n{\"index\":{\"_id\":\"S999920010007\"}}\n{\"uuid\":\"S999920010007\",\"type\":\"building\",\"name\":\"C10宿舍楼\",\"master_FQDN\":\"华南理工大学大学城校区\",\"FQDN\":\"华南理工大学大学城校区 C10宿舍楼\",\"FQDN_alias\":\"华南理工大学大学城校区 C10宿舍楼\",\"desc\":\"华工软件学院理工男的宿舍楼，楼下有着京东快递、打印店、水果店等，生活便利\"}\n{\"index\":{\"_id\":\"S999920020001\"}}\n{\"uuid\":\"S999920020001\",\"type\":\"floor\",\"name\":\"6F\",\"master_FQDN\":\"华南理工大学大学城校区 图书馆\",\"FQDN\":\"华南理工大学大学城校区 图书馆 6F\",\"FQDN_alias\":\"华南理工大学大学城校区 图书馆 6F\",\"desc\":\"西文书库和医学书库，是个很适合自习的场所\"}\n{\"index\":{\"_id\":\"S999920020002\"}}\n{\"uuid\":\"S999920020002\",\"type\":\"floor\",\"name\":\"3F\",\"master_FQDN\":\"华南理工大学大学城校区 第二食堂\",\"FQDN\":\"华南理工大学大学城校区 第二食堂 3F\",\"FQDN_alias\":\"华南理工大学大学城校区 第二食堂 3F\",\"desc\":\"简称二饭三楼，对许多来访的外校同学来说，这是华工南校最高规格的待遇\"}\n{\"index\":{\"_id\":\"S999920020003\"}}\n{\"uuid\":\"S999920020003\",\"type\":\"floor\",\"name\":\"2F\",\"master_FQDN\":\"华南理工大学大学城校区 B7实验楼\",\"FQDN\":\"华南理工大学大学城校区 B7实验楼 2F\",\"FQDN_alias\":\"华南理工大学大学城校区 B7实验楼 2F\",\"desc\":\"学生上机的许多实验室都在二楼\"}\n{\"index\":{\"_id\":\"S999920020004\"}}\n{\"uuid\":\"S999920020004\",\"type\":\"floor\",\"name\":\"1F\",\"master_FQDN\":\"华南理工大学大学城校区 B8实验楼\",\"FQDN\":\"华南理工大学大学城校区 B8实验楼 1F\",\"FQDN_alias\":\"华南理工大学大学城校区 B8实验楼 1F\",\"desc\":\"smartgreen项目组开会地点的第三选择（当然第一第二分别是咖啡厅和猫熊hh）\"}\n{\"index\":{\"_id\":\"S999920020005\"}}\n{\"uuid\":\"S999920020005\",\"type\":\"room\",\"name\":\"3F\",\"master_FQDN\":\"华南理工大学大学城校区 图书馆\",\"FQDN\":\"华南理工大学大学城校区 图书馆 3F\",\"FQDN_alias\":\"华南理工大学大学城校区 图书馆 3F\",\"desc\":\"工科书库，自习的设施也很棒\"}\n{\"index\":{\"_id\":\"S999920030001\"}}\n{\"uuid\":\"S999920030001\",\"type\":\"room\",\"name\":\"231\",\"master_FQDN\":\"华南理工大学大学城校区 B7实验楼 2F\",\"FQDN\":\"华南理工大学大学城校区 B7实验楼 2F 231\",\"FQDN_alias\":\"华南理工大学大学城校区 B7实验楼 2F 231\",\"desc\":\"软件学院 大数据与人工智能实验室\"}\n{\"index\":{\"_id\":\"S999920030002\"}}\n{\"uuid\":\"S999920030002\",\"type\":\"room\",\"name\":\"104\",\"master_FQDN\":\"华南理工大学大学城校区 B7实验楼 1F\",\"FQDN\":\"华南理工大学大学城校区 B7实验楼 1F 104\",\"FQDN_alias\":\"华南理工大学大学城校区 B7实验楼 1F 104\",\"desc\":\"软件学院 移动计算开发实验室\"}\n{\"index\":{\"_id\":\"S999920030003\"}}\n{\"uuid\":\"S999920030003\",\"type\":\"room\",\"name\":\"105\",\"master_FQDN\":\"华南理工大学大学城校区 B8实验楼 1F\",\"FQDN\":\"华南理工大学大学城校区 B8实验楼 1F 105\",\"FQDN_alias\":\"华南理工大学大学城校区 B8实验楼 1F 105\",\"desc\":\"软件学院 会议室\"}\n"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/entities/_doc/_bulk",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"entities",
+								"_doc",
+								"_bulk"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cat",
+			"item": [
+				{
+					"name": "check health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/_cat/health?v",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_cat",
+								"health"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list nodes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/_cat/nodes?v",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_cat",
+								"nodes"
+							],
+							"query": [
+								{
+									"key": "v",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "backup",
+			"item": [
+				{
+					"name": "back repository",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"fs\",\n\t\"settings\": {\n\t\t\"location\": \"/mount/backups/backup1\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_snapshot/backup1",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_snapshot",
+								"backup1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "repository verify",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{es-url}}/_snapshot/backup1/_verify",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"_snapshot",
+								"backup1",
+								"_verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create snapshot",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{es-url}}/_snapshot/backup1/snapshot_1?wait_for_completion=true",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"_snapshot",
+								"backup1",
+								"snapshot_1"
+							],
+							"query": [
+								{
+									"key": "wait_for_completion",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get snapshot",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-url}}/_snapshot/backup1/snapshot_1",
+							"host": [
+								"{{es-url}}"
+							],
+							"path": [
+								"_snapshot",
+								"backup1",
+								"snapshot_1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "analyze",
+			"item": [
+				{
+					"name": "en-token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"it is an inversion of the forward index\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_analyze",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_analyze"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cn-token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"analyzer\": \"smartcn\",\n\t\"text\": \"位于广州市天河区石牌高校区，是华工的老校区，历史悠久，有百步梯、红楼等名胜建筑，也称为“华工北校”\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_analyze",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_analyze"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "smartcn char & digit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"air jordan1\",\n\t\"analyzer\": \"smartcn\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_analyze",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_analyze"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "smartcn chinese & english",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"text\": \"springboot框架\",\n\t\"analyzer\": \"smartcn\"\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/_analyze",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"_analyze"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "explain",
+			"item": [
+				{
+					"name": "full text",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"match\": {\n\t\t\t\"title\": \"算法导论\"\n\t\t}\n\t},\n\t\"_source\": [\"title\"]\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search?explain=true",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "explain",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cn token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"match\": {\n\t\t\t\"title.cn\": \"算法导论\"\n\t\t}\n\t},\n\t\"_source\": [\"title\"]\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search?explain=true",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "explain",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "query",
+			"item": [
+				{
+					"name": "url query",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search?q=*&sort=modified_time:desc&pretty",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "*"
+								},
+								{
+									"key": "sort",
+									"value": "modified_time:desc"
+								},
+								{
+									"key": "pretty",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "requestbody query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"match\": {\n\t\t\t\"desc.cn\": \"算法\"\n\t\t}\n\t},\n\t\"highlight\": {\n\t\t\"fields\": {\n\t\t\t\"desc.cn\": {},\n\t\t\t\"title\": {}\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "select fields",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"match_all\": {} \n\t},\n\t\"size\": 20,\n\t\"_source\": [\"title\", \"desc\"]\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "extract fields (docvalue)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 10,\n\t\"query\": {\n\t\t\"match_all\": {}\n\t},\n\t\"docvalue_fields\": [\n\t\t\"version\",\n\t\t\"modified_time\"\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "match all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 50,\n\t\"query\": {\n\t\t\"match_all\": {}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "match_all",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"size\": 10,\n\t\"query\": {\n\t\t\"match_all\": {}\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{elasticsearch-url}}/authors/_search?pretty",
+									"host": [
+										"{{elasticsearch-url}}"
+									],
+									"path": [
+										"authors",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "pretty",
+											"value": null
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "content-encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "content-length",
+									"value": "983"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"took\": 18,\n    \"timed_out\": false,\n    \"_shards\": {\n        \"total\": 5,\n        \"successful\": 5,\n        \"skipped\": 0,\n        \"failed\": 0\n    },\n    \"hits\": {\n        \"total\": 2263,\n        \"max_score\": 1,\n        \"hits\": [\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"43532\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.864Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"石川啄木 Takuboku Ishikawa\",\n                    \"id\": 43532,\n                    \"type\": \"author\",\n                    \"country\": \"日本\",\n                    \"pic_url\": \"http://116.56.140.131:4869/11e780b7283011e403442117714a9d94\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"47519\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.867Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"赵乾乾\",\n                    \"id\": 47519,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": null\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"52614\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.867Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"维斯瓦娃·辛波斯卡 Wisława Szymborska\",\n                    \"id\": 52614,\n                    \"type\": \"author\",\n                    \"country\": \"波兰\",\n                    \"pic_url\": \"http://116.56.140.131:4869/5e30cbdaa7e9b13fb7814d08e2b8999b\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"104951\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.882Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"霭理士 Havelock Ellis\",\n                    \"id\": 104951,\n                    \"type\": \"author\",\n                    \"country\": \"英国\",\n                    \"pic_url\": \"http://116.56.140.131:4869/dc936cd1a72d3bcaaf9fbdecc72431c4\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"128306\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.930Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"焦元溥\",\n                    \"id\": 128306,\n                    \"type\": \"author\",\n                    \"country\": \"中国台湾\",\n                    \"pic_url\": \"http://116.56.140.131:4869/04f4de011b17fb7a0f7d8d4b003c1399\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"135826\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.936Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"陈敬容\",\n                    \"id\": 135826,\n                    \"type\": \"author\",\n                    \"country\": \"中国\",\n                    \"pic_url\": \"http://116.56.140.131:4869/295b27ec89dc7877d11fe8e6e7afb7db\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"140091\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.940Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"田村由美\",\n                    \"id\": 140091,\n                    \"type\": \"author\",\n                    \"country\": \"日本\",\n                    \"pic_url\": \"http://116.56.140.131:4869/0df4f10c9d685c798cf599150d224d49\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"143521\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.942Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"雷姆·库哈斯 Rem Koolhaas\",\n                    \"id\": 143521,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/712c86ce3c853993bb8de60fe0ab2f9b\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"146473\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.943Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"顾诚\",\n                    \"id\": 146473,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/00961be3a7dcd517e7aeb7dfa1e645e6\"\n                }\n            },\n            {\n                \"_index\": \"authors\",\n                \"_type\": \"_doc\",\n                \"_id\": \"158506\",\n                \"_score\": 1,\n                \"_source\": {\n                    \"@timestamp\": \"2019-06-10T13:05:42.950Z\",\n                    \"@version\": \"1\",\n                    \"name\": \"曹锦清\",\n                    \"id\": 158506,\n                    \"type\": \"author\",\n                    \"country\": null,\n                    \"pic_url\": \"http://116.56.140.131:4869/8f4f38222085d3db5631cf4be119700d\"\n                }\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "match field",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": {\n        \"match\": {\n            \"title\": \"算法\"\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bool query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"query\": {\n        \"bool\": {\n            \"must\": {\n                \"multi_match\": {\n                    \"query\": \"算法\",\n                    \"fields\": [\n                        \"title\",\n                        \"title.cn^3\",\n                        \"desc\",\n                        \"desc.cn\"\n                    ]\n                }\n            },\n            \"filter\": [\n                {\n                    \"term\": {\n                        \"type\": \"image\"\n                    }\n                },\n                {\n                    \"terms_set\": {\n                        \"tags\": {\n                            \"terms\": [\n                                133,\n                                137\n                            ],\n                            \"minimum_should_match_script\": {\n                                \"source\": \"2\"\n                            }\n                        }\n                    }\n                },\n                {\n                    \"terms_set\": {\n                        \"categories\": {\n                            \"terms\": [\n                                0,\n                                6\n                            ],\n                            \"minimum_should_match_script\": {\n                                \"source\": \"2\"\n                            }\n                        }\n                    }\n                }\n            ]\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{es-remote-url}}/spa_files/_search?size=10",
+							"host": [
+								"{{es-remote-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "aggs",
+			"item": [
+				{
+					"name": "agg_search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 2,\n\t\"aggs\": {\n\t\t\"group_by_state\": {\n\t\t\t\"terms\": {\n\t\t\t\t\"field\": \"state.keyword\"\n\t\t\t},\n\t\t\t\"aggs\": {\n\t\t\t\t\"average_balance\": {\n\t\t\t\t\t\"avg\": {\n\t\t\t\t\t\t\"field\": \"balance\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{elasticsearch-url}}/bank/_search",
+							"host": [
+								"{{elasticsearch-url}}"
+							],
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nested_aggs_search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 0,\n\t\"aggs\": {\n\t\t\"group_by_age\": {\n\t\t\t\"range\": {\n\t\t\t\t\"field\": \"age\",\n\t\t\t\t\"ranges\":[\n\t\t\t\t\t{\n\t\t\t\t\t\t\"from\": 20,\n\t\t\t\t\t\t\"to\": 30\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"from\": 30,\n\t\t\t\t\t\t\"to\": 40\n\t\t\t\t\t},\n\t\t\t\t\t{\n\t\t\t\t\t\t\"from\": 40,\n\t\t\t\t\t\t\"to\": 50\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t\t},\n\t\t\t\"aggs\": {\n\t\t\t\t\"group_by_gender\": {\n\t\t\t\t\t\"terms\": {\n\t\t\t\t\t\t\"field\": \"gender.keyword\"\n\t\t\t\t\t},\n\t\t\t\t\t\"aggs\": {\n\t\t\t\t\t\t\"average_balance\": {\n\t\t\t\t\t\t\t\"avg\": {\n\t\t\t\t\t\t\t\t\"field\": \"balance\"\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{elasticsearch-url}}/bank/_search",
+							"host": [
+								"{{elasticsearch-url}}"
+							],
+							"path": [
+								"bank",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchkit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Origin",
+								"value": "http://demo.searchkit.co"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": "gzip, deflate"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.90 Safari/537.36"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "Referer",
+								"value": "http://demo.searchkit.co/?q=matrix&actors[0]=Christine%20Anu&actors[1]=Keanu%20Reeves&sort=released_desc&view=list"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "DNT",
+								"value": "1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": {\n        \"simple_query_string\": {\n            \"query\": \"matrix\",\n            \"fields\": [\n                \"actors^1\",\n                \"type^2\",\n                \"languages\",\n                \"title^5\",\n                \"genres^2\",\n                \"plot\"\n            ],\n            \"minimum_should_match\": \"70%\"\n        }\n    },\n    \"post_filter\": {\n        \"bool\": {\n            \"should\": [\n                {\n                    \"term\": {\n                        \"actors.raw\": \"Christine Anu\"\n                    }\n                },\n                {\n                    \"term\": {\n                        \"actors.raw\": \"Keanu Reeves\"\n                    }\n                }\n            ]\n        }\n    },\n    \"aggs\": {\n        \"categories\": {\n            \"filter\": {\n                \"bool\": {\n                    \"should\": [\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Christine Anu\"\n                            }\n                        },\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Keanu Reeves\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"type.raw\": {\n                    \"filter\": {},\n                    \"aggs\": {\n                        \"type.raw\": {\n                            \"terms\": {\n                                \"field\": \"type.raw\",\n                                \"size\": 20\n                            }\n                        }\n                    }\n                }\n            }\n        },\n        \"metascore\": {\n            \"filter\": {\n                \"bool\": {\n                    \"must\": [\n                        {\n                            \"bool\": {\n                                \"should\": [\n                                    {\n                                        \"term\": {\n                                            \"actors.raw\": \"Christine Anu\"\n                                        }\n                                    },\n                                    {\n                                        \"term\": {\n                                            \"actors.raw\": \"Keanu Reeves\"\n                                        }\n                                    }\n                                ]\n                            }\n                        },\n                        {\n                            \"range\": {\n                                \"metaScore\": {\n                                    \"gte\": 0,\n                                    \"lte\": 100\n                                }\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"metascore\": {\n                    \"histogram\": {\n                        \"field\": \"metaScore\",\n                        \"interval\": 5,\n                        \"min_doc_count\": 0,\n                        \"extended_bounds\": {\n                            \"min\": 0,\n                            \"max\": 100\n                        }\n                    }\n                }\n            }\n        },\n        \"imdbRating\": {\n            \"filter\": {\n                \"bool\": {\n                    \"must\": [\n                        {\n                            \"bool\": {\n                                \"should\": [\n                                    {\n                                        \"term\": {\n                                            \"actors.raw\": \"Christine Anu\"\n                                        }\n                                    },\n                                    {\n                                        \"term\": {\n                                            \"actors.raw\": \"Keanu Reeves\"\n                                        }\n                                    }\n                                ]\n                            }\n                        },\n                        {\n                            \"range\": {\n                                \"imdbRating\": {\n                                    \"gte\": 0,\n                                    \"lte\": 10\n                                }\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"imdbRating\": {\n                    \"histogram\": {\n                        \"field\": \"imdbRating\",\n                        \"interval\": 1,\n                        \"min_doc_count\": 0,\n                        \"extended_bounds\": {\n                            \"min\": 0,\n                            \"max\": 10\n                        }\n                    }\n                }\n            }\n        },\n        \"actors.raw6\": {\n            \"filter\": {},\n            \"aggs\": {\n                \"actors.raw\": {\n                    \"terms\": {\n                        \"field\": \"actors.raw\",\n                        \"size\": 10\n                    }\n                },\n                \"actors.raw_count\": {\n                    \"cardinality\": {\n                        \"field\": \"actors.raw\"\n                    }\n                }\n            }\n        },\n        \"writers.raw7\": {\n            \"filter\": {\n                \"bool\": {\n                    \"should\": [\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Christine Anu\"\n                            }\n                        },\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Keanu Reeves\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"writers.raw\": {\n                    \"terms\": {\n                        \"field\": \"writers.raw\",\n                        \"size\": 10\n                    }\n                },\n                \"writers.raw_count\": {\n                    \"cardinality\": {\n                        \"field\": \"writers.raw\"\n                    }\n                }\n            }\n        },\n        \"countries.raw8\": {\n            \"filter\": {\n                \"bool\": {\n                    \"should\": [\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Christine Anu\"\n                            }\n                        },\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Keanu Reeves\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"countries.raw\": {\n                    \"terms\": {\n                        \"field\": \"countries.raw\",\n                        \"size\": 10\n                    }\n                },\n                \"countries.raw_count\": {\n                    \"cardinality\": {\n                        \"field\": \"countries.raw\"\n                    }\n                }\n            }\n        },\n        \"runtimeMinutes9\": {\n            \"filter\": {\n                \"bool\": {\n                    \"should\": [\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Christine Anu\"\n                            }\n                        },\n                        {\n                            \"term\": {\n                                \"actors.raw\": \"Keanu Reeves\"\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"runtimeMinutes\": {\n                    \"range\": {\n                        \"field\": \"runtimeMinutes\",\n                        \"ranges\": [\n                            {\n                                \"key\": \"All\"\n                            },\n                            {\n                                \"key\": \"up to 20\",\n                                \"from\": 0,\n                                \"to\": 20\n                            },\n                            {\n                                \"key\": \"21 to 60\",\n                                \"from\": 21,\n                                \"to\": 60\n                            },\n                            {\n                                \"key\": \"60 or more\",\n                                \"from\": 61,\n                                \"to\": 1000\n                            }\n                        ]\n                    }\n                }\n            }\n        },\n        \"no_filters_top_hits\": {\n            \"top_hits\": {\n                \"size\": 1,\n                \"_source\": false\n            }\n        }\n    },\n    \"size\": 12,\n    \"sort\": [\n        {\n            \"released\": \"desc\"\n        }\n    ],\n    \"highlight\": {\n        \"fields\": {\n            \"title\": {},\n            \"plot\": {}\n        }\n    },\n    \"suggest\": {\n        \"text\": \"matrix\",\n        \"suggestions\": {\n            \"phrase\": {\n                \"field\": \"title\",\n                \"real_word_error_likelihood\": 0.95,\n                \"max_errors\": 1,\n                \"gram_size\": 4,\n                \"direct_generator\": [\n                    {\n                        \"field\": \"_all\",\n                        \"suggest_mode\": \"always\",\n                        \"min_word_length\": 1\n                    }\n                ]\n            }\n        }\n    },\n    \"_source\": [\n        \"plot\",\n        \"title\",\n        \"poster\",\n        \"imdbId\",\n        \"imdbRating\",\n        \"year\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://demo.searchkit.co/api/movies/_search",
+							"protocol": "http",
+							"host": [
+								"demo",
+								"searchkit",
+								"co"
+							],
+							"path": [
+								"api",
+								"movies",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "significant terms agg",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"multi_match\": {\n            \"query\": \"算法导论\",\n            \"fields\": [\n                \"title\",\n                \"title.cn^3\"\n            ]\n        }\n\t},\n\t\"aggs\": {\n\t\t\"significant_keywords\": {\n\t\t\t\"significant_terms\": {\n\t\t\t\t\"field\": \"title.raw\"\n\t\t\t}\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{elasticsearch-url}}/spa_files/_search?size=0",
+							"host": [
+								"{{elasticsearch-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "significant text agg",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": {\n\t\t\"multi_match\": {\n            \"query\": \"编程\",\n            \"fields\": [\n                \"title\",\n                \"title.cn^3\"\n            ]\n        }\n\t},\n\t\"aggs\": {\n\t\t\"significant_keywords\": {\n\t\t\t\"significant_text\": {\n\t\t\t\t\"field\": \"desc.cn\"\n\t\t\t}\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{elasticsearch-url}}/spa_files/_search?size=0",
+							"host": [
+								"{{elasticsearch-url}}"
+							],
+							"path": [
+								"spa_files",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sparrow search",
+			"item": [
+				{
+					"name": "index",
+					"item": [
+						{
+							"name": "create spa_files index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"doc_id\": {\n                \"type\": \"keyword\"\n            },\n            \"type\": {\n                \"type\": \"keyword\"\n            },\n            \"ext\": {\n                \"type\": \"keyword\"\n            },\n            \"size\": {\n                \"type\": \"long\"\n            },\n            \"tags\": {\n                \"type\": \"long\"\n            },\n            \"categories\": {\n                \"type\": \"long\"\n            },\n            \"store_key\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"thumbnail\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"derived_files\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"version\": {\n                \"type\": \"byte\"\n            },\n            \"original_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"parent_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"keywords\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"content\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-url}}/spa_files",
+									"host": [
+										"{{es-url}}"
+									],
+									"path": [
+										"spa_files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_docs index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\": {\n            \"number_of_shards\": 5,\n            \"number_of_replicas\": 2\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"files\": {\n                \"type\": \"keyword\"\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"meta_state\": {\n                \"type\": \"byte\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_docs",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_docs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_tags index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"long\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_tags",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_tags"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create spa_categories index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        },\n        \"index\" : {\n            \"number_of_shards\" : 5, \n            \"number_of_replicas\" : 2 \n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"id\": {\n            \t\"type\": \"long\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_categories",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_categories"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "index (legal)",
+					"item": [
+						{
+							"name": "create legal_files index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"doc_id\": {\n                \"type\": \"keyword\"\n            },\n            \"type\": {\n                \"type\": \"keyword\"\n            },\n            \"ext\": {\n                \"type\": \"keyword\"\n            },\n            \"size\": {\n                \"type\": \"long\"\n            },\n            \"tags\": {\n                \"type\": \"long\"\n            },\n            \"categories\": {\n                \"type\": \"long\"\n            },\n            \"store_key\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"thumbnail\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"derived_files\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"version\": {\n                \"type\": \"byte\"\n            },\n            \"original_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"parent_id\": {\n                \"type\": \"keyword\",\n                \"index\": false\n            },\n            \"keywords\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"content\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/legal_files",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"legal_files"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create legal_docs index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"keyword\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"creator\": {\n                \"type\": \"keyword\"\n            },\n            \"files\": {\n                \"type\": \"keyword\"\n            },\n            \"created_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"modified_time\": {\n                \"type\": \"date\",\n                \"format\": \"yyyy-MM-dd HH:mm:ss.SSS||yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis\"\n            },\n            \"meta_state\": {\n                \"type\": \"byte\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/legal_docs",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"legal_docs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create legal_tags index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"id\": {\n                \"type\": \"long\"\n            },\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/legal_tags",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"legal_tags"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create legal_categories index",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"settings\": {\n        \"similarity\": {\n            \"BM25_X\": {\n                \"type\": \"BM25\",\n                \"b\": 1,\n                \"k1\": 0.2\n            }\n        }\n    },\n    \"mappings\": {\n        \"properties\": {\n            \"title\": {\n                \"type\": \"text\",\n                \"similarity\": \"BM25_X\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"similarity\": \"BM25_X\",\n                        \"analyzer\": \"smartcn\"\n                    },\n                    \"raw\": {\n                        \"type\": \"keyword\"\n                    }\n                }\n            },\n            \"desc\": {\n                \"type\": \"text\",\n                \"fields\": {\n                    \"cn\": {\n                        \"type\": \"text\",\n                        \"analyzer\": \"smartcn\"\n                    }\n                }\n            },\n            \"id\": {\n            \t\"type\": \"long\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/legal_categories",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"legal_categories"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "search",
+					"item": [
+						{
+							"name": "search suggestions",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"bool\": {\n            \"must\": {\n                \"multi_match\": {\n                    \"query\": \"算法\",\n                    \"fields\": [\n                        \"title\",\n                        \"title.cn^3\"\n                    ]\n                }\n            },\n            \"filter\": {\n                \"script\": {\n                    \"script\": {\n                        \"source\": \"!doc.containsKey('type') || doc.containsKey('type') && doc['type'].value.equals(params.type)\",\n                        \"params\": {\n                            \"type\": \"image\"\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"aggs\": {\n        \"group_by_title\": {\n            \"terms\": {\n                \"field\": \"title.raw\",\n                \"order\": {\n                    \"term_score.value\": \"desc\"\n                }\n            },\n            \"aggs\": {\n                \"term_score\": {\n                    \"max\": {\n                        \"script\": {\n                            \"source\": \"_score\"\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_files,spa_tags,spa_categories/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_files,spa_tags,spa_categories",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "top association tags & categories",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"multi_match\": {\n            \"query\": \"算法导论\",\n            \"fields\": [\n                \"title\",\n                \"title.cn^3\"\n            ]\n        }\n    },\n    \"aggs\": {\n    \t\"top_tags\": {\n    \t\t\"terms\": {\n    \t\t\t\"field\": \"tags\",\n    \t\t\t\"size\": 5\n    \t\t}\n    \t},\n    \t\"top_categories\": {\n    \t\t\"terms\": {\n    \t\t\t\"field\": \"categories\",\n    \t\t\t\"size\": 5\n    \t\t}\n    \t}\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_files/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_files",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tags by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"ids\": {\n            \"values\": [\n                2998,\n                2697,\n                137,\n                66,\n                133\n            ]\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{elasticsearch-url}}/spa_tags/_search",
+									"host": [
+										"{{elasticsearch-url}}"
+									],
+									"path": [
+										"spa_tags",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "search results",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"query\": {\n        \"bool\": {\n            \"must\": {\n                \"multi_match\": {\n                    \"query\": \"数学\",\n                    \"fields\": [\n                        \"title\",\n                        \"title.cn^3\",\n                        \"desc\",\n                        \"desc.cn\"\n                    ]\n                }\n            }\n        }\n    },\n    \"aggs\": {\n        \"exts_limit\": {\n            \"filter\": {\n                \"terms\": {\n                    \"ext\": [\n                        \"jpg\",\n                        \"gif\"\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"created_time_ranges\": {\n                    \"date_range\": {\n                        \"field\": \"created_time\",\n                        \"format\": \"yyyy-MM-dd\",\n                        \"time_zone\": \"+8\",\n                        \"ranges\": [\n                            {\n                                \"key\": \"三天内\",\n                                \"from\": \"now-3d/d\"\n                            },\n                            {\n                                \"key\": \"一周内\",\n                                \"from\": \"now-1w/d\"\n                            },\n                            {\n                                \"key\": \"一个月内\",\n                                \"from\": \"now-1M/d\"\n                            },\n                            {\n                                \"key\": \"三个月内\",\n                                \"from\": \"now-3M/d\"\n                            },\n                            {\n                                \"key\": \"半年内\",\n                                \"from\": \"now-6M/d\"\n                            },\n                            {\n                                \"key\": \"一年内\",\n                                \"from\": \"now-1y/d\"\n                            },\n                            {\n                                \"key\": \"全部\",\n                                \"to\": \"now\"\n                            }\n                        ]\n                    }\n                },\n                \"modified_time_ranges\": {\n                    \"date_range\": {\n                        \"field\": \"modified_time\",\n                        \"format\": \"yyyy-MM-dd\",\n                        \"time_zone\": \"+8\",\n                        \"ranges\": [\n                            {\n                                \"key\": \"三天内\",\n                                \"from\": \"now-3d/d\"\n                            },\n                            {\n                                \"key\": \"一周内\",\n                                \"from\": \"now-1w/d\"\n                            },\n                            {\n                                \"key\": \"一个月内\",\n                                \"from\": \"now-1M/d\"\n                            },\n                            {\n                                \"key\": \"三个月内\",\n                                \"from\": \"now-3M/d\"\n                            },\n                            {\n                                \"key\": \"半年内\",\n                                \"from\": \"now-6M/d\"\n                            },\n                            {\n                                \"key\": \"一年内\",\n                                \"from\": \"now-1y/d\"\n                            },\n                            {\n                                \"key\": \"全部\",\n                                \"to\": \"now\"\n                            }\n                        ]\n                    }\n                }\n            }\n        },\n        \"time_ranges_limit\": {\n            \"filter\": {\n                \"bool\": {\n                    \"filter\": [\n                        {\n                            \"range\": {\n                                \"created_time\": {\n                                    \"time_zone\": \"+8\",\n                                    \"lte\": \"now\"\n                                }\n                            }\n                        },\n                        {\n                            \"range\": {\n                                \"modified_time\": {\n                                    \"time_zone\": \"+8\",\n                                    \"lte\": \"now\"\n                                }\n                            }\n                        }\n                    ]\n                }\n            },\n            \"aggs\": {\n                \"group_by_ext\": {\n                    \"terms\": {\n                        \"field\": \"ext\"\n                    }\n                },\n                \"final_exts_limit\": {\n                    \"filter\": {\n                        \"terms\": {\n                            \"ext\": [\n                                \"jpg\",\n                                \"gif\"\n                            ]\n                        }\n                    },\n                    \"aggs\": {\n                        \"results\": {\n                            \"top_hits\": {\n                                \"from\": 0,\n                                \"size\": 10,\n                                \"highlight\": {\n                                    \"fields\": {\n                                        \"title\": {\n                                            \"number_of_fragments\": 0,\n                                            \"no_match_size\": 50\n                                        },\n                                        \"desc\": {},\n                                        \"keywords\": {},\n                                        \"content\": {}\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_files/_search?size=0",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_files",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "size",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "other",
+					"item": [
+						{
+							"name": "create spa_doc",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"code\",\n\t\"desc\": \"代码仓库\",\n\t\"creator\": \"green\",\n\t\"files\": [\"1\", \"2\", \"ABC\"],\n\t\"meta_state\": 0,\n\t\"created_time\": \"2019-07-05 23:09:00\",\n\t\"modified_time\": \"2019-07-05 23:10:00\"\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_docs/_doc",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_docs",
+										"_doc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get a spa_doc",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es-remote-url}}/spa_docs/_doc/CIivwmsBFPpUZs7pHWA8",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_docs",
+										"_doc",
+										"CIivwmsBFPpUZs7pHWA8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create a spa_file",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"title\": \"ABC\",\n\t\"type\": \"doc\",\n\t\"tags\": [1, 2, 3],\n\t\"created_time\": \"2019-07-19 14:31:00.000\"\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/files/_doc",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"files",
+										"_doc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get a spa_file",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{es-remote-url}}/files/_doc/vUDuCGwBUc1SZQJOJtQo",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"files",
+										"_doc",
+										"vUDuCGwBUc1SZQJOJtQo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create tag",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"iid\": 1,\n\t\"title\": \"金庸\"\n}"
+								},
+								"url": {
+									"raw": "{{elasticsearch-url}}/tags/_doc",
+									"host": [
+										"{{elasticsearch-url}}"
+									],
+									"path": [
+										"tags",
+										"_doc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get tags by spa_file's id (terms query)",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"query\": {\n\t\t\"terms\": {\n\t\t\t\"id\": {\n\t\t\t\t\"index\": \"spa_files\",\n\t\t\t\t\"id\": \"image_10432347\",\n\t\t\t\t\"path\": \"tags\" \n\t\t\t}\n\t\t}\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{es-remote-url}}/spa_tags/_search",
+									"host": [
+										"{{es-remote-url}}"
+									],
+									"path": [
+										"spa_tags",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"id": "366afec1-0494-4209-aaf0-77862817d8df",
+			"key": "elastic-url",
+			"value": "http://localhost:9200",
+			"type": "string"
+		}
+	]
+}
