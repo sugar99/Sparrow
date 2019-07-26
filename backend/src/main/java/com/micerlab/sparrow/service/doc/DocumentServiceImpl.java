@@ -40,6 +40,12 @@ public class DocumentServiceImpl implements DocumentService{
     @Autowired
     private ACLService aclService;
 
+    /**
+     * 创建文档
+     * @param user_id User's Id
+     * @param cur_id Current Directory's Id
+     * @return Result
+     */
     @Override
     public Result createDoc(String user_id, String cur_id) {
         String doc_id = UUID.randomUUID().toString();
@@ -54,6 +60,11 @@ public class DocumentServiceImpl implements DocumentService{
         return Result.OK().data(document).build();
     }
 
+    /**
+     * 获取文档元数据
+     * @param doc_id Document's Id
+     * @return Document
+     */
     @Override
     public Result getDoc(String doc_id) {
         JSONObject docJson = spaDocDao.getJsonDoc(doc_id);
@@ -62,16 +73,32 @@ public class DocumentServiceImpl implements DocumentService{
         return Result.OK().data(docJson).build();
     }
 
+    /**
+     * 获得创建者id
+     * @param doc_id Document's Id
+     * @return Creator's Id
+     */
     @Override
     public String getCreatorId(String doc_id) {
         return documentDao.getDoc(doc_id).getCreator_id();
     }
 
+    /**
+     * 获取父目录id
+     * @param doc_id Document's Id
+     * @return Master Dirctory's Id
+     */
     @Override
     public String getMasterDirId(String doc_id) {
         return documentDao.getMasterDir(doc_id).getId();
     }
 
+    /**
+     * 更新文档元数据
+     * @param doc_id Document's Id
+     * @param params 参数
+     * @return Result
+     */
     @Override
     public Result updateDoc(String doc_id, SpaDocUpdateParams params) {
         String title = params.getTitle();
@@ -81,12 +108,23 @@ public class DocumentServiceImpl implements DocumentService{
         return Result.OK().build();
     }
 
+    /**
+     * 删除文档
+     * @param doc_id Directory's Id
+     * @return Result
+     */
     @Override
     public Result deleteDoc(String doc_id) {
+        //产生删除文档事件
         EventBus.getDefault().post(new DeleteDocEvent(doc_id));
         return Result.OK().build();
     }
 
+    /**
+     * 获取下级文件
+     * @param doc_id Document's Id
+     * @return List of Files
+     */
     @Override
     public Result getSlaveFiles(String doc_id) {
         List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);

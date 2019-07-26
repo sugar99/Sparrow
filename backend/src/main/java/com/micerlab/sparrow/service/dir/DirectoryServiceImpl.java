@@ -68,11 +68,21 @@ public class DirectoryServiceImpl implements DirectoryService{
         return Result.OK().data(directoryDao.getDir(dir_id)).build();
     }
 
+    /**
+     * 获取创建者id
+     * @param dir_id Directory's Id
+     * @return Creator's Id
+     */
     @Override
     public String getCreatorId(String dir_id) {
         return directoryDao.getDir(dir_id).getCreator_id();
     }
 
+    /**
+     * 获取父目录id
+     * @param dir_id Directory's Id
+     * @return Master Directory's Id
+     */
     @Override
     public String getMasterDirId(String dir_id) {
         if (dir_id.equals(directoryDao.getRootDir().getId())) {
@@ -81,8 +91,16 @@ public class DirectoryServiceImpl implements DirectoryService{
         return directoryDao.getMasterDir(dir_id).getId();
     }
 
+    /**
+     * 更新目录元数据
+     * @param user_id User's Id
+     * @param dir_id Directory's Id
+     * @param paramMap 参数
+     * @return
+     */
     @Override
     public Result updateDir(String user_id, String dir_id, Map<String, Object> paramMap) {
+        //检查该目录是否可修改，若不可修改，则除非用户是管理员，否则操作失败
         if (directoryDao.isModifiable(dir_id) == 0 && !user_id.equals(userDao.getAdminId())) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
@@ -91,16 +109,26 @@ public class DirectoryServiceImpl implements DirectoryService{
         return Result.OK().build();
     }
 
+    /**
+     * 删除目录
+     * @param user_id User's Id
+     * @param dir_id Directory's Id
+     * @return result
+     */
     @Override
     public Result deleteDir(String user_id, String dir_id) {
         if (directoryDao.isModifiable(dir_id) == 0 && !user_id.equals(userDao.getAdminId())) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_WRITE_CUR_DIR, "");
         }
         List<String> slavesIdList = directoryDao.getTotalSlavesId(dir_id);
+        //删除子资源，子孙资源.....
         if (slavesIdList != null) {
             for (String slave_id: slavesIdList) {
+                //解绑父子资源关系
                 directoryDao.dropSlaveDir(slave_id);
+                //删除群组资源授权关系
                 aclService.deleteResourcePermission(slave_id);
+                //删除资源
                 directoryDao.deleteDir(dir_id);
             }
         }
@@ -110,6 +138,11 @@ public class DirectoryServiceImpl implements DirectoryService{
         return Result.OK().build();
     }
 
+    /**
+     * 获取下级目录资源
+     * @param dir_id Directory's Id
+     * @return List of Directories or Documents
+     */
     @Override
     public Result getSlaveResources(String dir_id) {
         return Result.OK().data(directoryDao.getOneLevelSlaves(dir_id)).build();

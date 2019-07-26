@@ -4,6 +4,7 @@ import com.micerlab.sparrow.domain.ActionType;
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.ResourceType;
 import com.micerlab.sparrow.domain.Result;
+import com.micerlab.sparrow.domain.params.UpdateAuthGroupsParams;
 import com.micerlab.sparrow.service.acl.ACLService;
 import com.micerlab.sparrow.service.base.BaseService;
 import com.micerlab.sparrow.service.dir.DirectoryService;
@@ -109,12 +110,12 @@ public class DirectoryController {
     @PostMapping("/v1/dirs/{dir_id}/permissions")
     @ResponseBody
     public Result addPermission(HttpServletRequest request, @PathVariable("dir_id") String dir_id,
-                                @RequestBody Map<String, Object> paramMap) {
+                                @RequestBody UpdateAuthGroupsParams params) {
         //判断用户是否为该目录的创建者
         if (!BaseService.getUser_Id(request).equals(directoryService.getCreatorId(dir_id))) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NOT_RESOURCE_OWNER, "");
         }
-        return aclService.addGroupPermission(dir_id, ResourceType.DIR, paramMap);
+        return aclService.addGroupPermission(dir_id, ResourceType.DIR, params);
     }
 
     @ApiOperation("移除群组对指定目录的操作权限")
