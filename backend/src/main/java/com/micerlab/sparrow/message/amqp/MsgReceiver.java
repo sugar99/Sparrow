@@ -29,25 +29,25 @@ import java.util.Map;
 public class MsgReceiver
 {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     @Autowired
     private FileUtil fileUtil;
-    
+
     @Autowired
     @Qualifier("minioService")
     private FileStoreService fileStoreService;
-    
+
     @Autowired
     private SpaFileDao spaFileDao;
-    
+
     @Autowired
     private FileExtractService fileExtractService;
-    
+
     /**
      * 提取关键词的个数
      */
     private static final int K_words = 8;
-    
+
     /**
      * 生成缩略图 / 记录文本信息，并更新到es
      *
@@ -62,7 +62,7 @@ public class MsgReceiver
         try
         {
             JSONObject jsonMap = new JSONObject();
-            
+
             // 生成缩略图
             if (fileMeta.getThumbnail() == null)
             {
@@ -71,7 +71,7 @@ public class MsgReceiver
                 spaFileDao.updateJsonDoc(fileMeta.getId(), jsonMap);
                 jsonMap.clear();
             }
-            
+
             // 提取全文信息
             // content 和 keyword 需要记录插入到 es
             if (FileType.DOC.getType().equals(fileMeta.getType())
@@ -86,14 +86,14 @@ public class MsgReceiver
                     logger.debug("extract text: " + content);
                     List<String> keywords = fileExtractService.findKeyword(content, K_words);
                     logger.debug("findKeyword: " + keywords);
-                    
+
                     jsonMap.put("content", content);
                     jsonMap.put("keywords", keywords);
-                    
+
                     EventBus.getDefault().post(new UpdateFileEvent(message, jsonMap));
                 }
             }
-            
+
             // 使用 EventBus 更新 es
 //            EventBus.getDefault().post(new UpdateFileEvent(message, jsonMap));
         } catch (Exception e)
