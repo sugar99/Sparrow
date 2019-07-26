@@ -1,11 +1,9 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.config.ESConfig;
-import com.micerlab.sparrow.domain.file.FileType;
+import com.micerlab.sparrow.domain.meta.FileType;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 @Component

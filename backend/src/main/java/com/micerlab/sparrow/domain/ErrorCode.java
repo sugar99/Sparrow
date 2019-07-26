@@ -1,6 +1,6 @@
 package com.micerlab.sparrow.domain;
 
-import com.micerlab.sparrow.domain.file.FileType;
+import com.micerlab.sparrow.domain.meta.FileType;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;

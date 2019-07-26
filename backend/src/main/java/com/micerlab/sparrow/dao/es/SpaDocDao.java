@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.config.ESConfig;
-import com.micerlab.sparrow.domain.doc.SpaDoc;
+import com.micerlab.sparrow.domain.meta.SpaDoc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

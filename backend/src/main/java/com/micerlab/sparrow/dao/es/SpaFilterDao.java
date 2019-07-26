@@ -2,8 +2,8 @@ package com.micerlab.sparrow.dao.es;
 
 import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.config.ESConfig;
-import com.micerlab.sparrow.domain.search.SpaFilter;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilter;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import com.micerlab.sparrow.utils.MapUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

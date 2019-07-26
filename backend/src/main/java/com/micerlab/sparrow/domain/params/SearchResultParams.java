@@ -1,7 +1,6 @@
 package com.micerlab.sparrow.domain.params;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.SearchType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

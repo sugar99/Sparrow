@@ -3,8 +3,8 @@ package com.micerlab.sparrow.service.file;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import com.micerlab.sparrow.domain.params.UpdateFileMetaParams;
-import com.micerlab.sparrow.domain.search.SpaFilter;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilter;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 
 import java.util.List;
 

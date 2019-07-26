@@ -2,7 +2,7 @@ package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.domain.params.SearchResultParams;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

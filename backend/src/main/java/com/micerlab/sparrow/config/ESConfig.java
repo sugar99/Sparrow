@@ -1,21 +1,9 @@
 package com.micerlab.sparrow.config;
 
-import com.micerlab.sparrow.dao.es.ESBaseDao;
-import com.micerlab.sparrow.dao.es.SpaDocDao;
-import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.domain.ErrorCode;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import com.micerlab.sparrow.utils.BusinessException;
-import lombok.Getter;
-import lombok.Setter;
-import org.apache.http.HttpHost;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component

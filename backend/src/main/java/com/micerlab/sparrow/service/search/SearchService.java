@@ -2,7 +2,7 @@ package com.micerlab.sparrow.service.search;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SearchResultParams;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 
 public interface SearchService
 {

@@ -1,7 +1,7 @@
 package com.micerlab.sparrow.service.fileStore;
 
 import com.micerlab.sparrow.domain.Result;
-import com.micerlab.sparrow.domain.file.SpaFile;
+import com.micerlab.sparrow.domain.meta.SpaFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

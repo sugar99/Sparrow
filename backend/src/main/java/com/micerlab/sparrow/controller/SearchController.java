@@ -2,9 +2,8 @@ package com.micerlab.sparrow.controller;
 
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SearchResultParams;
-import com.micerlab.sparrow.domain.file.FileType;
 import com.micerlab.sparrow.domain.search.SearchType;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import com.micerlab.sparrow.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

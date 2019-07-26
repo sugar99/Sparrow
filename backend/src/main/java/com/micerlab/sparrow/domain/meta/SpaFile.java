@@ -1,11 +1,10 @@
-package com.micerlab.sparrow.domain.file;
+package com.micerlab.sparrow.domain.meta;
 
 import com.micerlab.sparrow.domain.params.CreateSpaFileParams;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -4,11 +4,8 @@ import com.micerlab.sparrow.config.ESConfig;
 import com.micerlab.sparrow.dao.es.SearchDao;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SearchResultParams;
-import com.micerlab.sparrow.domain.search.SpaFilterType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.micerlab.sparrow.domain.meta.SpaFilterType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

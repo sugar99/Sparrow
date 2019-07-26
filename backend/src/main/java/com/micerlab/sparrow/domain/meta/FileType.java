@@ -1,4 +1,4 @@
-package com.micerlab.sparrow.domain.file;
+package com.micerlab.sparrow.domain.meta;
 
 import com.micerlab.sparrow.domain.ErrorCode;
 import com.micerlab.sparrow.utils.BusinessException;

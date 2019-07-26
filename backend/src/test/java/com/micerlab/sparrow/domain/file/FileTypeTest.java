@@ -1,6 +1,7 @@
 package com.micerlab.sparrow.domain.file;
 
 import com.micerlab.sparrow.SparrowApplicationTests;
+import com.micerlab.sparrow.domain.meta.FileType;
 import org.junit.Test;
 
 import java.util.Map;

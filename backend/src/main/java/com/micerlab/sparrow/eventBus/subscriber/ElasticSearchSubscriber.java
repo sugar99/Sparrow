@@ -5,7 +5,7 @@ import com.micerlab.sparrow.dao.es.CUDUserGroupDao;
 import com.micerlab.sparrow.dao.es.SpaDocDao;
 import com.micerlab.sparrow.dao.es.SpaFileDao;
 import com.micerlab.sparrow.dao.postgre.UserDao;
-import com.micerlab.sparrow.domain.doc.SpaDoc;
+import com.micerlab.sparrow.domain.meta.SpaDoc;
 import com.micerlab.sparrow.domain.pojo.Group;
 import com.micerlab.sparrow.eventBus.event.doc.DeleteDocEvent;
 import com.micerlab.sparrow.eventBus.event.doc.InsertDocEvent;
@@ -21,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Elasticsearch 事件订阅者

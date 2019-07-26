@@ -1,14 +1,12 @@
 package com.micerlab.sparrow.dao.es;
 
 import com.micerlab.sparrow.config.ESConfig;
-import com.micerlab.sparrow.domain.search.Category;
-import com.micerlab.sparrow.domain.search.Tag;
+import com.micerlab.sparrow.domain.meta.SpaFilter;
 import org.elasticsearch.action.search.MultiSearchRequest;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -96,24 +94,24 @@ public class SearchAssociationDao
         MultiSearchResponse mSearchResponse = ESBaseDao.getRestHighLevelClient().msearch(mSearchRequest, RequestOptions.DEFAULT);
         
         MultiSearchResponse.Item categoriesResponse = mSearchResponse.getResponses()[0];
-        List<Category> categories = new LinkedList<>();
+        List<SpaFilter> categories = new LinkedList<>();
         if (!categoriesResponse.isFailure())
             for (SearchHit searchHit : categoriesResponse.getResponse().getHits().getHits())
             {
                 Map<String, Object> source = searchHit.getSourceAsMap();
-                categories.add(new Category(
+                categories.add(new SpaFilter(
                         (int) (source.get("id")),
                         source.get("title").toString(),
                         (String) (source.get("desc"))));
             }
         
         MultiSearchResponse.Item tagsResponse = mSearchResponse.getResponses()[1];
-        List<Tag> tags = new LinkedList<>();
+        List<SpaFilter> tags = new LinkedList<>();
         if (!tagsResponse.isFailure())
             for (SearchHit searchHit : tagsResponse.getResponse().getHits().getHits())
             {
                 Map<String, Object> source = searchHit.getSourceAsMap();
-                tags.add(new Tag(
+                tags.add(new SpaFilter(
                         (int) (source.get("id")),
                         source.get("title").toString(),
                         (String) (source.get("desc"))));
