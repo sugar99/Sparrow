@@ -62,7 +62,7 @@ public class ACLServiceImpl implements ACLService{
                     if(hasPermission.equals("111")) {
                         return true;
                     }
-                    //判断用户所在去之怒是否有对应权限
+                    //判断用户所在群组是否有对应操作权限
                     String actionCode = action.getActionCode();
                     for (int i = 0; i < 3; i++) {
                         if (actionCode.charAt(i) == '1' && hasPermission.charAt(i) == '1') {

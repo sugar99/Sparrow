@@ -10,7 +10,7 @@
     <select id="getGroupMeta" resultType="group">
         select * from spa_group where group_id = #{group_id}
     </select>
-    <select id="getGroupOwnerId" resultType="String">
+    <select id="getGroupOwnerId" resultType="java.lang.String">
         select creator_id from spa_group where group_id = #{group_id}
     </select>
     <update id="updateGroupMeta">

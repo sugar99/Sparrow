@@ -46,6 +46,7 @@ public interface IPrincipal {
     /**
      * 返回用户所属群组；游客则返回空链表
      * @return 群组唯一标识链表
+     *
      */
     public List<String> getGroupsIdList();
 

@@ -16,7 +16,7 @@
     <delete id="deleteDoc">
         delete from spa_doc where id = #{id};
     </delete>
-    <insert id="setMasterDir" parameterType="String">
+    <insert id="setMasterDir" parameterType="java.lang.String">
         insert into master_slaves(master_id, slave_id) values(#{master_id}, #{slave_id});
     </insert>
     <select id="getMasterDir" resultType="directory">

@@ -16,13 +16,13 @@
     <delete id="deleteUser">
         delete from spa_user where user_id = #{user_id}
     </delete>
-    <select id="getUserGroupIds" resultType="String">
+    <select id="getUserGroupIds" resultType="java.lang.String">
         select g.group_id from group_user r inner join spa_group g on g.group_id = r.group_id and r.user_id = #{user_id}
     </select>
     <select id="getUserGroups" resultType="group">
         select g.* from group_user r inner join spa_group g on g.group_id = r.group_id and r.user_id = #{user_id}
     </select>
-    <select id="getAdminId" resultType="String">
+    <select id="getAdminId" resultType="java.lang.String">
         select user_id from spa_user where isadmin = 1
     </select>
 </mapper>
