@@ -2,7 +2,7 @@
 
 > 作者：陈绿佳、郑铠锋
 >
-> 有关ES的环境准备，具体请见  [doc/ES/ES资料整理.md](doc/ES/ES资料整理.md) 与 [doc/Sparrow项目快速部署.md](./Sparrow项目快速部署.md) 中关于ES的章节。
+> 有关ES的环境准备，具体请见  [doc/ES/ES资料整理.md](doc/ES/ES资料整理.md) 与 [doc/Sparrow项目快速部署.md](./Sparrow项目快速部署.md) 中关于ES的章节。
 
 [TOC]
 
@@ -924,6 +924,12 @@ Query DSL实现思路
 [S3.搜索结果]接口，用关键词keyword模糊匹配title字段（title.raw）。官方文档：[Fuzzy Query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-fuzzy-query.html)
 
 模糊匹配需要构建状态机，消耗大量系统资源，而且匹配效果有限（感觉更适合英文单词）。建议只匹配长度短的字段（例如 `title`）。
+
+#### 3.5.3.[S3 搜索结果]的优化
+
+由于ES的限制，使用 top hit aggregation 获取搜索结果中的文件记录，数量受到限制，具体见 [Index Modules](https://www.elastic.co/guide/en/elasticsearch/reference/7.2/index-modules.html#dynamic-index-settings) 中 `index.max_inner_result_window` 参数说明。可考虑更改为从蓝色箭头描述的路径获取搜索结果，用 [post filter](https://www.elastic.co/guide/en/elasticsearch/reference/7.2/search-request-post-filter.html) 完成从 `D1` 到 `D4` 的过滤。建议保留原有v1接口，新接口采用v2版本。
+
+![1563847877508](assets/1563847877508.png)
 
 ## 4.代码实现
 
