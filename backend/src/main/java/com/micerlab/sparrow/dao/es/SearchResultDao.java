@@ -448,8 +448,11 @@ public class SearchResultDao
     
     private void aggs(SearchSourceBuilder searchSourceBuilder, SearchResultParams params)
     {
+        // time_zone字段暂时弃用
 //        String time_zone = params.getTime_zone(); // 例如 "+8"，表示 UTC+8 的北京时间
-        String time_zone = "+0"; // UTC 时间
+    
+        // 读写都用 UTC标准时间 为基准
+        String time_zone = "+0";
         
         // Agg1.1 created_time_ranges
         DateRangeAggregationBuilder created_time_ranges = buildTimeRangesAgg(
@@ -566,7 +569,7 @@ public class SearchResultDao
     {
         DateRangeAggregationBuilder dateRangeAgg = new DateRangeAggregationBuilder(name);
         dateRangeAgg.field(field);
-        dateRangeAgg.format("yyyy-MM-dd");
+        dateRangeAgg.format("yyyy-MM-dd HH:mm:ss"); // 精确到秒
         dateRangeAgg.timeZone(ZoneId.of("UTC" + time_zone));
         addDefaultRange(dateRangeAgg);
         if (timeRangeFilter != null)
