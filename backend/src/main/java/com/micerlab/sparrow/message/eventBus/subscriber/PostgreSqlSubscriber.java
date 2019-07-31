@@ -15,6 +15,7 @@ import com.micerlab.sparrow.message.eventBus.event.group.InsertGroupEvent;
 import com.micerlab.sparrow.message.eventBus.event.group.UpdateGroupEvent;
 import com.micerlab.sparrow.message.eventBus.event.user.InsertUserEvent;
 import com.micerlab.sparrow.service.acl.ACLService;
+import com.micerlab.sparrow.service.dir.DirectoryService;
 import com.micerlab.sparrow.service.group.GroupService;
 import com.micerlab.sparrow.service.resource.ResourceService;
 import org.greenrobot.eventbus.EventBus;
@@ -39,7 +40,7 @@ public class PostgreSqlSubscriber {
     private GroupDao groupDao;
 
     @Autowired
-    private ResourceService resourceService;
+    private DirectoryService directoryService;
 
     @Autowired
     private DocumentDao documentDao;
@@ -64,7 +65,7 @@ public class PostgreSqlSubscriber {
         User user = new User(user_id, insertUserEvent.getUsername(), insertUserEvent.getPassword(),
                 insertUserEvent.getWork_no(), insertUserEvent.getEmail());
         //创建用户个人目录
-        String personal_id = resourceService.createPersonalDir(user_id, insertUserEvent.getUsername());
+        String personal_id = directoryService.createPersonalDir(user_id, insertUserEvent.getUsername());
         user.setPersonal_dir(personal_id);
         //创建个人群组
         String personal_group_id = groupService.createPersonalGroup(user_id, insertUserEvent.getUsername());
