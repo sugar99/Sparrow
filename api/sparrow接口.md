@@ -521,7 +521,7 @@ POST /v1/search/results
 | highlight_pre_tag       | string | 高亮起始标签     | `<em>` |          | `<h4 class="hlt">` |
 | highlight_post_tag      | string | 高亮终止标签     | `</em>` |   | `</h4>` |
 
->  当 type='doc_content' 时，触发文档全文检索，`content_highlight_count` 字段才有效
+>  当 type='doc_content' 时，触发文档全文检索，`content_highlight_count` 字段才有效
 
 Response Body
 
@@ -1079,7 +1079,53 @@ Response Body
 ```
 
 #### D5.2 获取指定文档下的文件
-[GET] /v1/docs/{doc_id}/slaves
+[GET] /v2/docs/{doc_id}/slaves
+
+* doc_id: 文档id
+
+```http
+GET /v2/docs/1/slaves?page=1&per_page=10
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+      "total": 1,
+      "files": [
+        {
+          "ext": "png",
+          "created_time": "2019-07-25 11:18:17.746",
+          "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+          "derived_files": [],
+          "thumbnail": null,
+          "keywords": [],
+          "resource_type": "file",
+          "title": "panda",
+          "type": "image",
+          "thumbnail_url": "http://39.108.210.48:9000/douban-test/image/thumbnail/temp6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=SWLNR4NMXK02HG0K6BM6%2F20190725%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190725T151817Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=c2ac75320897974ffbfacad83856ffd8314061612310e669fb742e0d5efb11f0",
+          "doc_id": "1",
+          "version": 0,
+          "content": "",
+          "tags": [],
+          "modified_time": "2019-07-25 11:18:17.746",
+          "size": 23332,
+          "parent_id": null,
+          "categories": [],
+          "id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+          "original_id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+          "desc": "",
+          "store_key": "image/6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png"
+        }
+      ]
+  }     
+}
+```
+
+[GET] /v1/docs/{doc_id}/slaves [已废弃]
 
 * doc_id: 文档id
 

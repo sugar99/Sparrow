@@ -35,5 +35,5 @@ public interface ResourceService {
     /**
      * 获取文档包含的所有文件的Meta
      */
-    Result getFiles(String doc_id);
+    Result getFiles(String doc_id, int page, int per_page);
 }

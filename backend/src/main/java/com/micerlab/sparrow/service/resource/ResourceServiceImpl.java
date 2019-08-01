@@ -189,7 +189,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Override
     public Result getSlavesResource(String user_id, String resource_id, String type) {
         if (type.equals("doc")) {
-            return getFiles(resource_id);
+            return getFiles(resource_id, 1, 10);
         } else {
             //获取指定目录的子资源（一级）
             List<Map<String, Object>> data = resourceDao.getSlaveResources(resource_id);
@@ -257,9 +257,9 @@ public class ResourceServiceImpl implements ResourceService{
     }
     
     @Override
-    public Result getFiles(String doc_id)
+    public Result getFiles(String doc_id, int page, int per_page)
     {
-        List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);
+        List<Map<String, Object>> files = spaDocDao.getFiles1(doc_id, page, per_page);
         return Result.OK().data(files).build();
     }
 }
