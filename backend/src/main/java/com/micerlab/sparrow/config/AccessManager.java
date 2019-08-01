@@ -14,19 +14,12 @@ public class AccessManager {
     private static final Logger logger = LoggerFactory.getLogger(AccessManager.class);
 
     private static List<String> authenticateUriList = Arrays.asList(
-            "/v{:\\d+}/users/**",
+            "/v{:\\d+}/users/**", // 匹配 /v1/users 与其下级路径
             "/v{:\\d+}/groups/**",
             "/v{:\\d+}/resources/**",
             "/v{:\\d+}/files/**",
             "/v{:\\d+}/dirs/**",
-            "/v{:\\d+}/docs/**",
-            "/v{:\\d+}/users",
-            "/v{:\\d+}/groups",
-            "/v{:\\d+}/resources",
-            "/v{:\\d+}/files",
-            "/v{:\\d+}/dirs",
-            "/v{:\\d+}/docs"
-            
+            "/v{:\\d+}/docs/**"
     );
 
     public static boolean mathUriList(String uri, List<String> uriList) {
