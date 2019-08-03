@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 public class SpaDocDaoTest extends SparrowApplicationTests
 {
     @Autowired
@@ -18,7 +16,7 @@ public class SpaDocDaoTest extends SparrowApplicationTests
     public void getFiles()
     {
         String doc_id = "algs";
-        List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);
+        List<Map<String, Object>> files = spaDocDao.getFiles1(doc_id, 1, 10);
         System.out.println(files);
     }
 }

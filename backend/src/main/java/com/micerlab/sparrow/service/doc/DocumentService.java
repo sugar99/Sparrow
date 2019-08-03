@@ -3,8 +3,6 @@ package com.micerlab.sparrow.service.doc;
 import com.micerlab.sparrow.domain.Result;
 import com.micerlab.sparrow.domain.params.SpaDocUpdateParams;
 
-import java.util.Map;
-
 public interface DocumentService {
 
     Result createDoc(String user_id, String cur_id);
@@ -19,5 +17,8 @@ public interface DocumentService {
 
     Result deleteDoc(String doc_id);
 
-    Result getSlaveFiles(String doc_id);
+    @Deprecated
+    Result getSlaveFiles1(String doc_id, int page, int per_page);
+    
+    Result getSlaveFiles2(String doc_id, int page, int per_page);
 }

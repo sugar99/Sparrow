@@ -122,13 +122,28 @@ public class DocumentServiceImpl implements DocumentService{
     /**
      * 获取下级文件
      * @param doc_id Document's Id
+     * @param page
+     * @param per_page
      * @return List of Files
      */
+    @Deprecated
     @Override
-    public Result getSlaveFiles(String doc_id) {
-        List<Map<String, Object>> files = spaDocDao.getFiles(doc_id);
+    public Result getSlaveFiles1(String doc_id, int page, int per_page) {
+        List<Map<String, Object>> files = spaDocDao.getFiles1(doc_id, page, per_page);
         return Result.OK().data(files).build();
     }
-
-
+    
+    /**
+     * 获取下级文件
+     * @param doc_id Document's Id
+     * @param page 第几页
+     * @param per_page 每页几条记录
+     * @return 文件Meta
+     */
+    @Override
+    public Result getSlaveFiles2(String doc_id, int page, int per_page) {
+        return Result.OK().data(
+                spaDocDao.getFiles2(doc_id, page, per_page)
+        ).build();
+    }
 }

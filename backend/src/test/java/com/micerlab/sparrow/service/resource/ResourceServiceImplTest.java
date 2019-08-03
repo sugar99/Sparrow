@@ -18,7 +18,7 @@ public class ResourceServiceImplTest
 //    public void testGetFiles()
 //    {
 //        String doc_id = "algs";
-//        Result result = resourceService.getFiles(doc_id);
+//        Result result = resourceService.getFiles1(doc_id);
 //        System.out.println(result);
 //    }
 }

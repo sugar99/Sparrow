@@ -14,7 +14,6 @@ import com.micerlab.sparrow.utils.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,15 +81,35 @@ public class DocumentController {
         return documentService.deleteDoc(doc_id);
     }
 
-    @ApiOperation("获取文档内的文件")
+    @Deprecated
+    @ApiOperation("D5.2.获取文档内的文件（已废弃）")
     @GetMapping("/v1/docs/{doc_id}/slaves")
     @ResponseBody
-    public Result getSlaves(HttpServletRequest request, @PathVariable("doc_id") String doc_id) {
+    public Result getSlaves1(HttpServletRequest request,
+                            @PathVariable("doc_id") String doc_id,
+                            @RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "10") int per_page
+                            ) {
         //判断用户对指定文档是否有可读权限
         if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request), ActionType.READ)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
         }
-        return documentService.getSlaveFiles(doc_id);
+        return documentService.getSlaveFiles1(doc_id, page, per_page);
+    }
+    
+    @ApiOperation("D5.2.获取文档内的文件")
+    @GetMapping("/v2/docs/{doc_id}/slaves")
+    @ResponseBody
+    public Result getSlaves2(HttpServletRequest request,
+                             @PathVariable("doc_id") String doc_id,
+                             @RequestParam(defaultValue = "1") int page,
+                             @RequestParam(defaultValue = "10") int per_page
+    ) {
+        //判断用户对指定文档是否有可读权限
+        if (!aclService.hasPermission(BaseService.getUser_Id(request), doc_id, ResourceType.DOC, BaseService.getGroupIdList(request), ActionType.READ)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_NO_READ_TARGET_RESOURCE, "");
+        }
+        return documentService.getSlaveFiles2(doc_id, page, per_page);
     }
 
     @ApiOperation("授予群组对指定文档的操作权限")

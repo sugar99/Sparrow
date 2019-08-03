@@ -366,11 +366,21 @@ Response Body
 
 ### S1.搜索建议
 
-[GET] /search/suggestions{?type,keyword,size}
+[GET] /v1/search/suggestions{?type,keyword,size}
 
 ```http
-GET /search/suggestions?type=all&keyword=算法&size=10
+GET /v1/search/suggestions?type=all&keyword=算法&size=10
 ```
+
+`type` 取值
+
+* `all` - 全部
+* image - 图片
+* doc - 文档
+* video - 视频
+* audio - 音频
+* others - 其它文件
+* `doc_content` - 文档全文
 
 Response Body
 
@@ -395,10 +405,10 @@ Response Body
 
 ### S2.获取高度相关的类目标签
 
-[GET] `/search/top-associations{?keyword,tag_count,category_count}`
+[GET] `/v1/search/top-associations{?keyword,tag_count,category_count}`
 
 ```http
-GET /search/top-associations?keyword=算法&tag_count=5&category_count=5
+GET /v1/search/top-associations?keyword=算法&tag_count=5&category_count=5
 ```
 
 Response Body
@@ -462,37 +472,56 @@ Response Body
 
 ### S3.搜索结果
 
-[POST] `/search/results` 
+[POST] `/v1/search/results` 
 
 ```http
-POST /search/results
+POST /v1/search/results
 ```
 
 ```json
 {
-  "type": "all",
+  "type": "doc_content",
   "keyword": "算法",
-  "tags": [
-    1,
-    3
-  ],
-  "categories": [
-    1,
-    2
-  ],
+  "tags": [133, 137],
+  "categories": [],
   "exts": [
-    "jpg",
-    "all",
-    "jpg",
-    "gif",
-    "doc",
     "pdf"
   ],
-  "time_zone": "+8",
-  "page": 2,
-  "per_page": 40
+  "created_time": {
+    "from": "2019-06-03 09:05:00" // "yyyy-MM-dd HH:mm:ss" 精确到秒
+  },
+  "modified_time": {
+    "to": "now-3d"
+  },
+  "page": 1,
+  "per_page": 5,
+  "desc_highlight_count": 2,
+  "content_highlight_count": 5,
+  "highlight_pre_tag": "<em>",
+  "highlight_post_tag": "</em>"
 }
 ```
+
+参数说明
+
+| 参数          | 类型          | 解释                    | 默认值     | 默认操作           | 示例值                          |
+| ------------- | ------------- | ----------------------- | ---------- | ------------------ | ------------------------------- |
+| type          | string        | 搜索类型                | all        | 搜索所有类型的文件 | doc                             |
+| keyword       | string        | 搜索关键词              | 空字符串   | 匹配任意关键词     | 算法                            |
+| tags          | array[number] | 过滤标签id              | [] 或 null | 不过滤标签         | [1, 3]                          |
+| categories    | array[number] | 过滤类目id              | [] 或 null | 不过滤类目         | [1, 3]                          |
+| exts          | array[string] | 过滤拓展名              | ["all"]    | 匹配所有拓展名     | ["jpg", "png"]                  |
+| created_time  | object        | 创建时间                |            | 不过滤创建时间     | {"from": "2019-06-03 09:00:00"} |
+| modified_time | object        | 最后修改时间            |            | 不过滤修改时间     | {"from": "now-3d","to": "now"}  |
+| time_zone     | string        | UTC时区（该字段已弃用） | "0"        |                    | "+8"                            |
+| page          | number        | 第几页                  | 1          |                    | 2                               |
+| per_page      | number        | 每页记录数              | 10         |                    | 40                              |
+| desc_highlight_count    | number | 详情高亮记录数量 | 2      |          | 3                  |
+| content_highlight_count | number | 全文详情记录数量 | 5      |          | 1                  |
+| highlight_pre_tag       | string | 高亮起始标签     | `<em>` |          | `<h4 class="hlt">` |
+| highlight_post_tag      | string | 高亮终止标签     | `</em>` |   | `</h4>` |
+
+>  当 type='doc_content' 时，触发文档全文检索，`content_highlight_count` 字段才有效
 
 Response Body
 
@@ -504,113 +533,223 @@ Response Body
     "group_by_created_time": [
       {
         "key": "全部",
-        "doc_count": 33
+        "doc_count": 28,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-29T08:11:44.729Z",
+        "to_as_string": "2019-07-29"
       },
       {
         "key": "三天内",
-        "doc_count": 6
+        "doc_count": 0,
+        "from": "2019-07-26T00:00:00Z",
+        "from_as_string": "2019-07-26",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一周内",
-        "doc_count": 15
+        "doc_count": 0,
+        "from": "2019-07-22T00:00:00Z",
+        "from_as_string": "2019-07-22",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一个月内",
-        "doc_count": 23
+        "doc_count": 7,
+        "from": "2019-06-29T00:00:00Z",
+        "from_as_string": "2019-06-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "三个月内",
-        "doc_count": 25
+        "doc_count": 23,
+        "from": "2019-04-29T00:00:00Z",
+        "from_as_string": "2019-04-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "半年内",
-        "doc_count": 27
+        "doc_count": 26,
+        "from": "2019-01-29T00:00:00Z",
+        "from_as_string": "2019-01-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一年内",
-        "doc_count": 27
+        "doc_count": 26,
+        "from": "2018-07-29T00:00:00Z",
+        "from_as_string": "2018-07-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一年前",
-        "doc_count": 0
+        "doc_count": 2,
+        "from": null,
+        "from_as_string": null,
+        "to": "2018-07-29T00:00:00Z",
+        "to_as_string": "2018-07-29"
+      },
+      {
+        "key": "自定义",
+        "doc_count": 20,
+        "from": "2019-06-03T00:00:00Z",
+        "from_as_string": "2019-06-03",
+        "to": "2019-07-29T08:11:44.729Z",
+        "to_as_string": "2019-07-29"
       }
     ],
     "group_by_modified_time": [
       {
         "key": "全部",
-        "doc_count": 33
+        "doc_count": 28,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-29T08:11:44.729Z",
+        "to_as_string": "2019-07-29"
       },
       {
         "key": "三天内",
-        "doc_count": 6
+        "doc_count": 0,
+        "from": "2019-07-26T00:00:00Z",
+        "from_as_string": "2019-07-26",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一周内",
-        "doc_count": 15
+        "doc_count": 0,
+        "from": "2019-07-22T00:00:00Z",
+        "from_as_string": "2019-07-22",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一个月内",
-        "doc_count": 23
+        "doc_count": 13,
+        "from": "2019-06-29T00:00:00Z",
+        "from_as_string": "2019-06-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "三个月内",
-        "doc_count": 25
+        "doc_count": 23,
+        "from": "2019-04-29T00:00:00Z",
+        "from_as_string": "2019-04-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "半年内",
-        "doc_count": 27
+        "doc_count": 26,
+        "from": "2019-01-29T00:00:00Z",
+        "from_as_string": "2019-01-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一年内",
-        "doc_count": 27
+        "doc_count": 26,
+        "from": "2018-07-29T00:00:00Z",
+        "from_as_string": "2018-07-29",
+        "to": null,
+        "to_as_string": null
       },
       {
         "key": "一年前",
-        "doc_count": 0
+        "doc_count": 2,
+        "from": null,
+        "from_as_string": null,
+        "to": "2018-07-29T00:00:00Z",
+        "to_as_string": "2018-07-29"
+      },
+      {
+        "key": "自定义",
+        "doc_count": 28,
+        "from": null,
+        "from_as_string": null,
+        "to": "2019-07-26T08:11:44.729Z",
+        "to_as_string": "2019-07-26"
       }
     ],
-    "result": [
+    "group_by_ext": [
       {
-        "id": "image_10432347",
-        "title": "算法",
-        "desc": "《算法(英文版•第4版)》作为算法领域经典的参考书，全面介绍了关于算法和数据结构的必备知识，并特别针对排序、搜索、图处理和字符串处理进行了论述。第4版具体给出了每位程序员应知应会的50个算法，提供了实际代码，而且这些Java代码实现采用了模块化的编程风格，读者可以方便地加以改造。本书配套网站提供了本书内容的摘要及更多的代码实现、测试数据、练习、教学课件等资源。《算法(英文版•第4版)》适合用作大学教材或从业者的参考书。",
-        "type": "image",
-        "ext": "jpg",
-        "categories": [
-          0,
-          1,
-          6
+        "key": "全部",
+        "doc_count": 36
+      },
+      {
+        "key": "pdf",
+        "doc_count": 20
+      },
+      {
+        "key": "docx",
+        "doc_count": 16
+      }
+    ],
+    "total": 20,
+    "results": [
+      {
+        "ext": "pdf",
+        "created_time": "2019-06-21 21:34:16",
+        "creator": "green",
+        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/1737661.jpeg",
+        "derived_files": null,
+        "desc_highlights": [
+          "《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》是近年来关于<em>算</em><em>法</em>设计和分析的不可多得的优秀教材。",
+          "《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》围绕<em>算</em><em>法</em>设计技术组织素材，对每种<em>算</em><em>法</em>技术选择了多个典型范例进行分析。"
         ],
+        "keywords": [
+          "<em>算</em><em>法</em>"
+        ],
+        "content_highlights": [
+          "《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》是近年来关于<em>算</em><em>法</em>设计和分析的不可多得的优秀教材。",
+          "《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》围绕<em>算</em><em>法</em>设计技术组织素材，对每种<em>算</em><em>法</em>技术选择了多个典型范例进行分析。",
+          "每章从实际问题出发，经过具体、深入、细致的分析，自然且富有启发性地引出相应的<em>算</em><em>法</em>设计思想，并对<em>算</em><em>法</em>的正确性、复杂性进行恰当的分析、论证。",
+          "《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》覆盖的面较宽，凡属串行<em>算</em><em>法</em>的经典论题都有涉及，并且论述深入有新意。",
+          "全书共200多道丰富而精彩的习题是《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》的重要组成部分，也是《大学计<em>算</em>机教育国外著名教材系列:<em>算</em><em>法</em>设计(影印版)》的突出特色之一。"
+        ],
+        "title": "算法设计",
+        "type": "doc",
+        "doc_id": null,
+        "version": 0,
+        "content": "《大学计算机教育国外著名教材系列:算法设计(影印版)》是近年来关于算法设计和分析的不可多得的优秀教材。《大学计算机教育国外著名教材系列:算法设计(影印版)》围绕算法设计技术组织素材，对每种算法技术选择了多个典型范例进行分析。《大学计算机教育国外著名教材系列:算法设计(影印版)》将直观性与严谨性完美地结合起来。每章从实际问题出发，经过具体、深入、细致的分析，自然且富有启发性地引出相应的算法设计思想，并对算法的正确性、复杂性进行恰当的分析、论证。《大学计算机教育国外著名教材系列:算法设计(影印版)》覆盖的面较宽，凡属串行算法的经典论题都有涉及，并且论述深入有新意。全书共200多道丰富而精彩的习题是《大学计算机教育国外著名教材系列:算法设计(影印版)》的重要组成部分，也是《大学计算机教育国外著名教材系列:算法设计(影印版)》的突出特色之一。",
         "tags": [
-          6,
           133,
           137,
-          2552,
+          2274,
           2697,
           2998,
-          22409,
-          24310
+          10614,
+          11088,
+          22409
         ],
-        "creator": "green",
-        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
-        "thumbnail": "http://douban-test.oss-cn-beijing.aliyuncs.com/img/10432347.jpeg",
-        "derived_files": [],
-        "created_time": "2017-07-01 21:34:16",
-        "modified_time": "2017-07-06 21:34:16",
-        "version": 0,
-        "original_id": "10432347",
-        "parent_id": null
+        "modified_time": "2019-06-26 21:34:16",
+        "size": 0,
+        "parent_id": null,
+        "title_highlight": "<em>算</em><em>法</em>设计",
+        "id": "pdf_1737661",
+        "categories": [
+          0,
+          6
+        ],
+        "original_id": "1737661",
+        "desc": "《大学计算机教育国外著名教材系列:算法设计(影印版)》是近年来关于算法设计和分析的不可多得的优秀教材。《大学计算机教育国外著名教材系列:算法设计(影印版)》围绕算法设计技术组织素材，对每种算法技术选择了多个典型范例进行分析。《大学计算机教育国外著名教材系列:算法设计(影印版)》将直观性与严谨性完美地结合起来。每章从实际问题出发，经过具体、深入、细致的分析，自然且富有启发性地引出相应的算法设计思想，并对算法的正确性、复杂性进行恰当的分析、论证。《大学计算机教育国外著名教材系列:算法设计(影印版)》覆盖的面较宽，凡属串行算法的经典论题都有涉及，并且论述深入有新意。全书共200多道丰富而精彩的习题是《大学计算机教育国外著名教材系列:算法设计(影印版)》的重要组成部分，也是《大学计算机教育国外著名教材系列:算法设计(影印版)》的突出特色之一。",
+        "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/pdf/1737661.pdf"
       }
-    ]
-  }
 }
 ```
 
 ### S4.搜索类目或标签
 
-[GET] `/search/tags?{keyword, size}`
+[GET] `/v1/search/tags?{keyword, size}`
 
-[GET] `/search/categories?{keyword, size}`
+[GET] `/v1/search/categories?{keyword, size}`
 
 ```http
 GET /search/tags?keyword=算法&size=5
@@ -761,10 +900,10 @@ Response Body
 ```
 
 #### D2.2 获取文档元数据
-[GET] `/docs/{doc_id}`
+[GET] `/v1/docs/{doc_id}`
 
 ```http
-GET /docs/1
+GET /v1/docs/1
 ```
 
 Response Body
@@ -817,10 +956,10 @@ Response Body
 }
 ```
 #### D3.2 更新文档元数据
-[PATCH] `/docs/{doc_id}`
+[PATCH] `/v1/docs/{doc_id}`
 
 ```http
-PATCH /files/1
+PATCH /v1/files/1
 ```
 
 Request Body
@@ -940,7 +1079,53 @@ Response Body
 ```
 
 #### D5.2 获取指定文档下的文件
-[GET] /v1/docs/{doc_id}/slaves
+[GET] /v2/docs/{doc_id}/slaves
+
+* doc_id: 文档id
+
+```http
+GET /v2/docs/1/slaves?page=1&per_page=10
+```
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "data": {
+      "total": 1,
+      "files": [
+        {
+          "ext": "png",
+          "created_time": "2019-07-25 11:18:17.746",
+          "creator": "e1f5f562-2e96-4b3e-a6ff-e3f953c5b368",
+          "derived_files": [],
+          "thumbnail": null,
+          "keywords": [],
+          "resource_type": "file",
+          "title": "panda",
+          "type": "image",
+          "thumbnail_url": "http://39.108.210.48:9000/douban-test/image/thumbnail/temp6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=SWLNR4NMXK02HG0K6BM6%2F20190725%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20190725T151817Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=c2ac75320897974ffbfacad83856ffd8314061612310e669fb742e0d5efb11f0",
+          "doc_id": "1",
+          "version": 0,
+          "content": "",
+          "tags": [],
+          "modified_time": "2019-07-25 11:18:17.746",
+          "size": 23332,
+          "parent_id": null,
+          "categories": [],
+          "id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+          "original_id": "6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f",
+          "desc": "",
+          "store_key": "image/6a442cdd-cb0d-4e5e-ade5-ee5d752ccd0f.png"
+        }
+      ]
+  }     
+}
+```
+
+[GET] /v1/docs/{doc_id}/slaves [已废弃]
 
 * doc_id: 文档id
 
@@ -1112,13 +1297,12 @@ Request Body:
 
 ```json
 {
-    "title": "", //"文件名"
-    "store_key": "", //文件在Minio中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
-    "doc_id": "", //当前上传文件所属的文档ID
-    "parent_id": "", //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为""
-    "ext": "", // 文件后缀名
-    "creator": "", // 文件的创建者
-   	"size": "" // 文件的大小
+    "title": "lab3", //"文件名"
+    "store_key": "http://douban-test.oss-cn-beijing.aliyuncs.com/doc/1231271.pdf",, //文件在oss中的key。filename可从获取签名url请求返回的url获取 例：user-dir-prefix/${filename}.${suffix}
+    "doc_id": "55447f46-2692-40b3-84c0-74e8d04d1590", //当前上传文件所属的文档ID
+    "parent_id": null, //当前上传文件如果为某一文件的新版本，则需要传其父版本文件的ID，否则为null
+    "ext": "pdf", // 文件后缀名
+   	"size": 1024 // 文件的大小
 }
 ```
 
@@ -1170,7 +1354,7 @@ GET /v1/files/1/download
 
 Response Body: HttpServletResponse
 
-### F8. 获取文件历史版本列表
+### F8. 获取文件历史版本列表[未实现]
 
 [GET] /v1/files/​{file_id}/versions
 
@@ -1205,10 +1389,10 @@ Response Body:
 
 获取文件meta
 
-[GET] `/files/{file_id}`
+[GET] `/v1/files/{file_id}`
 
 ```http
-GET /files/1
+GET /v1/files/1
 ```
 
 Response Body
@@ -1255,10 +1439,10 @@ Response Body
 
 > 部分更新，仅可更新部分字段
 
-[PATCH] `/files/{file_id}`
+[PATCH] `/v1/files/{file_id}`
 
 ```http
-PATCH /files/1
+PATCH /v1/files/1
 ```
 
 Request Body
@@ -1329,13 +1513,12 @@ Response Body
 
 ### F11. 创建类目或标签
 
-[POST] `/tags/`
+[POST] `/v1/tags/`
 
-[POST] `/categories/`
+[POST] `/v1/categories/`
 
 ```http
-POST /tag/
-POST /categories/
+POST /v1/tag/
 ```
 
 Request Body
@@ -1363,12 +1546,12 @@ Response Body
 
 ### F12. 获取类目或标签
 
-[GET] `/tags/{tag_id}`
+[GET] `/v1/tags/{tag_id}`
 
-[GET] `/categories/{category_id}`
+[GET] `/v1/categories/{category_id}`
 
 ```http
-GET /tags/1
+GET /v1/tags/1
 ```
 
 Response Body
@@ -1387,12 +1570,12 @@ Response Body
 
 ### F13. 更新类目或标签
 
-[PUT] `/tags/{tag_id}`
+[PUT] `/v1/tags/{tag_id}`
 
-[PUT] `/categories/{category_id}`
+[PUT] `/v1/categories/{category_id}`
 
 ```http
-PUT /tags/1
+PUT /v1/tags/1
 ```
 
 Request Body
@@ -1421,12 +1604,12 @@ Response Body
 
 ### F14. 删除类目或标签
 
-[DELETE] `/tags/{tag_id}`
+[DELETE] `/v1/tags/{tag_id}`
 
-[DELETE] `/categories/{category_id}`
+[DELETE] `/v1/categories/{category_id}`
 
 ```http
-DELETE /tags/1
+DELETE /v1/tags/1
 ```
 
 Response Body
@@ -1441,12 +1624,12 @@ Response Body
 
 ### F15. 获取文件的类目或标签
 
-[GET] `/files/{file_id}/tags`
+[GET] `/v1/files/{file_id}/tags`
 
-[GET] `/files/{file_id}/categories`
+[GET] `/v1/files/{file_id}/categories`
 
 ```http
-GET /files/1/tags
+GET /v1/files/1/tags
 ```
 
 Response Body
@@ -1484,9 +1667,9 @@ Response Body
 
 ### F16. 更新文件的类目或标签
 
-[PUT] `/files/{file_id}/tags`
+[PUT] `/v1/files/{file_id}/tags`
 
-[PUT] `/files/{file_id}/categories`
+[PUT] `/v1/files/{file_id}/categories`
 
 ```http
 PUT /files/1/tags

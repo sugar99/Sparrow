@@ -2,7 +2,9 @@ package com.micerlab.sparrow.dao.es;
 
 import com.alibaba.fastjson.JSONObject;
 import com.micerlab.sparrow.domain.ErrorCode;
+import com.micerlab.sparrow.domain.meta.TermsWrapper;
 import com.micerlab.sparrow.utils.BusinessException;
+import com.micerlab.sparrow.utils.Page;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -59,33 +61,60 @@ public class ESBaseDao
         return restHighLevelClient;
     }
     
+    private final static int DEFAULT_TERMS_PAGE = 1;
+    private final static int DEFAULT_TERMS_PER_PAGE = 10;
+    
+    @Deprecated
     public List<Map<String, Object>> termsLookup(
             String search_index,
             String index,
             String id,
             String path
+    ){
+        TermsWrapper termsWrapper = termsLookup(search_index,
+                index,
+                id,
+                path,
+                DEFAULT_TERMS_PAGE,
+                DEFAULT_TERMS_PER_PAGE);
+        return termsWrapper.getItems();
+    }
+    
+    public TermsWrapper termsLookup(
+            String search_index,
+            String index,
+            String id,
+            String path,
+            int page,
+            int per_page
     )
     {
         SearchTemplateRequest request = new SearchTemplateRequest();
         request.setRequest(new SearchRequest(search_index));
+    
+        Page pageHelper = new Page(page, per_page);
         
         request.setScriptType(ScriptType.INLINE);
         request.setScript("{" +
-                "  \"query\": {" +
-                "    \"terms\": {" +
-                "      \"id\": {" +
-                "        \"index\": \"{{index}}\"," +
-                "        \"id\": \"{{id}}\"," +
-                "        \"path\": \"{{path}}\"" +
-                "      }" +
-                "    }" +
-                "  }" +
+                "\"from\":\"{{from}}\"," +
+                "\"size\":\"{{size}}\"," +
+                "\"query\": {" +
+                    "\"terms\": {" +
+                        "\"id\": {" +
+                            "\"index\": \"{{index}}\"," +
+                            "\"id\": \"{{id}}\"," +
+                            "\"path\": \"{{path}}\"" +
+                        "}" +
+                    "}" +
+                "}" +
                 "}");
         
         Map<String, Object> scriptParams = new HashMap<>();
         scriptParams.put("index", index);
         scriptParams.put("id", id);
         scriptParams.put("path", path);
+        scriptParams.put("from", pageHelper.getFrom());
+        scriptParams.put("size", pageHelper.getSize());
         
         request.setScriptParams(scriptParams);
         try
@@ -95,7 +124,9 @@ public class ESBaseDao
             List<Map<String, Object>> results = new LinkedList<>();
             for (SearchHit searchHit : searchResponse.getHits().getHits())
                 results.add(searchHit.getSourceAsMap());
-            return results;
+            return new TermsWrapper(
+                    searchResponse.getHits().getTotalHits().value,
+                    results);
         } catch (IOException ex)
         {
             logger.error(ex.getMessage());
