@@ -139,6 +139,24 @@ Response Body
 }
 ```
 
+#### U6.以工号获取用户元数据
+
+[GET] /v1/users/{user_work_no}/workno
+
+- user_work_no: 用户工号
+
+Response Body
+
+```json
+{
+  "status": 200,
+  "msg": "OK",
+  "userInfo": {
+      "user_id":0001
+  }
+}
+```
+
 ### 群组模块
 
 #### G1.新建群组

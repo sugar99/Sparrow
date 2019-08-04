@@ -109,6 +109,20 @@ public class UserServiceImpl implements UserService{
         return Result.OK().data(defaultUserState(user_id)).build();
     }
 
+    //suheng 19-08-04
+    /**
+     * 以工号返回用户的元数据
+     * @param user_work_no 用户工号
+     * @return Result (data: userInfo, personal_dir, home, root)
+     */
+    @Override
+    public Result getUserMetaByWorkNo(String user_work_no) {
+        return Result.OK().data(getUserStateByWorkNo(user_work_no)).build();
+    }
+
+
+
+
     /**
      * 登录注销
      * @param user_id 用户id
@@ -162,6 +176,25 @@ public class UserServiceImpl implements UserService{
         data.put("master_dirs", master_dirs);
         return data;
     }
+
+    //suheng
+    /**
+     * 以用户工号查询用户个人信息，返回信息给前端
+     * @param user_work_no 用户工号
+     * @return Map {user_id}
+     */
+    @Override
+    public Map<String, Object> getUserStateByWorkNo(String user_work_no) {
+        //构造返回给前端的信息 这里只要user_id
+        Map<String, Object> userInfo = new HashMap<>();
+        User user = userDao.getUserMetaByWorkNo(user_work_no);
+        //用户个人信息
+        userInfo.put("user_id",user.getUser_id());
+
+        return userInfo;
+    }
+
+
 
     @Override
     public List<String> getUserGroupsIdList(String user_id) {

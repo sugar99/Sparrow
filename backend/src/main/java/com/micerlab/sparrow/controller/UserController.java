@@ -64,4 +64,13 @@ public class UserController {
             return userService.getUserGroups(user_id);
         }
     }
+
+    //suheng 19-08-04
+    @ApiOperation("U6.以用户工号获取用户meta")
+    @GetMapping("/v1/users/{user_work_no}/workno")
+    @ResponseBody
+    public Result getUserMetaByWorkNo(HttpServletRequest request, @PathVariable("user_work_no") String user_work_no) {
+        return userService.getUserMetaByWorkNo(user_work_no);
+    }
+
 }

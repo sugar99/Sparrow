@@ -21,5 +21,10 @@ public interface UserService {
 
     Map<String, Object> defaultUserState(String user_id);
 
-    public List<String> getUserGroupsIdList(String user_id);
+    List<String> getUserGroupsIdList(String user_id);
+
+    //以用户工号查询用户元数据
+    Result getUserMetaByWorkNo(String user_work_no);
+
+    Map<String, Object> getUserStateByWorkNo(String user_work_no);
 }
