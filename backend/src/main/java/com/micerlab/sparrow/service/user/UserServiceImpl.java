@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService{
     /**
      * 以工号返回用户的元数据
      * @param user_work_no 用户工号
-     * @return Result (data: userInfo, personal_dir, home, root)
+     * @return Result (userInfo: user_id)
      */
     @Override
     public Result getUserMetaByWorkNo(String user_work_no) {
@@ -186,10 +186,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public Map<String, Object> getUserStateByWorkNo(String user_work_no) {
         //构造返回给前端的信息 这里只要user_id
+//        Map<String, Object> data = new HashMap<>();
         Map<String, Object> userInfo = new HashMap<>();
         User user = userDao.getUserMetaByWorkNo(user_work_no);
         //用户个人信息
-        userInfo.put("user_id",user.getUser_id());
+        userInfo.put("user_id", user.getUser_id());
 
         return userInfo;
     }

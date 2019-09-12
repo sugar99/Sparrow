@@ -10,6 +10,9 @@ logging:
 
 # postgreSQL, redis, rabbitmq连接配置
 spring:
+  jackson:
+    # 解决前后端时间差8个小时
+    time-zone: GMT+8
   profiles:
     active: dev
   datasource:
@@ -127,7 +130,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sparrow_legacy
 
-# 生产环境，使用localhost
+#生产环境，使用localhost
 sparrow:
   host: localhost
   require-login: false

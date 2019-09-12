@@ -152,7 +152,7 @@ Response Body
   "status": 200,
   "msg": "OK",
   "userInfo": {
-      "user_id":0001
+      "user_id":"0001"
   }
 }
 ```

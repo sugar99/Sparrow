@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class CUDUserGroupDao {
+public class  CUDUserGroupDao {
 
     private RestHighLevelClient elasticsearchClient;
 
