@@ -48,8 +48,6 @@ public class FileController {
     @Autowired
     private ACLService aclService;
 
-    
-
     @Autowired
     private FileStoreMinioServiceImpl fileStoreMinioService;
 
@@ -152,11 +150,7 @@ public class FileController {
      */
     @ApiOperation("F5.创建文件Meta")
     @PostMapping("/v1/files/{file_id}")
-    public Result createFileMeta(
-            HttpServletRequest request,
-            @PathVariable("file_id") String file_id,
-            @RequestBody CreateSpaFileParams params
-            )
+    public Result createFileMeta(HttpServletRequest request, @PathVariable("file_id") String file_id, @RequestBody CreateSpaFileParams params)
     {
         String creator = params.getCreator();
         String doc_id = params.getDoc_id();

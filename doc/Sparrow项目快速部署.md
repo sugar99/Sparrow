@@ -337,7 +337,7 @@ create database sparrow
 
 ```shell
 # 修改Redis.conf文件
-[root@demo ~]# vim redis.conf
+[root@demo ~]# vim redis.conf			//TODO:(20191022)
 将daemonize no 修改为 daemonize yes (以后台进程方式启动Redis服务)
 
 # 指定redis.conf文件启动
@@ -352,8 +352,11 @@ create database sparrow
 
 ```shell
 # 下载并更改权限
-[root@demo ~]# wget https://dl.min.io/server/minio/release/linux-ppc64le/minio
+[root@demo ~]# wget https://dl.min.io/server/minio/release/linux-amd64/minio
 [root@demo ~]# chmod +x minio
+
+# 同目录下创建一个data目录
+[root@demo ~]# mkdir minio
 ```
 
 ##### 启动MinIo

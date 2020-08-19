@@ -41,8 +41,7 @@ public class SpaFile
     private String content = "";
     
     public SpaFile()
-    {
-    }
+    {}
     
     public SpaFile(String id, CreateSpaFileParams params)
     {
